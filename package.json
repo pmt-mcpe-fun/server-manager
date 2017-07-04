@@ -14,6 +14,9 @@
     "Manager"
   ],
   "author": "Ad5001 <mail@ad5001.eu>",
+  "contributors": [
+  "Nathaniel F. <hello@nfgamermc.com> (https://nfgamermc.com)"
+  ],
   "license": "CC-BY-NC-SA-4.0",
   "devDependencies": {
     "electron": "~1.6.2",
