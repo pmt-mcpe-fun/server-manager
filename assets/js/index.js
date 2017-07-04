@@ -33,6 +33,18 @@ window.addEventListener("load", function () {
 	// 	console.log("Reloading frame");
 	// })
 
+
+	/**
+	 * Making menu
+	 */
+	var menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
+	// Add event listener to some button to toggle the menu on and off.
+	document.querySelector('#open_menu')
+		.addEventListener('click', function() { 
+			menu.open = !menu.open
+			this.toggle();
+		});
+
 	/**
 	 * Add Server Dialog buttons
 	 */

@@ -50,6 +50,10 @@ iframe {
     left: calc(100% - 4em);
 }
 
+#footerAddServer * {
+    cursor: pointer;
+}
+
 main.mdl-layout__content {
     width: 100%;
     height: calc(100% - 2.001px);
@@ -59,6 +63,15 @@ main.mdl-layout__content {
     cursor: default !important;
 }
 
+.clickable {
+    cursor: pointer !important;
+}
+
 #leftClick, #leftClickButton {
     position: absolute;
+}
+
+#menu1 {
+    right: 1em;
+    top: 1em;
 }

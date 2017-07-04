@@ -11,8 +11,8 @@ if(top) require = top.require;
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const properties = require("./properties.js");
-const main = require('./main.js');
+const properties = require("./js/properties.js");
+const main = require('./js/main.js');
 
 var servers = fs.readdirSync(main.serverFolder);
 if (servers.length > 0) {

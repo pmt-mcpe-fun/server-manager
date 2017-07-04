@@ -7,13 +7,14 @@
  * @copyright (C) Ad5001 2017
  */
 
-if(!require) require = top.window.require;
-if(!_dirname) _dirname = top._dirname;
+if(top) {
+	require = top.window.require;
+}
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const properties = require(_dirname + "/js/properties.js");
-const ListenerTracker = require(top._dirname + "/js/interceptListener.js");
+const properties = require("./js/properties.js");
+const ListenerTracker = require("./js/interceptListener.js");
 
 
 // Defining servers folder location

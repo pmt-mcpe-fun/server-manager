@@ -7,6 +7,8 @@
 	<title>PocketMine Server Manager</title>
 	<!-- PMS Design -->
 	<link rel="stylesheet" href="css/psm.css">
+	<link rel="stylesheet" href="css/icon.css">
+	<link rel="stylesheet" href="css/roboto.css">
 	<script>
 		require("./js/index.js");
 	</script>
@@ -17,41 +19,39 @@
 
 <!-- Starting body -->
 
-<body>
+<body class="mdc-typography">
 	<!-- Menu -->
-	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-		<header class="mdc-toolbar">
-  			<div class="mdc-toolbar__row">
-				<!-- Header row -->
-  			  	<section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-					<a id="main-logo" class="unclickable mdl-layout__drawer-button" role="button" tabindex="0" target="frame"><i class="material-icons" style="color: rgb(66,66,66);">home</i></a>
-					<span class="mdl-layout-title">PocketMine Server Manager</span>
-  			  	</section>
-    			<section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-					<button id="menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
-         				<i class="material-icons">more_vert</i>
-          			</button>
-    			</section>
-				<!--Menu Actions-->
-				<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-lower-right">
-					<li class="mdl-menu__item" id="addServerOpen">Add server</li>
-					<li class="mdl-menu__item">Modify servers</li>
+	<header class="mdc-toolbar mdc-toolbar--fixed demo-header-toolbar">
+		<div class="mdc-toolbar__row">
+			<!-- Header row -->
+			<section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+				<span class="catalog-back">
+					<a id="main-logo" class="unclickable mdl-layout__drawer-button mdc-toolbar__icon--menu" role="button" tabindex="0" target="frame"><i class="material-icons" style="color: rgb(66,66,66);">home</i></a>
+				</span>
+				<span class="mdc-toolbar__title catalog-title">PocketMine Server Manager</span>
+			</section>
+			<section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+				<span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions">more_vert</span>
+			</section>
+			<!--Menu Actions-->
+			<div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menu1" tabindex="-1">
+  				<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+					<li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
+					<li class="mdc-list-item" role="menuitem" tabindex="0" >Modify servers</li>
 				</ul>
 			</div>
-		</header>
-	</div>
+		</div>
+	</header>
 
 
 	<!-- Page Contents -->
-	<main class="mdl-layout__content">
-		<div class="page-content">
-			<!-- Page content -->
-			<iframe src="serverPicker.html" frameborder=0 id="frame" name="frame"></iframe>
-			<!-- Add button -->
-			<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" id="footerAddServer">
-          <i class="material-icons">add</i>
-        </button>
-		</div>
+	<main>
+		<!-- Page content -->
+		<iframe src="serverPicker.html" frameborder=0 id="frame" name="frame"></iframe>
+		<!-- Add button -->
+		<button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2" id="footerAddServer">
+      		<span class="mdc-fab__icon">add</span>
+      	</button>
 	</main>
 
 
@@ -62,18 +62,18 @@
 			<!-- Dialog content -->
 			<form id="addServerForm">
 				<!-- Name -->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="text" id="serverName">
+				<div class="mdc-textfield mdc-textfield--upgraded">
+					<input class="mdc-textfield__input" type="text" id="serverName">
 					<label class="mdl-textfield__label" for="serverName">Name</label>
 				</div>
 				<!-- Server port -->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="number" id="serverPort" value="">
+				<div class="mdc-textfield mdc-textfield--upgraded">
+					<input class="mdc-textfield__input" type="number" id="serverPort" value="">
 					<label class="mdl-textfield__label" for="serverPort">Port</label>
 				</div>
 				<!--Version-->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
-					<input class="mdl-textfield__input" type="text" id="version" value="1.1" readonly tabIndex="-1">
+				<div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
+					<input class="mdc-textfield__input" type="text" id="version" value="1.1" readonly tabIndex="-1">
 					<label for="version" class="mdl-textfield__label">Supported MCPE Version</label>
 					<ul for="version" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
 						<li class="mdl-menu__item">1.1</li>
@@ -97,23 +97,23 @@
 			<!-- Dialog content -->
 			<form id="addServerForm">
 				<!-- MOTD -->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="text" id="motd" value="Minecraft PE PocketMine Server">
+				<div class="mdc-textfield mdc-textfield--upgraded">
+					<input class="mdc-textfield__input" type="text" id="motd" value="Minecraft PE PocketMine Server">
 					<label class="mdl-textfield__label" for="motd">Message Of The Day</label>
 				</div>
 				<!-- Server port -->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="number" id="serverPortMdf" value="">
+				<div class="mdc-textfield mdc-textfield--upgraded">
+					<input class="mdc-textfield__input" type="number" id="serverPortMdf" value="">
 					<label class="mdl-textfield__label" for="serverPort">Port</label>
 				</div>
 				<!-- Max Players -->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input class="mdl-textfield__input" type="number" id="maxPlayers" value=20>
+				<div class="mdc-textfield mdc-textfield--upgraded">
+					<input class="mdc-textfield__input" type="number" id="maxPlayers" value=20>
 					<label class="mdl-textfield__label" for="maxPlayers">Max Players</label>
 				</div>
 				<!--Gamemode-->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
-					<input class="mdl-textfield__input" type="text" id="gamemode" value="Survival" readonly tabIndex="-1">
+				<div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
+					<input class="mdc-textfield__input" type="text" id="gamemode" value="Survival" readonly tabIndex="-1">
 					<label for="gamemode" class="mdl-textfield__label">Default gamemode</label>
 					<ul for="gamemode" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
 						<li class="mdl-menu__item">Survival</li>
@@ -123,8 +123,8 @@
 					</ul>
 				</div>
 				<!--Difficulty-->
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
-					<input class="mdl-textfield__input" type="text" id="difficulty" value="Easy" readonly tabIndex="-1">
+				<div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
+					<input class="mdc-textfield__input" type="text" id="difficulty" value="Easy" readonly tabIndex="-1">
 					<label for="difficulty" class="mdl-textfield__label">Difficulty</label>
 					<ul for="difficulty" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
 						<li class="mdl-menu__item">Peaceful</li>
@@ -148,6 +148,10 @@
 	</dialog>
 </body>
 
-    <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
-    <script>mdc.autoInit()</script>
+<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
+<script>
+	mdc.autoInit()
+
+</script>
+
 </html>
