@@ -17,12 +17,13 @@
 <body class="mdc-typography">
 	<nav class="mdc-list mdc-list--two-line" id="serverPicker">
 	</nav>
-	<button id="leftClickButton" class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">null</i></button>	\
-	<!-- Left click element -->\
-	<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" id="leftClick" for="leftClickButton"> \
-		<li class="mdl-menu__item" id="addServerOpen">Add server</li> \
-		<li class="mdl-menu__item">Modify servers</li> \
-	</ul>
+	<!-- Left click element -->
+	<div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="leftClick" tabindex="-1">
+		<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+			<li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
+			<li class="mdc-list-item" role="menuitem" tabindex="0">Modify servers</li>
+		</ul>
+	</div>
 </body>
 
 

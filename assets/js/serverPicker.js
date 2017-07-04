@@ -14,6 +14,23 @@ const os = require('os');
 const properties = require("./js/properties.js");
 const main = require('./js/main.js');
 
+// Defining custom left click element
+document.body.addEventListener("contextmenu", function (event) {
+	var menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
+	console.log(document.getElementById("leftClick"));
+	document.getElementById("leftClick").style.left = event.clientX + 'px';
+	document.getElementById("leftClick").style.top = event.clientY + 'px';
+	// Showing element
+	menu.open = !menu.open;
+});
+
+// Adding add server button
+document.getElementById("addServerOpen").addEventListener('click', function (evt) {
+	var addServerDialog = new mdc.dialog.MDCDialog(top.document.getElementById("createServerDialog"));
+	addServerDialog.lastFocusedTarget = evt.target;
+	addServerDialog.show();
+});
+
 var servers = fs.readdirSync(main.serverFolder);
 if (servers.length > 0) {
 	servers.forEach(function (folder) {
@@ -30,7 +47,7 @@ if (servers.length > 0) {
 			var list = document.getElementById("serverPicker");
 			if (typeof list == "object") {
 				list.innerHTML += '<a href="serverInfos.html#' + folder + '" class="mdc-list-item" data-mdc-auto-init="MDCRipple"> \
-    		<i class="material-icons mdc-list-item__start-detail"> \
+    		<i class="material-icons mdc-list-item__start-detail" style="color: ' + (running ? "play_arrow" : "stop" ) + ';"> \
       			' + (running ? "play_arrow" : "stop" ) + ' \
     		</i> \
     		' + folder + ' \

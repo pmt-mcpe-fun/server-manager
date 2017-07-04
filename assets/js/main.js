@@ -31,18 +31,6 @@ try {
 }
 
 window.addEventListener("load", function (event) {
-	// Defining custom left click element
-	document.body.addEventListener("contextmenu", function (event) {
-		console.log("Lol");
-		if(!document.getElementById("leftClickButton")) return;
-		leftClickElem = document.getElementById("leftClickButton");
-		console.log(document.getElementById("leftClick"));
-		leftClickElem.style.left = event.clientX + 'px';
-		leftClickElem.style.top = event.offsetY + event.clientY + 'px';
-		// Showing element
-		console.log(leftClickElem.getEventListeners("click")[0].listener);
-		leftClickElem.getEventListeners("click")[0].listener.apply(leftClickElem, event)
-	});
 
 	// Making inputs working
 	document.querySelectorAll('.mdc-textfield').forEach(function(elem){
