@@ -9,9 +9,6 @@
 	<link rel="stylesheet" href="css/psm.css">
 	<link rel="stylesheet" href="css/icon.css">
 	<link rel="stylesheet" href="css/roboto.css">
-	<script>
-		require("./js/index.js");
-	</script>
 	<!-- Material Design -->
 	<link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
 </head>
@@ -31,13 +28,14 @@
 				<span class="mdc-toolbar__title catalog-title">PocketMine Server Manager</span>
 			</section>
 			<section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-				<span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions">more_vert</span>
+				<span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions"
+				 alt="Actions">more_vert</span>
 			</section>
 			<!--Menu Actions-->
 			<div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menu1" tabindex="-1">
-  				<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+				<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
 					<li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
-					<li class="mdc-list-item" role="menuitem" tabindex="0" >Modify servers</li>
+					<li class="mdc-list-item" role="menuitem" tabindex="0">Modify servers</li>
 				</ul>
 			</div>
 		</div>
@@ -49,49 +47,67 @@
 		<!-- Page content -->
 		<iframe src="serverPicker.html" frameborder=0 id="frame" name="frame"></iframe>
 		<!-- Add button -->
-		<button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2" id="footerAddServer">
+		<button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2"
+		 id="footerAddServer">
       		<span class="mdc-fab__icon">add</span>
       	</button>
 	</main>
 
 
 	<!-- Creating server dialog -->
-	<dialog id="createServerDialog" class="mdl-dialog">
-		<h3 class="mdl-dialog__title">Create PMMP server</h3>
-		<div class="mdl-dialog__content">
-			<!-- Dialog content -->
-			<form id="addServerForm">
-				<!-- Name -->
-				<div class="mdc-textfield mdc-textfield--upgraded">
-					<input class="mdc-textfield__input" type="text" id="serverName">
-					<label class="mdl-textfield__label" for="serverName">Name</label>
-				</div>
-				<!-- Server port -->
-				<div class="mdc-textfield mdc-textfield--upgraded">
-					<input class="mdc-textfield__input" type="number" id="serverPort" value="">
-					<label class="mdl-textfield__label" for="serverPort">Port</label>
-				</div>
-				<!--Version-->
-				<div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
-					<input class="mdc-textfield__input" type="text" id="version" value="1.1" readonly tabIndex="-1">
-					<label for="version" class="mdl-textfield__label">Supported MCPE Version</label>
-					<ul for="version" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-						<li class="mdl-menu__item">1.1</li>
-						<li class="mdl-menu__item">1.0</li>
-					</ul>
-				</div>
-			</form>
-		</div>
-		<div class="mdl-dialog__actions">
-			<button type="button" class="mdl-button" id="addServerClose">Close</button>
-			<button type="button" class="mdl-button" disabled>Add server</button>
-		</div>
-	</dialog>
+	<aside id="createServerDialog" class="mdc-dialog" role="alertdialog" aria-labelledby="addServerTitle" aria-describedby="addServerBody">
+		<div class="mdc-dialog__surface">
+			<header class="mdc-dialog__header">
+				<h2 id="addServerTitle" class="mdc-dialog__header__title">
+					Create PocketMine Server
+				</h2>
+			</header>
+			<section class="mdc-dialog__body" id="addServerBody">
+				<!-- Dialog content -->
+				<form id="addServerForm">
+					<!-- Name -->
+					<div class="mdc-textfield mdc-textfield--upgraded">
+						<input class="mdc-textfield__input" type="text" id="serverName" pattern="^[\w\-\._]+$" />
+						<label class="mdc-textfield__label" for="serverName">Name</label>
+					</div>
+					<br>
+					<!-- Server port -->
+					<div class="mdc-textfield mdc-textfield--upgraded">
+						<input class="mdc-textfield__input" type="number" id="serverPort" value="" />
+						<label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Port</label>
+					</div>
+					<br>
+					<!--Version-->
+					<div class="mdc-select" role="listbox" tabindex="0">
+						<span class="mdc-select__selected-text">Supported MCPE Version</span>
+						<div class="mdc-simple-menu mdc-select__menu" id="addServerVersion">
+							<ul class="mdc-list mdc-simple-menu__items">
+								<li class="mdc-list-item" role="option" id="supported" aria-disabled="true">
+									Supported MCPE Version
+								</li>
+								<li class="mdc-list-item" role="option" id="1.1" tabindex="0">
+									1.1
+								</li>
+								<li class="mdc-list-item" role="option" id="1.0" tabindex="0">
+									1.0
+								</li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</section>
+			<footer class="mdc-dialog__footer">
+  		    	<button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised">Close</button>
+  		    	<butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised">Create server</button>
+  		  	</footer>
+  		</div>
+  		<div class="mdc-dialog__backdrop"></div>
+	</aside>
 
 
 
 	<!-- Server properties dialog -->
-	<dialog id="createServerDialog" class="mdl-dialog">
+	<dialog id="serverPropertiesDialog" class="mdl-dialog">
 		<h3 class="mdl-dialog__title">Create PMMP server</h3>
 		<div class="mdl-dialog__content">
 			<!-- Dialog content -->
@@ -146,11 +162,25 @@
 			<button type="button" class="mdl-button" disabled>Add server</button>
 		</div>
 	</dialog>
+
+
+	<!-- Snackbar -->
+	<div class="mdc-snackbar"
+	 id="formError"
+     aria-live="assertive"
+     aria-atomic="true"
+     aria-hidden="true">
+		<div class="mdc-snackbar__text" id="formErrorMessage"></div>
+	  	<div class="mdc-snackbar__action-wrapper">
+	    	<button type="button" class="mdc-button mdc-snackbar__action-button">Dismiss</button>
+	  	</div>
+	</div>
 </body>
 
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
-	mdc.autoInit()
+	require("./js/index.js");
+	mdc.autoInit();
 
 </script>
 

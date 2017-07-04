@@ -8,9 +8,9 @@
  */
 
 const fs = require('fs');
-const main = require(__dirname + '/main.js');
 
 window.addEventListener("load", function () {
+	const main = require(__dirname + '/main.js');
 	/**
 	 * Adding frame changing API
 	 */
@@ -40,30 +40,47 @@ window.addEventListener("load", function () {
 	var menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
 	// Add event listener to some button to toggle the menu on and off.
 	document.querySelector('#open_menu')
-		.addEventListener('click', function() { 
+		.addEventListener('click', function () {
 			menu.open = !menu.open
-			this.toggle();
 		});
 
 	/**
-	 * Add Server Dialog buttons
+	 * Add Server Dialog
 	 */
 	var addServerOpen = document.getElementById("addServerOpen");
 	var addServerOpen2 = document.getElementById("footerAddServer");
-	var addServerClose = document.getElementById("addServerClose");
-	var addServerDialog = document.getElementById("createServerDialog");
+	var addServerDialog = new mdc.dialog.MDCDialog(document.getElementById("createServerDialog"));
 	var addServerForm = document.getElementById("addServerForm");
-	addServerOpen.addEventListener('click', function () {
-		addServerDialog.showModal();
+	/**
+	 * Opening buttons
+	 */
+	addServerOpen.addEventListener('click', function (evt) {
+		addServerDialog.lastFocusedTarget = evt.target;
+		addServerDialog.show();
 	});
-	addServerOpen2.addEventListener('click', function () {
-		addServerDialog.showModal();
+	addServerOpen2.addEventListener('click', function (evt) {
+		addServerDialog.lastFocusedTarget = evt.target;
+		addServerDialog.show();
 	});
-	addServerClose.addEventListener('click', function () {
-		// resetForm(addServerForm);
-		// document.getElementById("serverPort").value = 19132 + fs.readdirSync(window.serverFolder).length;
+	/**
+	 * Closing buttons
+	 */
+	addServerDialog.listen('MDCDialog:accept', function () {
+		if(!document.getElementById("serverName").value.match(/^[\w\-._]+$/)) {
+			formError("Please enter a server name only with alphanumerical, dots (.), underscores (_) and hyphens (-) caracters.");
+			return false;
+		}
+		console.log(main.selects[0].value);
+		if(main.selects[0].value <= 0.1) {
+			formError("Please select a valid MCPE version");
+			return false;
+		}
+		resetForm(addServerForm);
+		document.getElementById("serverPort").value = 19132 + fs.readdirSync(main.serverFolder).length;
 		addServerDialog.close();
-	});
+	})
+	addServerDialog.listen('MDCDialog:cancel', function () {
+	})
 	document.getElementById("serverPort").value = 19132 + fs.readdirSync(main.serverFolder).length;
 
 	/**
@@ -97,5 +114,17 @@ window.addEventListener("load", function () {
 			text[i].innerHTML = '';
 
 		return false;
+	}
+
+	function formError(error){
+		var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+		snackbar.show({
+			message: error,
+			actionText: "Dismiss",
+			actionHandler: function(){},
+			multiline: true,
+			actionOnBottom: true
+		});
+		addServerDialog.show();
 	}
 });

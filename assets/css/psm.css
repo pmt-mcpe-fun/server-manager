@@ -35,6 +35,10 @@ iframe {
     overflow: hidden;
 }
 
+input[pattern]:invalid{
+  color:red;
+  border-bottom-color: red !important;
+}
 
 /*=============================================
 =            Material redisgn                 =
@@ -74,4 +78,9 @@ main.mdl-layout__content {
 #menu1 {
     right: 1em;
     top: 1em;
+}
+
+#addServerVersion {
+    top: 74% !important;
+    left: calc(2% - 1px) !important;
 }

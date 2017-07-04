@@ -16,6 +16,9 @@ const os = require('os');
 const properties = require("./js/properties.js");
 const ListenerTracker = require("./js/interceptListener.js");
 
+exports.inputs = {};
+exports.selects = [];
+
 
 // Defining servers folder location
 exports.serverFolder = path.join(os.homedir(), '.pocketmine');
@@ -25,7 +28,8 @@ try {
 	fs.mkdirSync(exports.serverFolder);
 }
 
-window.addEventListener("load", function (event) {// Defining custom left click element
+window.addEventListener("load", function (event) {
+	// Defining custom left click element
 	document.body.addEventListener("contextmenu", function (event) {
 		console.log("Lol");
 		if(!document.getElementById("leftClickButton")) return;
@@ -36,5 +40,16 @@ window.addEventListener("load", function (event) {// Defining custom left click 
 		// Showing element
 		console.log(leftClickElem.getEventListeners("click")[0].listener);
 		leftClickElem.getEventListeners("click")[0].listener.apply(leftClickElem, event)
+	});
+
+	// Making inputs working
+	document.querySelectorAll('.mdc-textfield').forEach(function(elem){
+		exports.inputs[elem.id] = new mdc.textfield.MDCTextfield(elem, /* foundation */ undefined, (el) => {
+		  // do something with el...
+		  return new mdc.ripple.MDCRipple(el);
+		});
+	});
+	document.querySelectorAll('.mdc-select').forEach(function(elem){
+		exports.selects.push(new mdc.select.MDCSelect(elem));
 	});
 });
