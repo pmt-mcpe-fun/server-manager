@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PocketMine Server Manager</title>
+	<!-- PMS Design -->
+	<link rel="stylesheet" href="css/psm.css">
+	<!-- Material Design -->
+	<link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
+</head>
+
+
+<body>
+	<main class="mdc-layout__content">
+		<div class="page-content" id="page-content">
+			<ul class="demo-list-three mdl-list" id="serverPicker">
+			</ul>
+		</div>
+	</main>
+	<button id="leftClickButton" class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">null</i></button> \
+	<!-- Left click element --> \
+	<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" id="leftClick" for="leftClickButton"> \
+		<li class="mdl-menu__item" id="addServerOpen">Add server</li> \
+		<li class="mdl-menu__item">Modify servers</li> \
+	</ul>
+</body>
+
+
+	<script src="js/serverPicker.js"></script>
+    <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
+    <script>mdc.autoInit()</script>
+
+</html>

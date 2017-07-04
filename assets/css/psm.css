@@ -1,0 +1,64 @@
+
+/**
+ *
+ * PocketMine Server Manager design
+ * 
+ * @version 1.0.0
+ * @license CC-BY-NC-SA-4.0
+ * @copyright Ad5001 2017
+ *
+ */
+
+
+
+/*=============================================
+=            Generic elements                 =
+=============================================*/
+
+
+body {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    overflow: hidden;
+}
+
+span, h1, h2, h3, h4, h5, p {
+    cursor: default;
+}
+
+iframe {
+    position: absolute;
+    top: 64px;
+    width: 100%;
+    height: calc(100% - 64px);
+    overflow: hidden;
+}
+
+
+/*=============================================
+=            Material redisgn                 =
+=============================================*/
+
+#menu-lower-right {
+    float: right;
+}
+
+#footerAddServer {
+    position: absolute;
+    top: calc(100% - 4em);
+    left: calc(100% - 4em);
+}
+
+main.mdl-layout__content {
+    width: 100%;
+    height: calc(100% - 2.001px);
+}
+
+.unclickable {
+    cursor: default !important;
+}
+
+#leftClick, #leftClickButton {
+    position: absolute;
+}
