@@ -21,10 +21,12 @@ exports.selects = [];
 
 
 // Defining servers folder location
-exports.serverFolder = path.join(os.homedir(), '.pocketmine');
+exports.appFolder = path.join(os.homedir(), '.pocketmine');
+exports.serverFolder = path.join(exports.appFolder, "servers");
 try {
 	fs.accessSync(exports.serverFolder);
 } catch (e) { // No .pocketmine folder
+	fs.mkdirSync(exports.appFolder);
 	fs.mkdirSync(exports.serverFolder);
 }
 

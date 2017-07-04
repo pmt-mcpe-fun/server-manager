@@ -8,6 +8,7 @@
  */
 
 const fs = require('fs');
+window.echanger = require(__dirname + "/echange.js");
 
 window.addEventListener("load", function () {
 	const main = require(__dirname + '/main.js');

@@ -15,14 +15,10 @@
 
 
 <body class="mdc-typography">
-	<main class="mdc-layout__content">
-		<div class="page-content" id="page-content">
-			<ul class="demo-list-three mdl-list" id="serverPicker">
-			</ul>
-		</div>
-	</main>
-	<button id="leftClickButton" class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">null</i></button> \
-	<!-- Left click element --> \
+	<nav class="mdc-list mdc-list--two-line" id="serverPicker">
+	</nav>
+	<button id="leftClickButton" class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">null</i></button>	\
+	<!-- Left click element -->\
 	<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" id="leftClick" for="leftClickButton"> \
 		<li class="mdl-menu__item" id="addServerOpen">Add server</li> \
 		<li class="mdl-menu__item">Modify servers</li> \
@@ -30,8 +26,11 @@
 </body>
 
 
-	<script src="js/serverPicker.js"></script>
-    <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
-    <script>mdc.autoInit()</script>
+<script src="js/serverPicker.js"></script>
+<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
+<script>
+	mdc.autoInit()
+
+</script>
 
 </html>

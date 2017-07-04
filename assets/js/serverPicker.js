@@ -7,7 +7,7 @@
  * @copyright (C) Ad5001 2017
  */
 
-if(top) require = top.require;
+if (top) require = top.require;
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -19,18 +19,24 @@ if (servers.length > 0) {
 	servers.forEach(function (folder) {
 		try {
 			fs.accessSync(path.join(main.serverFolder, folder, "server.properties"));
+			var running;
+			try{
+				fs.accessSync(path.join(main.serverFolder, folder, "pms.json"));
+				running = true;
+			} catch(e) {
+				running = false;
+			}
 			var serverInfos = properties.parseProperties(fs.readFileSync(path.join(main.serverFolder, folder, "server.properties")).toString());
 			var list = document.getElementById("serverPicker");
 			if (typeof list == "object") {
-				list.innerHTML += '<li class="mdl-list__item mdl-list__item--three-line"> \
-	    <span class="mdl-list__item-primary-content"> \
-	      <span>' + folder + '</span> \
-	      <span class="mdl-list__item-text-body">' + serverInfos.motd + '</span> \
-	    </span> \
-	    <span class="mdl-list__item-secondary-content"> \
-	      <a class="mdl-list__item-secondary-action" href="serverInfos.html#' + folder + '"><i class="material-icons" style="color: rgb(66,66,66);">navigate_next</i></a> \
-	    </span> \
-	  </li><hr>';
+				list.innerHTML += '<a href="serverInfos.html#' + folder + '" class="mdc-list-item" data-mdc-auto-init="MDCRipple"> \
+    		<i class="material-icons mdc-list-item__start-detail"> \
+      			' + (running ? "play_arrow" : "stop" ) + ' \
+    		</i> \
+    		' + folder + ' \
+			<span class="mdc-list-item__text__secondary">&nbsp;-&nbsp;' + serverInfos["motd"] + '</span> \
+			<i class="material-icons mdc-list-item__start-detail mdc-list-item__end-detail">navigate_next</i> \
+  			</a>';
 			}
 		} catch (e) {
 			console.error(e);
