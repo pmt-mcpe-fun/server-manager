@@ -75,7 +75,7 @@ window.addEventListener("load", function() {
             main.snackbar("Please select a valid MCPE version");
             return false;
         }
-        main.createServer(document.getElementById("serverName").value, document.getElementById("serverPort").value, main.selects[0].value);
+        main.createPMServer(document.getElementById("serverName").value, document.getElementById("serverPort").value, main.selects[0].value);
         resetForm(addServerForm);
         document.getElementById("serverPort").value = 19132 + fs.readdirSync(main.serverFolder).length;
         addServerDialog.close();
@@ -104,16 +104,9 @@ window.addEventListener("load", function() {
         }
 
         // clearing selects
-        var selects = form.getElementsByTagName('select');
-        for (var i = 0; i < selects.length; i++)
-            selects[i].selectedIndex = 0;
-
-        // clearing textarea
-        var text = form.getElementsByTagName('textarea');
-        for (var i = 0; i < text.length; i++)
-            text[i].innerHTML = '';
-
-        return false;
+        main.selects.forEach(function(sel) {
+            sel.selectedIndex = 0;
+        })
     }
 
 });

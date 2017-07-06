@@ -55,16 +55,18 @@ exports.download = function(url, dest, cb) {
  * 
  * @param {String} error 
  */
-exports.snackbar = function(error) {
+function snackbar(error) {
     var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
     snackbar.show({
         message: error,
         actionText: "Dismiss",
         actionHandler: function() {},
         multiline: error.indexOf("\n") > 0,
-        actionOnBottom: error.indexOf("\n") > 0
+        actionOnBottom: error.indexOf("\n") > 0,
+        timeout: error.length * 100
     });
 }
+exports.snackbar = snackbar;
 
 
 
@@ -73,6 +75,7 @@ exports.snackbar = function(error) {
 exports.appFolder = path.join(os.homedir(), '.pocketmine');
 exports.serverFolder = path.join(exports.appFolder, "servers");
 exports.phpFolder = path.join(exports.appFolder, "php");
+exports.phpExecutale = null;
 try {
     fs.accessSync(exports.serverFolder);
 } catch (e) { // No .pocketmine folder
@@ -135,6 +138,7 @@ window.addEventListener("load", function() {
                     } catch (e) { // Linux & MacOS
                         exports.phpExecutale = path.join(exports.phpFolder, "bin", "php7", "bin", "php");
                     }
+                    fs.unlink(path.join(exports.appFolder, "php.tar.gz"));
                     exports.snackbar("Successfully downloaded PHP 7.0.3.");
                 });
             });
@@ -158,12 +162,87 @@ window.addEventListener("load", function(event) {
 });
 
 /**
- * Creates a server
+ * Downloads and creates a pocketmine server.
  * 
- * @param {String} name 
- * @param {Integer} port 
- * @param {Integer} version 
+ * @param {String} name
+ * @param {Int} port
+ * @param {Float} version
  */
-exports.createServer = function(name, port, version) {
 
+exports.createPMServer = function(name, port, version) {
+    // Create servers pathes:
+    var serverPath = path.join(exports.serverFolder, name);
+    exports.snackbar("Creating server " + name + "...");
+    fs.mkdir(serverPath, function(err) {
+        if (!err) {
+            try {
+                fs.mkdirSync(path.join(serverPath, "plugins"));
+                fs.mkdirSync(path.join(serverPath, "players"));
+                fs.mkdirSync(path.join(serverPath, "worlds"));
+                fs.mkdirSync(path.join(serverPath, "resource_packs"));
+                fs.writeFile(path.join(serverPath, "server.properties"), properties.emitProperties({
+                    motd: name,
+                    "server-port": 19132,
+                    "white-list": "off",
+                    "announce-player-achievements": "on",
+                    "spawn-protection": 16,
+                    "max-players": 20,
+                    "allow-flight": "off",
+                    "spawn-animals": "on",
+                    "spawn-mobs": "on",
+                    gamemode: 0,
+                    "force-gamemode": "off",
+                    hardcore: "off",
+                    pvp: "on",
+                    difficulty: 1,
+                    "generator-settings": "",
+                    "level-name": "world",
+                    "level-seed": "",
+                    "level-type": "DEFAULT",
+                    "enable-query": "on",
+                    "enable-rcon": "off",
+                    "rcon.password": "iwc0adu6vD",
+                    "auto-save": "on",
+                    "view-distance": 8,
+                    "online-mode": "off",
+                    "server-ip": "0.0.0.0"
+                }), function(err) {
+                    if (err) {
+                        snackbar("Could not create server's properties file.");
+                        fs_utils.rmdir(serverPath);
+                        console.error(err);
+                    } else {
+                        http.get("https://jenkins.pmmp.io/job/PocketMine-MP/lastSuccessfulBuild/api/json?pretty=true&tree=url,artifacts[fileName],number,timestamp",
+                            function(response) {
+                                var completeResponse = '';
+                                response.on('data', function(chunk) {
+                                    completeResponse += chunk;
+                                });
+                                response.on('end', function(chunk) { // Here we have the final result
+                                    var data = JSON.parse(completeResponse);
+                                    exports.download("https://jenkins.pmmp.io/job/PocketMine-MP/lastSuccessfulBuild/artifact/" + data.artifacts[0].fileName,
+                                        path.join(serverPath, "PocketMine-MP.phar"),
+                                        function(err) {
+                                            if (err) {
+                                                snackbar("Could not download latest Jenkins phar.\nAre you connected to the internet?");
+                                                fs_utils.rmdir(serverPath);
+                                                console.error(err);
+                                            } else {
+                                                snackbar("Sucessfully created server " + name + "!");
+                                            }
+                                        });
+                                });
+                            })
+                    }
+                });
+            } catch (e) {
+                snackbar("Could not create server's folders.\nDo you have perms on your home folder?");
+                fs_utils.rmdir(serverPath);
+                console.error(e.message);
+            }
+        } else {
+            snackbar("Could not create server's folder.\nAre you sure a server with that name doesn't exists already?");
+            console.error(err.message);
+        }
+    });
 }

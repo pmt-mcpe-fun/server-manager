@@ -13,9 +13,22 @@
  * @param {String} properties
  */
 exports.parseProperties = function(properties) {
-	returning = {};
-	properties.split("\n").forEach(function (elem) {
-		if (elem.indexOf("=") > 0) returning[elem.split("=")[0]] = elem.split("=")[1];
-	}, this);
-	return returning;
+    returning = {};
+    properties.split("\n").forEach(function(elem) {
+        if (elem.indexOf("=") > 0) returning[elem.split("=")[0]] = elem.split("=")[1];
+    }, this);
+    return returning;
+}
+
+/**
+ * Parse object to properties string
+ * 
+ * @param {{}} properties
+ */
+exports.emitProperties = function(properties) {
+    returning = "";
+    Object.keys(properties).forEach(function(key) {
+        returning += key + "=" + properties[key] + "\n";
+    });
+    return returning;
 }
