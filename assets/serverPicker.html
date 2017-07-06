@@ -2,36 +2,35 @@
 <html>
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>PocketMine Server Manager</title>
-	<!-- PMS Design -->
-	<link rel="stylesheet" href="css/psm.css">
-	<link rel="stylesheet" href="css/icon.css">
-	<link rel="stylesheet" href="css/roboto.css">
-	<!-- Material Design -->
-	<link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketMine Server Manager</title>
+    <!-- PMS Design -->
+    <link rel="stylesheet" href="css/psm.css">
+    <link rel="stylesheet" href="css/icon.css">
+    <link rel="stylesheet" href="css/roboto.css">
+    <!-- Material Design -->
+    <link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
 </head>
 
 
 <body class="mdc-typography">
-	<nav class="mdc-list mdc-list--two-line" id="serverPicker">
-	</nav>
-	<!-- Left click element -->
-	<div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="leftClick" tabindex="-1">
-		<ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
-			<li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
-			<li class="mdc-list-item" role="menuitem" tabindex="0">Modify servers</li>
-		</ul>
-	</div>
+    <nav class="mdc-list mdc-list--two-line" id="serverPicker">
+    </nav>
+    <!-- Left click element -->
+    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
+        <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+            <li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
+            <li class="mdc-list-item" role="menuitem" tabindex="0">Modify servers</li>
+        </ul>
+    </div>
 </body>
 
 
 <script src="js/serverPicker.js"></script>
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
-	mdc.autoInit()
-
+    mdc.autoInit()
 </script>
 
 </html>

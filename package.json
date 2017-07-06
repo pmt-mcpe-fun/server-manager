@@ -1,82 +1,84 @@
 {
-  "name": "pocketmine-server-manager",
-  "version": "1.0.0",
-  "description": "A PocketMine Server manager",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "repository": "https://github.com/pmt-mcpe-fun/ServerManager",
-  "keywords": [
-    "PocketMine",
-    "MCPE",
-    "Server",
-    "Manager"
-  ],
-  "author": "Ad5001 <mail@ad5001.eu>",
-  "contributors": [
-  "Nathaniel F. <hello@nfgamermc.com> (https://nfgamermc.com)"
-  ],
-  "license": "CC-BY-NC-SA-4.0",
-  "devDependencies": {
-    "electron": "~1.6.2",
-    "js-yaml": "~3.8.4",
-    "material-components-web": "^0.14.0"
-  },
-  "dependencies": {
-    "js-yaml": "~3.8.4",
-    "material-components-web": "^0.14.0"
-  },
-  "build": {
-    "appId": "fun.mcpe.pmt.servermanager",
-    "win": {
-      "target": "nsis"
+    "name": "pocketmine-server-manager",
+    "version": "1.0.0",
+    "description": "A PocketMine Server manager",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
     },
-    "nsis": {
-      "allowToChangeInstallationDirectory": true,
-      "guid": "fun.mcpe.pmt.servermanager",
-      "deleteAppDataOnUninstall": true
+    "repository": "https://github.com/pmt-mcpe-fun/ServerManager",
+    "keywords": [
+        "PocketMine",
+        "MCPE",
+        "Server",
+        "Manager"
+    ],
+    "author": "Ad5001 <mail@ad5001.eu>",
+    "contributors": [
+        "Nathaniel F. <hello@nfgamermc.com> (https://nfgamermc.com)"
+    ],
+    "license": "CC-BY-NC-SA-4.0",
+    "devDependencies": {
+        "electron": "~1.6.2",
+        "js-yaml": "~3.8.4",
+        "material-components-web": "^0.14.0",
+        "node-targz": "^0.2.0"
     },
-    "mac": {
-      "category": "your.app.category.type"
+    "dependencies": {
+        "js-yaml": "~3.8.4",
+        "material-components-web": "^0.14.0",
+        "node-targz": "^0.2.0"
     },
-    "linux": {
-      "category": "Development;Utility",
-      "target": [
-        "deb",
-        "tar.gz",
-        "snap"
-      ],
-      "synopsis": "Dekstop version of PMT",
-      "icon": "linux_icons",
-      "desktop": {
-        "Name": "PocketMine Tools - PMT",
-        "Exec": "pocketmine-tools",
-        "Icon": "pocketmine-tools",
-        "Type": "Application",
-        "Terminal": "false",
-        "Categories": "Development;Utility;"
-      }
-    },
-    "snap": {
-      "confinement": "classic",
-      "summary": "Dekstop version of PMT",
-      "buildPackages": [
-        "php",
-        "libyaml-dev",
-        "php7.0-yaml"
-      ]
-    },
-    "deb": {
-      "priority": "optional",
-      "depends": [
-        "gconf2",
-        "gconf-service",
-        "libnotify4",
-        "libappindicator1",
-        "libxtst6",
-        "libnss3"
-      ]
+    "build": {
+        "appId": "fun.mcpe.pmt.servermanager",
+        "win": {
+            "target": "nsis"
+        },
+        "nsis": {
+            "allowToChangeInstallationDirectory": true,
+            "guid": "fun.mcpe.pmt.servermanager",
+            "deleteAppDataOnUninstall": true
+        },
+        "mac": {
+            "category": "your.app.category.type"
+        },
+        "linux": {
+            "category": "Development;Utility",
+            "target": [
+                "deb",
+                "tar.gz",
+                "snap"
+            ],
+            "synopsis": "Dekstop version of PMT",
+            "icon": "linux_icons",
+            "desktop": {
+                "Name": "PocketMine Tools - PMT",
+                "Exec": "pocketmine-tools",
+                "Icon": "pocketmine-tools",
+                "Type": "Application",
+                "Terminal": "false",
+                "Categories": "Development;Utility;"
+            }
+        },
+        "snap": {
+            "confinement": "classic",
+            "summary": "Dekstop version of PMT",
+            "buildPackages": [
+                "php",
+                "libyaml-dev",
+                "php7.0-yaml"
+            ]
+        },
+        "deb": {
+            "priority": "optional",
+            "depends": [
+                "gconf2",
+                "gconf-service",
+                "libnotify4",
+                "libappindicator1",
+                "libxtst6",
+                "libnss3"
+            ]
+        }
     }
-  }
 }
