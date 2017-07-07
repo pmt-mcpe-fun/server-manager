@@ -16,7 +16,7 @@ const main = require('./js/main.js');
 
 // Defining custom left click element
 document.body.addEventListener("contextmenu", function(event) {
-    var menu = document.querySelector('.mdc-simple-menu').MDCSimpleMenu;
+    var menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
     console.log(document.getElementById("leftClick"));
     document.getElementById("leftClick").style.left = event.clientX + 'px';
     document.getElementById("leftClick").style.top = event.clientY + 'px';
@@ -31,8 +31,14 @@ document.getElementById("addServerOpen").addEventListener('click', function(evt)
     addServerDialog.show();
 });
 
+// Exiting
+document.getElementById("exitPSM").addEventListener("click", main.exit);
+
+/**
+ * Refreshes forlders from home
+ * 
+ */
 window.refreshFolders = function() {
-    console.log("Refreshing servers...");
     if (document.getElementById("addServerButton")) {
         document.body.removeChild(document.getElementById("addServerButton"));
         document.body.removeChild(document.getElementById("head1"));
@@ -79,4 +85,4 @@ window.refreshFolders = function() {
     }
 }
 
-setInterval(window.refreshFolders, 1000)
+setInterval(window.refreshFolders, 5000)

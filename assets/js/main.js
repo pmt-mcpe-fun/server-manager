@@ -18,6 +18,7 @@ const http = require('https');
 const tarGz = require('node-targz');
 const properties = require("./js/properties.js");
 const fs_utils = require("./js/fs-utils.js");
+const ps = require('current-processes');
 
 const PHP_VERSION = "7.0.3";
 
@@ -49,6 +50,24 @@ exports.download = function(url, dest, cb) {
         if (cb) cb(err.message);
     });
 };
+
+
+/**
+ * Exits the app.
+ * 
+ */
+exports.exit = function() {
+    ps.get(function(err, processes) {
+        var c = 0;
+        processes.forEach(function(elem, key) {
+            if (elem.name == "pocketmine-server-manager" || elem.name == "electron") {
+                if (elem.pid !== process.pid) {
+                    process.kill(elem.pid, "SIGKILL");
+                }
+            }
+        });
+    });
+}
 
 /**
  * Submits an error
@@ -82,6 +101,7 @@ try {
     fs.mkdirSync(exports.appFolder);
     fs.mkdirSync(exports.serverFolder);
 }
+
 window.addEventListener("load", function() {
     // PHP
     try {
@@ -201,7 +221,7 @@ exports.createPMServer = function(name, port, version) {
                     "level-type": "DEFAULT",
                     "enable-query": "on",
                     "enable-rcon": "off",
-                    "rcon.password": "iwc0adu6vD",
+                    "rcon.password": (Date.now() * Math.random() * os.freemem() / 1000).toString(16), // What a password !
                     "auto-save": "on",
                     "view-distance": 8,
                     "online-mode": "off",
