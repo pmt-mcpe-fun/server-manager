@@ -45,10 +45,6 @@ window.addEventListener("load", function() {
             menu.open = !menu.open
         });
 
-
-    // Exiting
-    document.getElementById("exitPSM").addEventListener("click", main.exit);
-
     /**
      * Add Server Dialog
      */

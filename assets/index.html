@@ -16,26 +16,25 @@
 
 <!-- Starting body -->
 
-<body class="mdc-typography">
+<body class="mdc-typography" onLoad="document.getElementById('serverName').focus();">
     <!-- Menu -->
     <header class="mdc-toolbar mdc-toolbar--fixed demo-header-toolbar">
         <div class="mdc-toolbar__row">
             <!-- Header row -->
             <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <span class="catalog-back">
-					<a id="main-logo" class="unclickable mdl-layout__drawer-button mdc-toolbar__icon--menu" role="button" tabindex="0" target="frame"><i class="material-icons" style="color: rgb(66,66,66);">home</i></a>
+					<a id="main-logo" class="unclickable mdl-layout__drawer-button mdc-toolbar__icon--menu" role="button" tabindex="0" target="frame"><i class="material-icons" style="color: rgb(255,255,255);">home</i></a>
 				</span>
-                <span class="mdc-toolbar__title catalog-title">PocketMine Server Manager</span>
+                <span class="mdc-toolbar__title catalog-title" style="color: rgb(255,255,255);">PocketMine Server Manager</span>
             </section>
             <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-                <span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions">more_vert</span>
+                <span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions" style="color: rgb(255,255,255);">more_vert</span>
             </section>
             <!--Menu Actions-->
             <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menu1" tabindex="-1">
                 <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
                     <li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
                     <li class="mdc-list-item" role="menuitem" tabindex="0">Modify servers</li>
-                    <li class="mdc-list-item" role="menuitem" tabindex="0" id="exitPSM">Exit PocketMine Server Manager</li>
                 </ul>
             </div>
         </div>
@@ -67,28 +66,29 @@
                     <!-- Name -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
                         <input class="mdc-textfield__input" type="text" id="serverName" pattern="^[\w\-\._]+$" data-mdc-auto-init="MDCTextfield" />
-                        <label class="mdc-textfield__label" for="serverName">Name</label>
+                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverName">Server Name</label>
                     </div>
                     <br>
                     <!-- Server port -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
                         <input class="mdc-textfield__input" type="number" id="serverPort" value="" data-mdc-auto-init="MDCTextfield" />
-                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Port</label>
+                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Server Port</label>
                     </div>
                     <br>
+
                     <!--Version-->
                     <div class="mdc-select" role="listbox" tabindex="0">
-                        <span class="mdc-select__selected-text">Supported MCPE Version</span>
+                        <span class="mdc-select__selected-text">Supported Game Version</span>
                         <div class="mdc-simple-menu mdc-select__menu" id="addServerVersion">
                             <ul class="mdc-list mdc-simple-menu__items">
                                 <li class="mdc-list-item" role="option" id="supported" aria-disabled="true">
-                                    Supported MCPE Version
+                                    Supported Game Version
                                 </li>
                                 <li class="mdc-list-item" role="option" id="1.1" tabindex="0">
-                                    1.1
+                                    Minecraft 1.1.x
                                 </li>
                                 <li class="mdc-list-item" role="option" id="1.0" tabindex="0">
-                                    1.0
+                                    Minecraft 1.0.x
                                 </li>
                             </ul>
                         </div>
@@ -96,8 +96,8 @@
                 </form>
             </section>
             <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised">Close</button>
-                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised">Create server</button>
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Close</button>
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Create server</button>
             </footer>
         </div>
         <div class="mdc-dialog__backdrop"></div>
@@ -107,29 +107,29 @@
 
     <!-- Server properties dialog -->
     <dialog id="serverPropertiesDialog" class="mdl-dialog">
-        <h3 class="mdl-dialog__title">Create PMMP server</h3>
+        <h3 class="mdl-dialog__title">Create PocketMine server</h3>
         <div class="mdl-dialog__content">
             <!-- Dialog content -->
             <form id="addServerForm">
                 <!-- MOTD -->
                 <div class="mdc-textfield mdc-textfield--upgraded">
-                    <input class="mdc-textfield__input" type="text" id="motd" value="Minecraft PE PocketMine Server">
+                    <input class="mdc-textfield__input" type="text" id="motd" value="Minecraft: PocketMine Server">
                     <label class="mdl-textfield__label" for="motd">Message Of The Day</label>
                 </div>
                 <!-- Server port -->
                 <div class="mdc-textfield mdc-textfield--upgraded">
                     <input class="mdc-textfield__input" type="number" id="serverPortMdf" value="">
-                    <label class="mdl-textfield__label" for="serverPort">Port</label>
+                    <label class="mdl-textfield__label" for="serverPort">Server Port</label>
                 </div>
                 <!-- Max Players -->
                 <div class="mdc-textfield mdc-textfield--upgraded">
                     <input class="mdc-textfield__input" type="number" id="maxPlayers" value=20>
-                    <label class="mdl-textfield__label" for="maxPlayers">Max Players</label>
+                    <label class="mdl-textfield__label" for="maxPlayers">Maximum Players</label>
                 </div>
                 <!--Gamemode-->
                 <div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
                     <input class="mdc-textfield__input" type="text" id="gamemode" value="Survival" readonly tabIndex="-1">
-                    <label for="gamemode" class="mdl-textfield__label">Default gamemode</label>
+                    <label for="gamemode" class="mdl-textfield__label">Default Gamemode</label>
                     <ul for="gamemode" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
                         <li class="mdl-menu__item">Survival</li>
                         <li class="mdl-menu__item">Creative</li>
@@ -146,13 +146,12 @@
                         <li class="mdl-menu__item">Easy</li>
                         <li class="mdl-menu__item">Normal</li>
                         <li class="mdl-menu__item">Hard</li>
-                        <li class="mdl-menu__item">Hardcord</li>
                     </ul>
                 </div>
                 <!-- Cheats -->
                 <div class="mdl-checkbox mdl-js-checkbox mdl-checkbox--floating-label">
                     <input class="mdl-checkbox__input" type="checkbox" id="cheats" value="">
-                    <label class="mdl-checkbox__label" for="cheats">Allow flight</label>
+                    <label class="mdl-checkbox__label" for="cheats">Allow Flight</label>
                 </div>
             </form>
         </div>
@@ -166,9 +165,6 @@
     <!-- Snackbar -->
     <div class="mdc-snackbar" id="formError" aria-live="assertive" aria-atomic="true" aria-hidden="true" data-mdc-auto-init="MDCSnackbar">
         <div class="mdc-snackbar__text" id="formErrorMessage"></div>
-        <div class="mdc-snackbar__action-wrapper">
-            <button type="button" class="mdc-button mdc-snackbar__action-button">Dismiss</button>
-        </div>
     </div>
 </body>
 

@@ -20,18 +20,12 @@
     "license": "CC-BY-NC-SA-4.0",
     "devDependencies": {
         "electron": "~1.6.2",
-        "js-yaml": "~3.8.4",
+        "js-yaml": "^3.8.4",
         "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0",
-        "daemon-plus": "^1.1.1",
-        "current-processes": "^0.2.1"
+        "node-targz": "^0.2.0"
     },
     "dependencies": {
-        "js-yaml": "~3.8.4",
-        "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0",
-        "daemon-plus": "^1.1.1",
-        "current-processes": "^0.2.1"
+        "@material/theme": "^0.1.5"
     },
     "build": {
         "appId": "fun.mcpe.pmt.servermanager",

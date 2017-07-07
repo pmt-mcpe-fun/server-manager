@@ -12961,9 +12961,9 @@ fieldset:disabled .mdc-radio__native-control + .mdc-radio__background,
  * ```
  */
 :root {
-  --mdc-theme-primary: #4CAF50;
-  --mdc-theme-accent: #B0FF59;
-  --mdc-theme-background: #fff;
+  --mdc-theme-primary: #212121;
+  --mdc-theme-accent: #64DD17;
+  --mdc-theme-background: #F2F2F2;
   --mdc-theme-text-primary-on-primary: rgba(66, 66, 66, 1);;
   --mdc-theme-text-secondary-on-primary: rgba(66, 66, 66, 0.7);
   --mdc-theme-text-hint-on-primary: rgba(66, 66, 66, 0.5);
@@ -12992,8 +12992,8 @@ fieldset:disabled .mdc-radio__native-control + .mdc-radio__background,
 
 /* Special case, so that .mdc-theme--background changes background color, not text color. */
 .mdc-theme--background {
-  background-color: #fff;
-  background-color: var(--mdc-theme-background, #fff); }
+  background-color: #F2F2F2;
+  background-color: var(--mdc-theme-background, #F2F2F2); }
 
 .mdc-theme--primary {
   color: #4CAF50 !important;
