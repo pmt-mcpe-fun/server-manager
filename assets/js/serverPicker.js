@@ -83,4 +83,4 @@ window.refreshFolders = function() {
     }
 }
 
-setInterval(window.refreshFolders, 5000)
+setInterval(window.refreshFolders, 1000)

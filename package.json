@@ -51,9 +51,10 @@
             "target": [
                 "deb",
                 "tar.gz",
-                "snap"
+                "snap",
+                "apk"
             ],
-            "synopsis": "Dekstop version of PMT",
+            "synopsis": "Manage your servers with ease !",
             "icon": "linux_icons",
             "desktop": {
                 "Name": "PocketMine Tools - PMT",
@@ -66,23 +67,10 @@
         },
         "snap": {
             "confinement": "classic",
-            "summary": "Dekstop version of PMT",
-            "buildPackages": [
-                "php",
-                "libyaml-dev",
-                "php7.0-yaml"
-            ]
+            "summary": "Manage your servers with ease !"
         },
         "deb": {
-            "priority": "optional",
-            "depends": [
-                "gconf2",
-                "gconf-service",
-                "libnotify4",
-                "libappindicator1",
-                "libxtst6",
-                "libnss3"
-            ]
+            "priority": "optional"
         }
     }
 }

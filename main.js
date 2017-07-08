@@ -17,7 +17,7 @@ var stopped = false;
 ps.get(function(err, processes) {
     var c = 0;
     processes.forEach(function(elem, key) {
-        if (elem.name == "pocketmine-server-manager" || elem.name == "electron") {
+        if (elem.name == "pocketmine-serv" || elem.name == "electron") {
             console.log(elem.pid);
             c++; // Snif
         }

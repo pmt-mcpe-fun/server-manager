@@ -11,6 +11,7 @@
 if (top) {
     require = top.window.require;
 }
+const app = require('electron').remote;
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -60,7 +61,7 @@ exports.exit = function() {
     ps.get(function(err, processes) {
         var c = 0;
         processes.forEach(function(elem, key) {
-            if (elem.name == "pocketmine-server-manager" || elem.name == "electron") {
+            if (elem.name == "pocketmine-serv" || elem.name == "electron") {
                 if (elem.pid !== process.pid) {
                     process.kill(elem.pid, "SIGKILL");
                 }
