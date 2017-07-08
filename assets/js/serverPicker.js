@@ -1,5 +1,5 @@
 /**
- * index.js - Makes Pocketmine Server Manager vuttons functional
+ * index.js - Makes Pocketmine Server Manager buttons functional
  * 
  * @author Ad5001
  * @version 1.0.0
@@ -36,6 +36,7 @@ document.getElementById("addServerOpen").addEventListener('click', function(evt)
  * 
  */
 window.refreshFolders = function() {
+    console.log("Refreshing servers...");
     if (document.getElementById("addServerButton")) {
         document.body.removeChild(document.getElementById("addServerButton"));
         document.body.removeChild(document.getElementById("head1"));

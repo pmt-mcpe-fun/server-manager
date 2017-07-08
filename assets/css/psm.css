@@ -91,3 +91,7 @@ main.mdl-layout__content {
     top: 74% !important;
     left: calc(2% - 1px) !important;
 }
+
+.white {
+    color: white !important;
+}

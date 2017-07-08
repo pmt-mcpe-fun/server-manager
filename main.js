@@ -1,11 +1,10 @@
 const electron = require('electron');
 // Module to control application life.
-const app = electron.app
+const app = electron.app;
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow;
 
 require('daemon-plus')(); // creates new child process, exists the parent
-
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
 
 const path = require('path');
 const fs = require('fs');
@@ -55,7 +54,6 @@ function createWindow() {
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
-
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
         // Dereference the window object, usually you would store windows
@@ -63,6 +61,7 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+    require('./assets/menus')
 }
 
 
@@ -75,6 +74,15 @@ app.on('ready', createWindow);
 app.on('window-all-closed', function() {
     // Not killing process unitl used by force killing (soon tm). Let servers running.
 });
+
+
+app.on('activate', function() {
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+        createWindow()
+    }
+})
 
 app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
