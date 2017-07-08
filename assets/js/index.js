@@ -8,10 +8,16 @@
  */
 
 const fs = require('fs');
-window.echanger = require(__dirname + "/echange.js");
+const ipcRenderer = require('electron').ipcRenderer;
+
+ipcRenderer.on('ping', (event, arg) => {
+    console.log(arg) // prints "pong"
+});
+
 
 window.addEventListener("load", function() {
     const main = require(__dirname + '/main.js');
+    window.main = main;
     /**
      * Adding frame changing API
      */
@@ -40,10 +46,9 @@ window.addEventListener("load", function() {
      */
     var menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
     // Add event listener to some button to toggle the menu on and off.
-    document.querySelector('#open_menu')
-        .addEventListener('click', function() {
-            menu.open = !menu.open
-        });
+    document.querySelector('#open_menu').addEventListener('click', function() {
+        menu.open = !menu.open
+    });
 
 
     // Exiting
@@ -56,6 +61,7 @@ window.addEventListener("load", function() {
     var addServerOpen2 = document.getElementById("footerAddServer");
     var addServerDialog = document.getElementById("createServerDialog").MDCDialog;
     var addServerForm = document.getElementById("addServerForm");
+
     /**
      * Opening buttons
      */
@@ -67,6 +73,7 @@ window.addEventListener("load", function() {
         addServerDialog.lastFocusedTarget = evt.target;
         addServerDialog.show();
     });
+
     /**
      * Closing buttons
      */
@@ -81,11 +88,12 @@ window.addEventListener("load", function() {
         }
         main.createPMServer(document.getElementById("serverName").value, document.getElementById("serverPort").value, main.selects[0].value);
         resetForm(addServerForm);
-        document.getElementById("serverPort").value = 19132 + fs.readdirSync(main.serverFolder).length;
+        document.getElementById("serverPort").value = 19132 + fs.readdirSync(ipcRenderer.sendSync("getVar", "serverFolder")).length;
         addServerDialog.close();
     })
-    addServerDialog.listen('MDCDialog:cancel', function() {})
-    document.getElementById("serverPort").value = 19132 + fs.readdirSync(main.serverFolder).length;
+    addServerDialog.listen('MDCDialog:cancel', function() {});
+    var hey = ipcRenderer.sendSync("getVar", "serverFolder");
+    document.getElementById("serverPort").value = 19132 + fs.readdirSync(hey).length;
 
     /**
      * Clears an HTML form
@@ -112,5 +120,4 @@ window.addEventListener("load", function() {
             sel.selectedIndex = 0;
         })
     }
-
 });

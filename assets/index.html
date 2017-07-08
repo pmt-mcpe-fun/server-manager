@@ -66,13 +66,13 @@
                 <form id="addServerForm">
                     <!-- Name -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
-                        <input class="mdc-textfield__input" type="text" id="serverName" pattern="^[\w\-\._]+$" data-mdc-auto-init="MDCTextfield" />
+                        <input type="text" id="serverName" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
                         <label class="mdc-textfield__label" for="serverName">Name</label>
                     </div>
                     <br>
                     <!-- Server port -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
-                        <input class="mdc-textfield__input" type="number" id="serverPort" value="" data-mdc-auto-init="MDCTextfield" />
+                        <input class="mdc-textfield__input" type="number" id="serverPort" value="" />
                         <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Port</label>
                     </div>
                     <br>
@@ -102,65 +102,6 @@
         </div>
         <div class="mdc-dialog__backdrop"></div>
     </aside>
-
-
-
-    <!-- Server properties dialog -->
-    <dialog id="serverPropertiesDialog" class="mdl-dialog">
-        <h3 class="mdl-dialog__title">Create PMMP server</h3>
-        <div class="mdl-dialog__content">
-            <!-- Dialog content -->
-            <form id="addServerForm">
-                <!-- MOTD -->
-                <div class="mdc-textfield mdc-textfield--upgraded">
-                    <input class="mdc-textfield__input" type="text" id="motd" value="Minecraft PE PocketMine Server">
-                    <label class="mdl-textfield__label" for="motd">Message Of The Day</label>
-                </div>
-                <!-- Server port -->
-                <div class="mdc-textfield mdc-textfield--upgraded">
-                    <input class="mdc-textfield__input" type="number" id="serverPortMdf" value="">
-                    <label class="mdl-textfield__label" for="serverPort">Port</label>
-                </div>
-                <!-- Max Players -->
-                <div class="mdc-textfield mdc-textfield--upgraded">
-                    <input class="mdc-textfield__input" type="number" id="maxPlayers" value=20>
-                    <label class="mdl-textfield__label" for="maxPlayers">Max Players</label>
-                </div>
-                <!--Gamemode-->
-                <div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
-                    <input class="mdc-textfield__input" type="text" id="gamemode" value="Survival" readonly tabIndex="-1">
-                    <label for="gamemode" class="mdl-textfield__label">Default gamemode</label>
-                    <ul for="gamemode" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                        <li class="mdl-menu__item">Survival</li>
-                        <li class="mdl-menu__item">Creative</li>
-                        <li class="mdl-menu__item">Adventure</li>
-                        <li class="mdl-menu__item">Spectator</li>
-                    </ul>
-                </div>
-                <!--Difficulty-->
-                <div class="mdc-textfield mdc-textfield--upgraded getmdl-select getmdl-select__fullwidth">
-                    <input class="mdc-textfield__input" type="text" id="difficulty" value="Easy" readonly tabIndex="-1">
-                    <label for="difficulty" class="mdl-textfield__label">Difficulty</label>
-                    <ul for="difficulty" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                        <li class="mdl-menu__item">Peaceful</li>
-                        <li class="mdl-menu__item">Easy</li>
-                        <li class="mdl-menu__item">Normal</li>
-                        <li class="mdl-menu__item">Hard</li>
-                        <li class="mdl-menu__item">Hardcord</li>
-                    </ul>
-                </div>
-                <!-- Cheats -->
-                <div class="mdl-checkbox mdl-js-checkbox mdl-checkbox--floating-label">
-                    <input class="mdl-checkbox__input" type="checkbox" id="cheats" value="">
-                    <label class="mdl-checkbox__label" for="cheats">Allow flight</label>
-                </div>
-            </form>
-        </div>
-        <div class="mdl-dialog__actions">
-            <button type="button" class="mdl-button" id="addServerClose">Close</button>
-            <button type="button" class="mdl-button" disabled>Add server</button>
-        </div>
-    </dialog>
 
 
     <!-- Snackbar -->
