@@ -14,28 +14,37 @@ const os = require('os');
 const ps = require('current-processes');
 
 // Checking for already running processes and kill 'em
+var stopped = false;
 ps.get(function(err, processes) {
     var c = 0;
     processes.forEach(function(elem, key) {
         if (elem.name == "pocketmine-server-manager" || elem.name == "electron") {
-            console.log(elem);
+            console.log(elem.pid);
             c++; // Snif
         }
     });
-    console.log(c)
-    if (c > 3 /*Old Process*/ ) {
-        fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"));
-        process.exit(0);
+    if (c > 3) {
+        fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
+        mainWindow.webContents.executeJavaScript("window.close();");
+        stopped = true;
+        app.exit(0);
     }
 });
 
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+var mainWindow
+    // process.exit(0);
 
 function createWindow() {
+    console.log("Creating window");
+
+    if (stopped) return;
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 800, height: 600 })
+    mainWindow = new BrowserWindow({ width: 800, height: 600 });
+
+    // mainWindow.webContents.executeJavaScript("setTimeout(function(){window.close()}, 10);");
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
@@ -60,7 +69,7 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -72,7 +81,7 @@ app.on('activate', function() {
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
         createWindow();
-    } else {
+    } else if (mainWindow !== null) {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.focus();
     }
@@ -82,13 +91,14 @@ app.on('activate', function() {
 app.servers = {};
 
 setInterval(function() {
-    if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) {
+    // if (stopped) process.kill(process.pid, "SIGKILL");
+    if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
+        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
         if (mainWindow === null) {
             createWindow();
-        } else {
+        } else if (mainWindow !== null) {
             if (mainWindow.isMinimized()) mainWindow.restore();
             mainWindow.focus();
         }
-        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
     }
-}, 100)
+}, 1000);

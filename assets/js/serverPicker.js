@@ -31,9 +31,6 @@ document.getElementById("addServerOpen").addEventListener('click', function(evt)
     addServerDialog.show();
 });
 
-// Exiting
-document.getElementById("exitPSM").addEventListener("click", main.exit);
-
 /**
  * Refreshes forlders from home
  * 
