@@ -22,7 +22,6 @@ const fs_utils = require("./js/fs-utils.js");
 const ps = require('current-processes');
 const ipcRenderer = require('electron').ipcRenderer;
 
-const PHP_VERSION = "7.0.3";
 
 exports.inputs = {};
 exports.selects = [];

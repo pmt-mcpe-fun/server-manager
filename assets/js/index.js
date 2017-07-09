@@ -10,10 +10,6 @@
 const fs = require('fs');
 const ipcRenderer = require('electron').ipcRenderer;
 
-ipcRenderer.on('ping', (event, arg) => {
-    console.log(arg) // prints "pong"
-});
-
 
 window.addEventListener("load", function() {
     const main = require(__dirname + '/main.js');

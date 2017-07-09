@@ -6,6 +6,14 @@
  * @license CC-BY-NC-SA-4.0
  * @copyright (C) Ad5001 2017
  */
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const http = require('https');
+const tarGz = require('node-targz');
+const properties = require("./lib/properties.js");
+// const fs_utils = require("./js/fs-utils.js");
+const PHP_VERSION = "7.0.3";
 
 /**
  * Sets main.js app exports
@@ -15,6 +23,7 @@
 function setApp(app) {
     exports.app = app;
 }
+exports.setApp = setApp;
 
 /**
  * Defines php.
@@ -64,13 +73,13 @@ function downloadPHP() {
             break;
     }
     console.log('Downloading PHP_' + PHP_VERSION + '_' + arch + '_' + osName + '.tar.gz...');
-    exports.app.snackbar("Downloading PHP v" + PHP_VERSION + "...");
+    snackbar("Downloading PHP v" + PHP_VERSION + "...");
     exports.download('https://bintray.com/pocketmine/PocketMine/download_file?file_path=PHP_' + PHP_VERSION + '_' + arch + '_' + osName + '.tar.gz',
         path.join(exports.app.appFolder, "php.tar.gz"),
         function(err) {
             console.log("Finished downloading")
             if (err) {
-                exports.app.snackbar("An internet connection is required to download PHP. You may not be able to use your servers until then.");
+                snackbar("An internet connection is required to download PHP. You may not be able to use your servers until then.");
                 fs.unlink(exports.app.phpFolder);
                 console.error(err);
             }
@@ -85,7 +94,7 @@ function downloadPHP() {
                     exports.phpExecutale = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
                 }
                 fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
-                exports.app.snackbar("Successfully downloaded PHP 7.0.3.");
+                snackbar("Successfully downloaded PHP 7.0.3.");
             });
         });
 }
@@ -121,6 +130,6 @@ exports.download = function(url, dest, cb) {
  * @param {String} error 
  */
 function snackbar(error) {
-    mainWindow.webContents.executeJavaScript("window.main.snackbar('" + error + "');");
+    exports.app.mainWindow.webContents.executeJavaScript("window.main.snackbar('" + error + "');");
 }
 exports.snackbar = snackbar;

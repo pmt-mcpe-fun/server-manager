@@ -14,6 +14,7 @@ const fs = require('fs');
 const os = require('os');
 const properties = require("./js/properties.js");
 const main = require('./js/main.js');
+const { Server } = require('./js/server.js');
 
 // Defining custom left click element
 document.body.addEventListener("contextmenu", function(event) {
@@ -43,8 +44,7 @@ window.refreshFolders = function() {
         servers.forEach(function(folder) {
             try {
                 fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties"));
-                var running;
-                ipcRenderer.send("getServer", folder);
+                Server(folder, addServer);
             } catch (e) {
                 document.getElementById("contents").innerHTML = `<h2 style='margin-left: 50px;' class='mdc-typography--subheading2' id='head1'>No server created for the moment.</h2>
 	<button style='margin-left: 50px;' id='addServerButton'
@@ -59,24 +59,26 @@ window.refreshFolders = function() {
 	 onclick='top.document.getElementById(\"createServerDialog\").MDCDialog.show();'>Create one</button>`;
     }
 }
-window.refreshFolders();
-setInterval(window.refreshFolders, 5000);
 
 // When server is received
-ipcRenderer.on("sendServer", function(event, server) {
+function addServer(server) {
+    var servPath = ipcRenderer.sendSync("getVar", "serverFolder");
     var running = server.isStarted;
-    var serverInfos = properties.parseProperties(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties")).toString());
+    var serverInfos = properties.parseProperties(fs.readFileSync(path.join(servPath, server.name, "server.properties")).toString());
     var list = document.getElementById("serverPicker");
     if (typeof list == "object") {
-        list.innerHTML += `<li onclick="location = 'serverInfos.html#` + folder + `'" class="mdc-list-item" data-mdc-auto-init="MDCRipple">
+        list.innerHTML += `<li onclick="location = 'serverInfos.html#` + server.name + `'" class="mdc-list-item" data-mdc-auto-init="MDCRipple">
     		<i class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "play_arrow" : "stop") + `;">
       			` + (running ? "play_arrow" : "stop") + `
     		</i>
             <span class="mdc-list-item__text">
-    		    ` + folder + `
+    		    ` + server.name + `
 			    <span class="mdc-list-item__text__secondary">` + serverInfos["motd"] + `</span>
             </span>
 			<i class="material-icons mdc-list-item__start-detail mdc-list-item__end-detail">navigate_next</i>
   		</li>`;
     }
-})
+};
+
+window.refreshFolders();
+setInterval(window.refreshFolders, 5000);

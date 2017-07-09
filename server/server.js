@@ -32,6 +32,7 @@ exports.Server = function(name, php) {
      * Starts the server
      */
     this.start = function() {
+        this.log += "[PMS] Starting server " + this.name + "...\n";
         this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar")]);
         this.isStarted = true;
 
@@ -44,25 +45,17 @@ exports.Server = function(name, php) {
         });
 
         this.proc.stdin.on('data', (data) => {
-            this.log += data;
+            this.log += "> " + Command + "\n";
         });
 
         this.proc.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
         });
-
-
-        return proc;
-    }
-
-
-    this.getProc = function() {
-        if (this.app.php);
     }
 
 
     this.inputCommand = function(Command) {
-        this.log += "> cmd";
+        this.proc.stdin.write(Command)
     };
 
 }
@@ -87,7 +80,7 @@ exports.ServerExportable = function() {
     /**
      * Exports to a server instance
      */
-    this.import = function(Server) {
+    this.export = function(Server) {
         if (this.isStarted && !Server.isStarted) {
             Server.start();
         }
