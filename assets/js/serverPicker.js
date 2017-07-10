@@ -40,20 +40,16 @@ window.refreshFolders = function() {
     document.getElementById("contents").innerHTML = '<ul class="mdc-list mdc-list--two-line" id="serverPicker"></ul>';
     var hey = ipcRenderer.sendSync("getVar", "serverFolder");
     var servers = fs.readdirSync(hey);
-    if (servers.length > 0) {
-        servers.forEach(function(folder) {
-            try {
-                fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties"));
-                Server(folder, addServer);
-            } catch (e) {
-                document.getElementById("contents").innerHTML = `<h2 style='margin-left: 50px;' class='mdc-typography--subheading2' id='head1'>No server created for the moment.</h2>
-	<button style='margin-left: 50px;' id='addServerButton'
-	 class='mdc-button mdc-button--raised'  data-mdc-auto-init='MDCRipple'
-	 onclick='top.document.getElementById(\"createServerDialog\").MDCDialog.show();'>Create one</button>`;
-            }
-        }, this);
-    } else {
-        document.getElementById("contents").innerHTML = `<h2 id='head1' style='margin-left: 50px;' class='mdc-typography--subheading2'>No server created for the moment.</h2>
+    var serversC = 0;
+    servers.forEach(function(folder) {
+        try {
+            fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties"));
+            Server(folder, addServer);
+            serversC++;
+        } catch (e) {}
+    }, this);
+    if (serversC == 0) {
+        document.getElementById("contents").innerHTML += `<h2 id='head1' style='margin-left: 50px;' class='mdc-typography--subheading2'>No server created for the moment.</h2>
 	<button style='margin-left: 50px;' id='addServerButton'
 	 class='mdc-button mdc-button--raised'  data-mdc-auto-init='MDCRipple'
 	 onclick='top.document.getElementById(\"createServerDialog\").MDCDialog.show();'>Create one</button>`;
@@ -68,14 +64,17 @@ function addServer(server) {
     var list = document.getElementById("serverPicker");
     if (typeof list == "object") {
         list.innerHTML += `<li onclick="location = 'serverInfos.html#` + server.name + `'" class="mdc-list-item" data-mdc-auto-init="MDCRipple">
-    		<i class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "play_arrow" : "stop") + `;">
+    		<i class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "green" : "red") + `;">
       			` + (running ? "play_arrow" : "stop") + `
     		</i>
             <span class="mdc-list-item__text">
     		    ` + server.name + `
-			    <span class="mdc-list-item__text__secondary">` + serverInfos["motd"] + `</span>
+			    <span class="mdc-list-item__text__secondary">
+                    ` + serverInfos["motd"] + ` - 
+                    (` + Object.keys(server.players).length + "/" + server.settings["max-players"] + ` players)
+                </span>
             </span>
-			<i class="material-icons mdc-list-item__start-detail mdc-list-item__end-detail">navigate_next</i>
+			<i class="material-icons mdc-list-item__end-detail">navigate_next</i>
   		</li>`;
     }
 };

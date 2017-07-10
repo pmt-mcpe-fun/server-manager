@@ -11,6 +11,8 @@
  * Parse properties string
  * 
  * @param {String} properties
+ * 
+ * @return {{*}}
  */
 exports.parseProperties = function(properties) {
     returning = {};
@@ -24,6 +26,8 @@ exports.parseProperties = function(properties) {
  * Parse object to properties string
  * 
  * @param {{}} properties
+ * 
+ * @return {String}
  */
 exports.emitProperties = function(properties) {
     returning = "";

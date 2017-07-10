@@ -16,7 +16,7 @@
 
 <!-- Starting body -->
 
-<body class="mdc-typography">
+<body class="mdc-typography" style="overflow: hidden;">
     <!-- Menu -->
     <header class="mdc-toolbar mdc-toolbar--fixed demo-header-toolbar">
         <div class="mdc-toolbar__row">
@@ -47,7 +47,7 @@
         <!-- Page content -->
         <iframe src="serverPicker.html" frameborder=0 id="frame" name="frame"></iframe>
         <!-- Add button -->
-        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2" id="footerAddServer">
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2" id="footerAddServer" data-mdc-auto-init="MDCRipple">
       		<span class="mdc-fab__icon">add</span>
       	</button>
     </main>
@@ -96,8 +96,8 @@
                 </form>
             </section>
             <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised">Close</button>
-                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised">Create server</button>
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
+                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" data-mdc-auto-init="MDCRipple">Create server</button>
             </footer>
         </div>
         <div class="mdc-dialog__backdrop"></div>

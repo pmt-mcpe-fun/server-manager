@@ -27,6 +27,8 @@ exports.Server = function(name, php) {
     this.players = {};
     this.log = "";
     this.php = php;
+    this.changed = false;
+    this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
 
     /**
      * Starts the server
@@ -50,12 +52,14 @@ exports.Server = function(name, php) {
 
         this.proc.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
+            this.log("[PMS] Server stopped.");
+            fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
         });
     }
 
 
     this.inputCommand = function(Command) {
-        this.proc.stdin.write(Command)
+        this.proc.stdin.write(Command);
     };
 
 }
@@ -75,6 +79,7 @@ exports.ServerExportable = function() {
         this.players = Server.players;
         this.log = Server.log;
         this.commands = [];
+        this.settings = Server.settings
     }
 
     /**
@@ -85,6 +90,7 @@ exports.ServerExportable = function() {
             Server.start();
         }
         Server.log = this.log;
+        Server.settings = this.settings;
         this.commands.forEach(function(cmd) {
             Server.inputCommand(cmd);
         }, this);

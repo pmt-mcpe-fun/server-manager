@@ -1,0 +1,63 @@
+/**
+ *
+ * PocketMine Server Manager design
+ * 
+ * @version 1.0.0
+ * @license CC-BY-NC-SA-4.0
+ * @copyright Ad5001 2017
+ *
+ */
+
+
+/*=============================================
+=               Page contents                 =
+=============================================*/
+
+.console {
+    background: black;
+    color: white;
+    font-family: "monospace";
+    border: solid 1px black;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 75%;
+    width: 100%;
+}
+
+.console * {
+    margin: 10px;
+}
+
+#commandHolder {
+    height: 30px;
+    margin-top: -1px;
+    width: 100%;
+    border: solid 1px black;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.preCommandHolder {
+    height: 100%;
+    width: 30px;
+    border-bottom-left-radius: 10px;
+    margin: 0px;
+    background: lightgray;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#commandEnter {
+    height: 26px;
+    /*margin-left: 31px;*/
+    align-self: flex-end;
+    width: calc(100% - 32px);
+    border-bottom-right-radius: 10px;
+    margin: 0px;
+    border: solid 1px white;
+}
+
+#commandEnter:hover {
+    border: solid 1px white;
+    border-bottom-right-radius: 10px;
+}

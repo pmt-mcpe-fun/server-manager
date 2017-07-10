@@ -13,12 +13,16 @@
 =            Generic elements                 =
 =============================================*/
 
-body,
- :root {
-    width: 100%;
-    height: 100%;
+ :root,
+body {
+    height: calc(100% - 9px);
+    width: calc(100% - 5px);
+    overflow-x: hidden;
     user-select: none;
-    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 span,
@@ -33,10 +37,10 @@ p {
 
 iframe {
     left: 0px;
-    position: absolute;
-    top: 64px;
-    width: 100%;
-    height: calc(100% - 64px);
+    position: fixed;
+    top: 58px;
+    width: calc(100% - 1px);
+    height: calc(100% - 61px);
     overflow: hidden;
 }
 
@@ -94,4 +98,22 @@ main.mdl-layout__content {
 
 .white {
     color: white !important;
+}
+
+.inline {
+    display: flex;
+}
+
+.half {
+    width: 45%;
+    margin: 2.5%;
+}
+
+@media screen and (max-device-width:406px) {
+    .inline {
+        flex-direction: column;
+    }
+    .half {
+        width: 90%;
+    }
 }

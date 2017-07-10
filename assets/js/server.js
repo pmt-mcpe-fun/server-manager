@@ -24,22 +24,33 @@ ipcRenderer.on("sendServer", function(event, server) {
     servers[server.name].isStarted = server.isStarted;
     servers[server.name].players = server.players;
     servers[server.name].log = server.log;
-    servers[server.name].commands = [];
+    servers[server.name].settings = server.settings;
     cbs[server.name](servers[server.name]);
 });
 
+// Real server instance.
+var Server = function(name) {
+    this.name = name;
+    this.isStarted = false;
+    this.players = [];
+    this.log = "";
+    this.commands = [];
+    this.start = function() {
+        this.isStarted = true;
+    };
+    this.stop = function() {
+        this.commands.push("stop");
+    };
+    this.insertCommand = function(cmd) {
+        this.commands.push(cmd);
+    }
+}
+
+// Exporting server
 exports.Server = function(name, cb) {
     // Saving callback
     cbs[name] = cb;
     ipcRenderer.send("getServer", name);
 
-    servers[name] = {
-        name: name,
-        start: function() {
-            this.isStarted = true;
-        },
-        stop: function() {
-            this.commands.push("stop");
-        }
-    };
+    servers[name] = new Server(name);
 }

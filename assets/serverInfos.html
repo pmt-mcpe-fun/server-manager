@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketMine Server Manager</title>
+    <!-- PMS Design -->
+    <link rel="stylesheet" href="css/psm.css">
+    <link rel="stylesheet" href="css/serverInfos.css">
+    <link rel="stylesheet" href="css/icon.css">
+    <link rel="stylesheet" href="css/roboto.css">
+    <!-- Material Design -->
+    <link rel="stylesheet" href="css/material-components-web.css">
+</head>
+
+
+<body class="mdc-typography inline">
+    <div class="half">
+        <div class="inline">
+            <i id="started?" class="material-icons">play_arrow</i>
+            <h1 class="mdc-typography--display1" id="serverName" style="align-self: stretch;">ServerName</h1>
+        </div>
+        <button class="mdc-button mdc-button--raised" id="startServer" data-mdc-auto-init="MDCRipple">
+            Start
+        </button>
+        <button class="mdc-button mdc-button--raised" id="stopServer" data-mdc-auto-init="MDCRipple">
+            Stop
+        </button>
+    </div>
+    <div class="half">
+        <h1 class="mdc-typography--display1">Console</h1>
+        <div class="console">
+            <p id="consoleContent">This is an example console text</p>
+        </div>
+        <div class="inline" id="commandHolder">
+            <span class="material-icons preCommandHolder">navigate_next</span>
+            <input type="text" id="commandEnter" placeholder="Enter a command here...">
+        </div>
+    </div>
+
+</body>
+
+<!--<script src="js/serverInfos.js"></script>-->
+<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
+<script>
+    mdc.autoInit()
+</script>
+
+</html>

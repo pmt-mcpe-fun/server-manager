@@ -112,24 +112,6 @@ app.on('activate', function() {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-setInterval(function() {
-    // Listening to relaunch
-    // if (stopped) process.kill(process.pid, "SIGKILL");
-    if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
-        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
-        if (exports.mainWindow === null) {
-            createWindow();
-        } else if (exports.mainWindow !== null) {
-            if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-            exports.mainWindow.focus();
-        }
-    }
-    // IPC Refreshing
-    ipcMain.main = this;
-}, 1000);
-
-
-
 // Listeners for app
 // Gets a main porcess variable
 ipcMain.on('getVar', function(event, varN) {
@@ -153,7 +135,7 @@ ipcMain.on('getServer', function(event, serverName) {
     if (exports.servers[serverName]) {
         var serv = new server.ServerExportable();
         serv.import(exports.servers[serverName]);
-        event.sender.send("sendServer", exports.servers[serverName]);
+        event.sender.send("sendServer", serv);
     }
 });
 
@@ -170,4 +152,32 @@ function define() {
     servers.forEach(function(folder) {
         exports.servers[folder] = new server.Server(folder, php);
     }, this);
+
+    // Setting app clock (1 second based)
+    setInterval(function() {
+        // Listening to relaunch
+        // if (stopped) process.kill(process.pid, "SIGKILL");
+        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
+            if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
+            if (exports.mainWindow === null) {
+                createWindow();
+            } else if (exports.mainWindow !== null) {
+                if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+                exports.mainWindow.focus();
+            }
+        }
+        // IPC Refreshing
+        ipcMain.main = this;
+        // Servers refreshing
+        var name;
+        Object.keys(exports.servers).forEach(function(name) {
+            var server = exports.servers[name];
+            if (server.changed) {
+                server.changed = false;
+                var serv = new server.ServerExportable();
+                serv.import(server);
+                event.sender.send("sendServer", serv);
+            }
+        })
+    }, 1000);
 }
