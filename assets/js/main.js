@@ -7,18 +7,14 @@
  * @copyright (C) Ad5001 2017
  */
 
-// Starting script
-if (top) {
-    require = top.window.require;
-}
 const app = require('electron').remote;
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const http = require('https');
 const tarGz = require('node-targz');
-const properties = require("./js/properties.js");
-const fs_utils = require("./js/fs-utils.js");
+const properties = require("./properties.js");
+const fs_utils = require("./fs-utils.js");
 const ps = require('current-processes');
 const ipcRenderer = require('electron').ipcRenderer;
 
@@ -155,7 +151,7 @@ exports.createPMServer = function(name, port, version) {
                         fs_utils.rmdir(serverPath);
                         console.error(err);
                     } else {
-                        http.get("https://jenkins.pmmp.io/job/PocketMine-MP/lastSuccessfulBuild/api/json?pretty=true&tree=url,artifacts[fileName],number,timestamp",
+                        http.get("https://psm.mcpe.fun/versions.json",
                             function(response) {
                                 var completeResponse = '';
                                 response.on('data', function(chunk) {
@@ -163,7 +159,8 @@ exports.createPMServer = function(name, port, version) {
                                 });
                                 response.on('end', function(chunk) { // Here we have the final result
                                     var data = JSON.parse(completeResponse);
-                                    exports.download("https://jenkins.pmmp.io/job/PocketMine-MP/lastSuccessfulBuild/artifact/" + data.artifacts[0].fileName,
+                                    console.log("Sucessfully getted list. Heading torwards to: " + data[version]);
+                                    exports.download(data[version], // Getting the phar for our version
                                         path.join(serverPath, "PocketMine-MP.phar"),
                                         function(err) {
                                             if (err) {

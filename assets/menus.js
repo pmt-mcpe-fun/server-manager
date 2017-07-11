@@ -1,13 +1,24 @@
-const { Menu } = require('electron')
 const electron = require('electron')
+const Menu = electron.Menu;
 const app = electron.app
 
 const template = [{
         label: 'Visit Us',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+H' : 'Ctrl+Shift+H',
-        click(item, focusedWindow) {
-            if (focusedWindow) require('electron').shell.openExternal('https://pmt.mcpe.fun')
-        }
+        submenu: [{
+                label: 'PMT',
+                accelerator: process.platform === 'darwin' ? 'Shift+Command+H' : 'Ctrl+Shift+H',
+                click(item, focusedWindow) {
+                    if (focusedWindow) electron.shell.openExternal('https://pmt.mcpe.fun')
+                },
+            },
+            {
+                label: 'PSM',
+                accelerator: process.platform === 'darwin' ? 'Alt+Command+H' : 'Ctrl+Alt+H',
+                click(item, focusedWindow) {
+                    if (focusedWindow) require('electron').shell.openExternal('https://psm.mcpe.fun/user/')
+                }
+            },
+        ]
     },
     {
         label: 'Developer',

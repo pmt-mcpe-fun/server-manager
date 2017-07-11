@@ -10,11 +10,13 @@ const path = require('path');
 const fs = require('fs');
 const url = require('url');
 const os = require('os');
+const http = require('https');
 const ps = require('current-processes');
 const ipcMain = electron.ipcMain;
 const php = require("./server/php");
 const server = require("./server/server");
 exports.php = php;
+exports.servers = {};
 
 // Making folder
 exports.appFolder = path.join(os.homedir(), ".pocketmine");
@@ -48,12 +50,73 @@ ps.get(function(err, processes) {
 
 var this2 = this;
 
+// Checking for updates
+console.log("Checking for updates");
+http.get("https://psm.mcpe.fun/versions.json",
+    function(response) {
+        var completeResponse = '';
+        response.on('data', function(chunk) {
+            completeResponse += chunk;
+            console.log("Current res: " + completeResponse);
+        });
+        response.on('end', function() { // Here we have the final result
+            console.log("Finished !" + completeResponse);
+            try {
+                var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
+            } catch (e) {
+                var data = {};
+            }
+            var newData = JSON.parse(completeResponse);
+            if (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0) { // New version out for PMMP soft & no timeout
+                fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
+            }
+            if (newData.version !== data.version) { // New app version is out
+                console.log("exports.mainWindow");
+                if (exports.mainWindow instanceof BrowserWindow) {
+                    exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+                    snackbar.show({
+    				    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
+                        actionText: "Dismiss",
+                        actionHandler: function() {
+							require('electron').shell.openExternal('https://psm.mcpe.fun/download');
+						},
+                        multiline: false,
+                        actionOnBottom: true,
+                        timeout: 10000
+                    });`)
+                } else {
+                    var f = setInterval(function(mainWindow) {
+                        console.log("exports.mainWindow");
+                        if (mainWindow instanceof BrowserWindow) {
+                            mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+                    		snackbar.show({
+    						    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
+                    		    actionText: "Dismiss",
+                    		    actionHandler: function() {
+									require('electron').shell.openExternal('https://psm.mcpe.fun/download');
+								},
+                    		    multiline: false,
+                    		    actionOnBottom: true,
+                    		    timeout: 10000
+                    		});`);
+                            clearInterval(f);
+                        }
+                    }, 1000, exports.mainWindow);
+                }
+            }
+        });
+    }
+).on('error', function(e) { // An error occured. Do nothing
+    console.log(`Got error: ${e.message}`);
+});
+
+// Creates the window
 function createWindow() {
     console.log("Creating window");
 
     if (stopped) return;
     // Create the browser window.
-    exports.mainWindow = new BrowserWindow({ width: 800, height: 600 });
+    exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager" });
     exports.mainWindow.webContents.app = this2;
 
     // and load the index.html of the app.
@@ -145,8 +208,6 @@ function define() {
     // Defining php
     php.setApp(this.app);
     php.define();
-    // Defining servers
-    exports.servers = {};
     // Checking for servers;
     var servers = fs.readdirSync(exports.serverFolder);
     servers.forEach(function(folder) {
@@ -180,4 +241,5 @@ function define() {
             }
         })
     }, 1000);
+    exports.mainWindow.show()
 }

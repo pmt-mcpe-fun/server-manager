@@ -44,6 +44,7 @@ window.refreshFolders = function() {
     servers.forEach(function(folder) {
         try {
             fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties"));
+            fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "PocketMine-MP.phar"));
             Server(folder, addServer);
             serversC++;
         } catch (e) {}
