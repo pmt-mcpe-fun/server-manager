@@ -14,12 +14,8 @@
 =============================================*/
 
 .console {
-    background: black;
-    color: white;
-    font-family: "monospace";
-    border: solid 1px black;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background: white;
+    color: black;
     height: 75%;
     width: 100%;
 }
@@ -28,14 +24,7 @@
     margin: 10px;
 }
 
-#commandHolder {
-    height: 30px;
-    margin-top: -1px;
-    width: 100%;
-    border: solid 1px black;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
+
 
 .preCommandHolder {
     height: 100%;
@@ -60,4 +49,51 @@
 #commandEnter:hover {
     border: solid 1px white;
     border-bottom-right-radius: 10px;
+}
+.mdl-navigation__link[data-active-tab="true"] { /** Overwrites normal properties **/
+
+	background-color: #0097a7 !important;
+
+}
+
+.mdl-navigation__link:hover { /** Overwrites normal properties **/
+
+	background-color: #00b8d4 !important;
+
+}
+
+.mdl-navigation__link:hover[data-active-tab="true"] { /** Overwrites normal properties **/
+
+	background-color: #0097a2 !important;
+
+}
+
+/** Form based elements **/
+
+.mdl-button--file input {
+
+	cursor: pointer;
+
+	height: 100%;
+
+	right: 0;
+
+	opacity: 0;
+
+	position: absolute;
+
+	top: 0;
+
+	width: 300px;
+
+	z-index: 4;
+
+}
+
+.mdl-textfield--file .mdl-textfield__input {
+
+	box-sizing: border-box;
+
+	width: calc(100% - 32px);
+
 }

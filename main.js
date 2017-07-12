@@ -4,7 +4,7 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-// require('daemon-plus')(); // creates new child process, exists the parent
+require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
