@@ -16,7 +16,9 @@
 
 
 <body class="mdc-typography inline">
+    <!-- Main contents -->
     <div class="half">
+        <!-- Left Tab -->
         <div class="inline">
             <i id="started?" class="material-icons">play_arrow</i>
             <h1 class="mdc-typography--display1" id="serverName" style="align-self: stretch;">ServerName</h1>
@@ -29,6 +31,7 @@
         </button>
     </div>
     <div class="half">
+        <!-- Right tab -->
         <h1 class="mdc-typography--display1">Console</h1>
         <div class="console">
             <p id="consoleContent">This is an example console text</p>
@@ -39,9 +42,45 @@
         </div>
     </div>
 
+    <!-- Server properties dialog -->
+    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
+        <div class="mdc-dialog__surface">
+            <header class="mdc-dialog__header">
+                <h2 id="editServerTitle" class="mdc-dialog__header__title">
+                    Edit Server
+                </h2>
+            </header>
+            <section class="mdc-dialog__body" id="editServerBody">
+                <!-- Dialog content -->
+                <form id="editServerForm">
+                    <!-- MOTD -->
+                    <div class="mdc-textfield mdc-textfield--upgraded">
+                        <input type="text" id="serverName" class="mdc-textfield__input mdc-textfield__label--float-above" pattern="^[\w\-\._]+$" />
+                        <label class="mdc-textfield__label" for="serverMOTD">MOTD</label>
+                    </div>
+                    <br>
+                    <!-- Server port -->
+                    <span class="inline">
+                        <div class="mdc-textfield mdc-textfield--upgraded">
+                            <input class="mdc-textfield__input" type="number" id="serverPort" aria-controls="restart-helptext" />
+                            <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Server Port</label>
+                        </div>
+                        <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true"><br><i class="material-icons">autorenew</i><small>Require server restart</small></span>
+                    </span>
+                    <br>
+                    <!--Version-->
+                </form>
+            </section>
+            <footer class="mdc-dialog__footer">
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
+                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" data-mdc-auto-init="MDCRipple">Create server</button>
+            </footer>
+        </div>
+        <div class="mdc-dialog__backdrop"></div>
+    </aside>
 </body>
 
-<!--<script src="js/serverInfos.js"></script>-->
+<script src="js/serverInfos.js"></script>
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
     mdc.autoInit()
