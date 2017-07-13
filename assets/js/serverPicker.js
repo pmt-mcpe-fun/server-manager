@@ -14,7 +14,7 @@ const fs = require('fs');
 const os = require('os');
 const properties = require("./js/properties.js");
 const main = require('./js/main.js');
-const { Server } = require('./js/server.js');
+const server = require('./js/server.js');
 
 // Defining custom left click element
 document.body.addEventListener("contextmenu", function(event) {
@@ -37,7 +37,9 @@ document.getElementById("addServerOpen").addEventListener('click', function(evt)
  * 
  */
 window.refreshFolders = function() {
-    document.getElementById("contents").innerHTML = '<ul class="mdc-list mdc-list--two-line" id="serverPicker"></ul>';
+    if(document.getElementById("head1")){
+        document.getElementById("contents").innerHTML = '<ul class="mdc-list mdc-list--two-line" id="serverPicker"></ul>';
+    }
     var hey = ipcRenderer.sendSync("getVar", "serverFolder");
     var servers = fs.readdirSync(hey);
     var serversC = 0;
@@ -45,9 +47,11 @@ window.refreshFolders = function() {
         try {
             fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "server.properties"));
             fs.accessSync(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), folder, "PocketMine-MP.phar"));
-            Server(folder, addServer);
+            server.getServer(folder, addServer);
             serversC++;
-        } catch (e) {}
+        } catch (e) {
+            // console.error(e);
+        }
     }, this);
     if (serversC == 0) {
         document.getElementById("contents").innerHTML += `<h2 id='head1' style='margin-left: 50px;' class='mdc-typography--subheading2'>No server created for the moment.</h2>
@@ -64,19 +68,27 @@ function addServer(server) {
     var serverInfos = properties.parseProperties(fs.readFileSync(path.join(servPath, server.name, "server.properties")).toString());
     var list = document.getElementById("serverPicker");
     if (typeof list == "object") {
-        list.innerHTML += `<li onclick="location = 'serverInfos.html#` + server.name + `'" class="mdc-list-item" data-mdc-auto-init="MDCRipple">
-    		<i class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "green" : "red") + `;">
+        if(!document.getElementById("server" + server.name)) {
+            list.innerHTML += `<li onclick="location = 'serverInfos.html#` + server.name + `'" class="mdc-list-item" data-mdc-auto-init="MDCRipple" id="server` + server.name + `">
+    		<i id="server` + server.name + `Running" class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "green" : "red") + `;">
       			` + (running ? "play_arrow" : "stop") + `
     		</i>
             <span class="mdc-list-item__text">
     		    ` + server.name + `
-			    <span class="mdc-list-item__text__secondary">
-                    ` + serverInfos["motd"] + ` - 
-                    (` + Object.keys(server.players).length + "/" + server.settings["max-players"] + ` players)
+			    <span class="mdc-list-item__text__secondary" id="server` + server.name + `Secondary">
+                    ` + serverInfos["motd"] + ` - (` + Object.keys(server.players).length + "/" + server.settings["max-players"] + ` players)
                 </span>
             </span>
 			<i class="material-icons mdc-list-item__end-detail">navigate_next</i>
-  		</li>`;
+          </li>`;
+        } else {
+            document.getElementById("server" + server.name + "Running").style.color = (running ? "green" : "red")
+            document.getElementById("server" + server.name + "Running").innerHTML = (running ? "play_arrow" : "stop")
+            var Secondary = serverInfos["motd"] + " - (" + Object.keys(server.players).length + "/" + server.settings["max-players"] + " players)";
+            if(document.getElementById("server" + server.name + "Secondary").innerHTML.indexOf(Secondary) == 0) { // MOTD, Max players, or players number has changed
+                document.getElementById("server" + server.name + "Secondary").innerHTML = Secondary;
+            }
+        }
     }
 };
 

@@ -35,7 +35,8 @@ exports.Server = function(name, php) {
      */
     this.start = function() {
         this.log += "[PMS] Starting server " + this.name + "...\n";
-        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar")]);
+        console.log(path.join(this.folder, "PocketMine-MP.phar"));
+        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar")], {cwd: this.folder});
         this.isStarted = true;
 
         this.proc.stdout.on('data', (data) => {
@@ -48,19 +49,50 @@ exports.Server = function(name, php) {
 
         this.proc.stdin.on('data', (data) => {
             this.log += "> " + Command + "\n";
+            console.log(this.log);
         });
 
         this.proc.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            this.log("[PMS] Server stopped.");
+            this.log += "[PMS] Server stopped.";
+            this.isStarted = false;
+            console.log(this.log);
             fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
         });
     }
 
-
+    /**
+     * Inputs a command
+     * 
+     * @param {String} Command
+     */
     this.inputCommand = function(Command) {
-        this.proc.stdin.write(Command);
+        console.log(this.log);
+        try {
+            this.proc.stdin.write(Command + "\n");
+        } catch(e) {
+            this.isStarted = false;
+        }
     };
+
+    /**
+     * Stops the server
+     */
+    this.stop = function(){
+        this.inputCommand("stop")
+    }
+
+    /**
+     * Saves the server properties
+     * 
+     * @return {Boolean}
+     */
+    this.save = function(){
+        if(this.isStarted){
+            return false;
+        }
+        fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
+        return true;
+    }
 
 }
 
@@ -71,7 +103,9 @@ exports.Server = function(name, php) {
 exports.ServerExportable = function() {
 
     /**
-     * Import server instance
+     * Import server instance 
+     * 
+     * @param {Server} server
      */
     this.import = function(Server) {
         this.name = Server.name;
@@ -80,19 +114,5 @@ exports.ServerExportable = function() {
         this.log = Server.log;
         this.commands = [];
         this.settings = Server.settings
-    }
-
-    /**
-     * Exports to a server instance
-     */
-    this.export = function(Server) {
-        if (this.isStarted && !Server.isStarted) {
-            Server.start();
-        }
-        Server.log = this.log;
-        Server.settings = this.settings;
-        this.commands.forEach(function(cmd) {
-            Server.inputCommand(cmd);
-        }, this);
     }
 }

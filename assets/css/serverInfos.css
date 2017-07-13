@@ -14,9 +14,17 @@
 =============================================*/
 
 .console {
-    background: white;
-    color: black;
+    background: black;
+    color: white;
+    font-family: "monospace";
+    /* Don"'t forget ANSII ART ! */
+    border: solid 1px black;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     height: 75%;
+    overflow-y: scroll;
     width: 100%;
 }
 
@@ -24,7 +32,22 @@
     margin: 10px;
 }
 
+#consoleContent {
+    display: table-cell;
+    vertical-align: bottom;
+    overflow-y: scroll;
+    height: calc(75% - 30px);
+}
 
+#commandHolder {
+    padding-top: 6px;
+    height: 30px;
+    margin-top: -1px;
+    width: 100%;
+    border: solid 1px black;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
 
 .preCommandHolder {
     height: 100%;
@@ -43,57 +66,8 @@
     width: calc(100% - 32px);
     border-bottom-right-radius: 10px;
     margin: 0px;
-    border: solid 1px white;
 }
 
 #commandEnter:hover {
-    border: solid 1px white;
     border-bottom-right-radius: 10px;
-}
-.mdl-navigation__link[data-active-tab="true"] { /** Overwrites normal properties **/
-
-	background-color: #0097a7 !important;
-
-}
-
-.mdl-navigation__link:hover { /** Overwrites normal properties **/
-
-	background-color: #00b8d4 !important;
-
-}
-
-.mdl-navigation__link:hover[data-active-tab="true"] { /** Overwrites normal properties **/
-
-	background-color: #0097a2 !important;
-
-}
-
-/** Form based elements **/
-
-.mdl-button--file input {
-
-	cursor: pointer;
-
-	height: 100%;
-
-	right: 0;
-
-	opacity: 0;
-
-	position: absolute;
-
-	top: 0;
-
-	width: 300px;
-
-	z-index: 4;
-
-}
-
-.mdl-textfield--file .mdl-textfield__input {
-
-	box-sizing: border-box;
-
-	width: calc(100% - 32px);
-
 }

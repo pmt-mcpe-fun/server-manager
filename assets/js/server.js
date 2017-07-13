@@ -35,6 +35,7 @@ var Server = function(name) {
     this.players = [];
     this.log = "";
     this.commands = [];
+    this.settings = [];
     this.start = function() {
         this.isStarted = true;
     };
@@ -44,13 +45,30 @@ var Server = function(name) {
     this.insertCommand = function(cmd) {
         this.commands.push(cmd);
     }
+    this.send = function(){
+        exports.setServer(this);
+    }
 }
 
-// Exporting server
-exports.Server = function(name, cb) {
+/**
+ * Gets a server
+ * 
+ * @param {String} name
+ * @param {Function} cb
+ */ 
+exports.getServer = function(name, cb) {
     // Saving callback
     cbs[name] = cb;
     ipcRenderer.send("getServer", name);
 
     servers[name] = new Server(name);
+}
+
+/**
+ * Exports a server
+ * 
+ * @param {Server} server
+ */
+exports.setServer = function(server){
+    ipcRenderer.send("setServer", server);
 }

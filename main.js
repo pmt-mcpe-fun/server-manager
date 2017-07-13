@@ -4,7 +4,7 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-require('daemon-plus')(); // creates new child process, exists the parent
+// require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
@@ -30,43 +30,49 @@ try {
 }
 
 // Checking for already running processes and kill 'em
-var stopped = false;
-ps.get(function(err, processes) {
-    var c = 0;
-    processes.forEach(function(elem, key) {
-        if (elem.name == "pocketmine-serv" || elem.name == "electron") {
-            console.log(elem.pid);
-            c++; // Snif
+var stopped;
+var startApp = function () {
+    ps.get(function (err, processes) {
+        var c = 0;
+        processes.forEach(function (elem, key) {
+            if (elem.name == "pocketmine-serv" || elem.name == "electron") {
+                console.log(elem.pid);
+                c++; // Snif
+            }
+        });
+        if (c > 3) {
+            fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
+            app.exit(0);
+            process.exit(0);
+        } else {
+            createWindow();
         }
     });
-    if (c > 3) {
-        fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
-        exports.mainWindow.webContents.executeJavaScript("window.close();");
-        stopped = true;
-        app.exit(0);
-        process.exit(0);
-    }
-});
+}
 
 var this2 = this;
 
 // Checking for updates
-console.log("Checking for updates");
 http.get("https://psm.mcpe.fun/versions.json",
-    function(response) {
+    function (response) {
         var completeResponse = '';
-        response.on('data', function(chunk) {
+        response.on('data', function (chunk) {
             completeResponse += chunk;
             console.log("Current res: " + completeResponse);
         });
-        response.on('end', function() { // Here we have the final result
+        response.on('end', function () { // Here we have the final result
             console.log("Finished !" + completeResponse);
             try {
                 var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
             } catch (e) {
                 var data = {};
             }
-            var newData = JSON.parse(completeResponse);
+            var newData;
+            try {
+                newData = JSON.parse(completeResponse);
+            } catch(e) {
+                newData = {};
+            }
             if (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0) { // New version out for PMMP soft & no timeout
                 fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
             }
@@ -85,7 +91,7 @@ http.get("https://psm.mcpe.fun/versions.json",
                         timeout: 10000
                     });`)
                 } else {
-                    var f = setInterval(function(mainWindow) {
+                    var f = setInterval(function (mainWindow) {
                         console.log("exports.mainWindow");
                         if (mainWindow instanceof BrowserWindow) {
                             mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
@@ -106,7 +112,7 @@ http.get("https://psm.mcpe.fun/versions.json",
             }
         });
     }
-).on('error', function(e) { // An error occured. Do nothing
+).on('error', function (e) { // An error occured. Do nothing
     console.log(`Got error: ${e.message}`);
 });
 
@@ -129,7 +135,7 @@ function createWindow() {
     // Open the DevTools.
     // exports.mainWindow.webContents.openDevTools()
     // Emitted when the window is closed.
-    exports.mainWindow.on('closed', function() {
+    exports.mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
@@ -146,15 +152,15 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', startApp);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
     // Not killing process unitl used by force killing (soon tm). Let servers running.
 });
 
 
-app.on('activate', function() {
+app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
@@ -162,7 +168,7 @@ app.on('activate', function() {
     }
 })
 
-app.on('activate', function() {
+app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
@@ -176,16 +182,26 @@ app.on('activate', function() {
 // code. You can also put them in separate files and require them here.
 
 // Listeners for app
-// Gets a main porcess variable
-ipcMain.on('getVar', function(event, varN) {
+/**
+ * Gets an app variable (sync)
+ * 
+ * @param {*} event
+ * @param {String} varN
+ */
+ipcMain.on('getVar', function (event, varN) {
     if (exports[varN]) {
         event.returnValue = exports[varN];
     } else {
         event.returnValue = null;
     }
 });
-// Returns the servers
-ipcMain.on('getServer', function(event, serverName) {
+/**
+ * Sends a server by it's name (async)
+ * 
+ * @param {*} event
+ * @param {String} serverName
+ */
+ipcMain.on('getServer', function (event, serverName) {
     if (!exports.servers[serverName]) {
         if (fs.existsSync(path.join(exports.serverFolder, serverName))) {
             exports.servers[serverName] = new server.Server(serverName, php);
@@ -201,8 +217,41 @@ ipcMain.on('getServer', function(event, serverName) {
         event.sender.send("sendServer", serv);
     }
 });
+/**
+ * Sets back the server (async)
+ * 
+ * @param {*} event
+ * @param {{}} serverR
+ */
+ipcMain.on("setServer", function(event, serverR){
+    var export2 = function(obj, Server) {
+        if (obj.isStarted 
+            && !Server.isStarted) {
+            Server.start();
+        }
+        Server.log = obj.log;
+        Server.settings = obj.settings;
+        console.log(obj.commands);
+        obj.commands.forEach(function(cmd) {
+            Server.inputCommand(cmd);
+        }, obj);
+    }
+    export2(serverR, exports.servers[serverR.name]);
+});
+/**
+ * Saves server (sync)
+ * 
+ * @param {*} event
+ * @return {Boolean}
+ */
+ipcMain.on("save", function(event){
+    Object.keys(exports.servers).forEach(function(name){
+        var serv = exports.servers[name];
+        if(!serv.save()) event.returnValue = false;
+    })
+});
 
-// Defines everything when server loads
+// Defines everything when window loads
 function define() {
     console.log('Loaded !');
     // Defining php
@@ -210,12 +259,12 @@ function define() {
     php.define();
     // Checking for servers;
     var servers = fs.readdirSync(exports.serverFolder);
-    servers.forEach(function(folder) {
+    servers.forEach(function (folder) {
         exports.servers[folder] = new server.Server(folder, php);
     }, this);
 
     // Setting app clock (1 second based)
-    setInterval(function() {
+    setInterval(function () {
         // Listening to relaunch
         // if (stopped) process.kill(process.pid, "SIGKILL");
         if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
@@ -231,7 +280,7 @@ function define() {
         ipcMain.main = this;
         // Servers refreshing
         var name;
-        Object.keys(exports.servers).forEach(function(name) {
+        Object.keys(exports.servers).forEach(function (name) {
             var server = exports.servers[name];
             if (server.changed) {
                 server.changed = false;
@@ -241,5 +290,5 @@ function define() {
             }
         })
     }, 1000);
-    exports.mainWindow.show()
+    exports.mainWindow.show();
 }
