@@ -68,11 +68,6 @@ input[pattern]:invalid {
     cursor: pointer;
 }
 
-main.mdl-layout__content {
-    width: 100%;
-    height: calc(100% - 2.001px);
-}
-
 .unclickable {
     cursor: default !important;
 }

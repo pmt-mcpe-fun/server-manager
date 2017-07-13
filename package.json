@@ -26,7 +26,13 @@
         "material-components-web": "^0.14.0",
         "node-targz": "^0.2.0"
     },
-    "dependencies": {},
+    "dependencies": {
+        "current-processes": "^0.2.1",
+        "daemon-plus": "^1.1.1",
+        "js-yaml": "^3.8.4",
+        "material-components-web": "^0.14.0",
+        "node-targz": "^0.2.0"
+    },
     "build": {
         "appId": "fun.mcpe.pmt.servermanager",
         "win": {

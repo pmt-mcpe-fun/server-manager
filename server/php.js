@@ -12,7 +12,7 @@ const fs = require('fs');
 const http = require('https');
 const tarGz = require('node-targz');
 const properties = require("./lib/properties.js");
-// const fs_utils = require("./js/fs-utils.js");
+const replace = require('replace-in-file');
 const PHP_VERSION = "7.0.3";
 
 /**
@@ -34,9 +34,9 @@ function define() {
         fs.accessSync(exports.app.phpFolder);
         try { // Windows
             fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
-            exports.phpExecutale = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
+            exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
         } catch (e) { // Linux & MacOS
-            exports.phpExecutale = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+            exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
         }
     } catch (e) { // No PHP
         downloadPHP();
@@ -76,8 +76,8 @@ function downloadPHP() {
     snackbar("Downloading PHP v" + PHP_VERSION + "...");
     exports.download('https://bintray.com/pocketmine/PocketMine/download_file?file_path=PHP_' + PHP_VERSION + '_' + arch + '_' + osName + '.tar.gz',
         path.join(exports.app.appFolder, "php.tar.gz"),
-        function(err) {
-            console.log("Finished downloading")
+        function (err) {
+            console.log("Finished downloading");
             if (err) {
                 snackbar("An internet connection is required to download PHP. You may not be able to use your servers until then.");
                 fs.unlink(exports.app.phpFolder);
@@ -86,12 +86,22 @@ function downloadPHP() {
             tarGz.decompress({
                 source: path.join(exports.app.appFolder, "php.tar.gz"),
                 destination: exports.app.phpFolder
-            }, function() {
+            }, function () {
+                // Now we replace the "/PocketMine/" which is the default ~/.pocketmine/php AKA exports.app.phpFolder
+                const options = {
+                    files: [
+                        path.join(exports.app.phpFolder, "**", '*.*'),
+                    ],
+                    //Replacement to make (string or regex) 
+                    from: /\/PocketMine\//g,
+                    to: exports.app.phpFolder,
+                };
+                walk(exports.app.phpFolder);
                 try { // Windows
                     fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
-                    exports.phpExecutale = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
+                    exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
                 } catch (e) { // Linux & MacOS
-                    exports.phpExecutale = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+                    exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
                 }
                 fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
                 snackbar("Successfully downloaded PHP 7.0.3.");
@@ -106,8 +116,8 @@ function downloadPHP() {
  * @param {String} dest 
  * @param {Function} cb 
  */
-exports.download = function(url, dest, cb) {
-    var request = http.get(url, function(response) {
+exports.download = function (url, dest, cb) {
+    var request = http.get(url, function (response) {
         // check if response is success
         if (response.statusCode == 302) {
             exports.download(response.headers["location"], dest, cb);
@@ -115,10 +125,10 @@ exports.download = function(url, dest, cb) {
         }
         var file = fs.createWriteStream(dest);
         response.pipe(file);
-        file.on('finish', function() {
+        file.on('finish', function () {
             file.close(cb); // close() is async, call cb after close completes.
         });
-    }).on('error', function(err) { // Handle errors
+    }).on('error', function (err) { // Handle errors
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
         if (cb) cb(err.message);
     });
@@ -133,3 +143,23 @@ function snackbar(error) {
     exports.app.mainWindow.webContents.executeJavaScript("window.main.snackbar('" + error + "');");
 }
 exports.snackbar = snackbar;
+
+/**
+ * Replaces every /PocketMine to data dir.
+ * 
+ * @param {String} dir 
+ */
+var walk = function (dir) {
+    var list = fs.readdirSync(dir)
+    list.forEach(function (oldfile) {
+        file = path.join(dir, oldfile);
+        var stat = fs.statSync(file)
+        if (stat && stat.isDirectory()) {
+            walk(file);
+        } else {
+            var contents = fs.readFileSync(file).toString();
+            var newContents = contents.replace("/PocketMine", exports.app.phpFolder);
+            if (contents !== newContents && oldfile !== "php"/*Preventing bin to be overwritten so broken*/) fs.writeFileSync(file, newContents);
+        }
+    })
+}
