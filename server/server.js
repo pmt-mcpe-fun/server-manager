@@ -34,9 +34,9 @@ exports.Server = function(name, php) {
      * Starts the server
      */
     this.start = function() {
+        if(this.isStarted) return; // DO NOT CREATE IT TWO TIMES !
         this.log += "[PMS] Starting server " + this.name + "...\n";
-        console.log(path.join(this.folder, "PocketMine-MP.phar"));
-        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar")], {cwd: this.folder});
+        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar")], {cwd: this.folder, shell: true, stdio: "inherit"});
         this.isStarted = true;
 
         this.proc.stdout.on('data', (data) => {
@@ -47,15 +47,9 @@ exports.Server = function(name, php) {
             this.log += data;
         });
 
-        this.proc.stdin.on('data', (data) => {
-            this.log += "> " + Command + "\n";
-            console.log(this.log);
-        });
-
-        this.proc.on('close', (code) => {
+        this.proc.on('exit', (code) => {
             this.log += "[PMS] Server stopped.";
             this.isStarted = false;
-            console.log(this.log);
             fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
         });
     }
@@ -66,10 +60,10 @@ exports.Server = function(name, php) {
      * @param {String} Command
      */
     this.inputCommand = function(Command) {
-        console.log(this.log);
         try {
             this.proc.stdin.write(Command + "\n");
-        } catch(e) {
+            this.log += "> " + Command + "\n";
+        } catch(e) { // Process has ended
             this.isStarted = false;
         }
     };

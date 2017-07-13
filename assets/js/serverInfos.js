@@ -27,11 +27,11 @@ var server;
 var queuing = false; // TODO: Find a better var name.
 
 function define(serverR) {
-    console.log(serverR);
     server = serverR;
     document.getElementById("serverName").innerHTML = server.name;
     document.getElementById("started?").innerHTML = server.isStarted ? "play_arrow" : "stop";
     document.getElementById("consoleContent").innerHTML = server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\n/gim, "<br>");
+    document.querySelector(".console").scrollTop = 10000000000; // Should not have a that long console pixels.
 }
 
 

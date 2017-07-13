@@ -20,7 +20,6 @@ var servers = {}
 
 // When we receive the server
 ipcRenderer.on("sendServer", function(event, server) {
-    console.log("Rereceived " + server.name);
     servers[server.name].isStarted = server.isStarted;
     servers[server.name].players = server.players;
     servers[server.name].log = server.log;

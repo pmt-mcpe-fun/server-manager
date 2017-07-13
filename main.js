@@ -4,7 +4,7 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-// require('daemon-plus')(); // creates new child process, exists the parent
+require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
@@ -40,7 +40,7 @@ var startApp = function () {
                 c++; // Snif
             }
         });
-        if (c > 3) {
+        if (c > 5) {
             fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
             app.exit(0);
             process.exit(0);
@@ -156,7 +156,8 @@ app.on('ready', startApp);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-    // Not killing process unitl used by force killing (soon tm). Let servers running.
+    console.log(exports.servers);
+    // Not killing process unitl used by force killing. Let servers running.
 });
 
 

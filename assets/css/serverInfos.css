@@ -17,6 +17,7 @@
     background: black;
     color: white;
     font-family: "monospace";
+    font-size: 12px;
     /* Don"'t forget ANSII ART ! */
     border: solid 1px black;
     border-top-left-radius: 10px;
@@ -33,10 +34,8 @@
 }
 
 #consoleContent {
-    display: table-cell;
-    vertical-align: bottom;
     overflow-y: scroll;
-    height: calc(75% - 30px);
+    height: 100%;
 }
 
 #commandHolder {
