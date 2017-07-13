@@ -125,7 +125,7 @@ exports.createPMServer = function (name, port, version) {
                 fs.mkdirSync(path.join(serverPath, "resource_packs"));
                 fs.writeFile(path.join(serverPath, "server.properties"), properties.emitProperties({
                     motd: name,
-                    "server-port": 19132,
+                    "server-port": port,
                     "white-list": "off",
                     "announce-player-achievements": "on",
                     "spawn-protection": 16,
