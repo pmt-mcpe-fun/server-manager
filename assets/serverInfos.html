@@ -46,7 +46,8 @@
     </div>
 
     <!-- Server properties dialog -->
-    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
+    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle"
+        aria-describedby="editServerBody">
         <div class="mdc-dialog__surface">
             <header class="mdc-dialog__header">
                 <h2 id="editServerTitle" class="mdc-dialog__header__title">
@@ -58,7 +59,8 @@
                 <form id="editServerForm">
                     <!-- MOTD -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
-                        <input type="text" id="serverName" class="mdc-textfield__input mdc-textfield__label--float-above" pattern="^[\w\-\._]+$" />
+                        <input type="text" id="serverName" class="mdc-textfield__input mdc-textfield__label--float-above" pattern="^[\w\-\._]+$"
+                        />
                         <label class="mdc-textfield__label" for="serverMOTD">MOTD</label>
                     </div>
                     <br>
@@ -73,12 +75,33 @@
                         </span>
                     </span>
                     <br>
-                    <!--Version-->
+                    <!--Difficulty-->
+                    <div class="mdc-select" role="listbox" tabindex="0">
+                        <span class="mdc-select__selected-text" id="basedText">Difficulty</span>
+                        <div class="mdc-simple-menu mdc-select__menu" id="editServerDifficulty">
+                            <ul class="mdc-list mdc-simple-menu__items" id="versionList">
+                                <li class="mdc-list-item" role="option" id="difficulty0">
+                                    Peaceful
+                                </li>
+                                <li class="mdc-list-item" role="option" id="difficulty1">
+                                    Easy
+                                </li>
+                                <li class="mdc-list-item" role="option" id="difficulty2">
+                                    Normal
+                                </li>
+                                <li class="mdc-list-item" role="option" id="difficulty3">
+                                    Hard
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </form>
             </section>
             <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
-                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" data-mdc-auto-init="MDCRipple">Edit server</button>
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised"
+                    data-mdc-auto-init="MDCRipple">Close</button>
+                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised"
+                    data-mdc-auto-init="MDCRipple">Edit server</button>
             </footer>
         </div>
         <div class="mdc-dialog__backdrop"></div>
@@ -89,6 +112,7 @@
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
     mdc.autoInit()
+
 </script>
 
 </html>
