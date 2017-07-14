@@ -46,9 +46,20 @@ p#consoleContent::-webkit-scrollbar {
 p#consoleContent::-webkit-scrollbar-thumb {
     display: block;
     background-color: white;
-    color: blue;
     border: solid 1px white;
-    border-radius: 3px;
+    border-radius: 5px;
+}
+
+
+section#editServerBody::-webkit-scrollbar {
+    display: block;
+}
+
+section#editServerBody::-webkit-scrollbar-thumb {
+    display: block;
+    background-color: black;
+    border: solid 1px white;
+    border-radius: 5px;
 }
 
 #commandHolder {
