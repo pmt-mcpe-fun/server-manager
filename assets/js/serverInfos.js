@@ -25,13 +25,18 @@ window.addEventListener("load", function () {
 
 var server;
 var queuing = false; // TODO: Find a better var name.
+var first = 1;
 
 function define(serverR) {
     server = serverR;
     document.getElementById("serverName").innerHTML = server.name;
     document.getElementById("started?").innerHTML = server.isStarted ? "play_arrow" : "stop";
     document.getElementById("consoleContent").innerHTML = server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\n/gim, "<br>");
-    document.querySelector(".console").scrollTop = 10000000000; // Should not have a that long console pixels.
+    if (first > 0) {
+        document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
+        document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
+        first--;
+    }
 }
 
 
@@ -46,18 +51,22 @@ document.getElementById("stopServer").addEventListener("click", function (event)
 document.getElementById("EditServerPropertiesBtn").addEventListener("click", function (event) {
     document.getElementById("editServerDialog").MDCDialog.show();
 });
-document.getElementById("commandEnter").addEventListener("keypress", function(){
-    if(event.keyCode == 13){
+document.getElementById("commandEnter").addEventListener("keypress", function () {
+    if (event.keyCode == 13) {
         server.commands.push(this.value);
         this.value = "";
         queuing = true;
+        first = 3; //Scroll to bottom when received text
     }
 })
-
 setInterval(function () {
     if (queuing) {
         ipcRenderer.send("setServer", server);
         queuing = false;
     }
     serverF.getServer(location.hash.substr(1), define);
-}, 500)
+}, 500);
+
+
+// Server editing dialog
+new mdc.select.MDCSelect(document.querySelector(".mdc-select"));

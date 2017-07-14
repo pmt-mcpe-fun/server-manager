@@ -55,7 +55,7 @@
                 "apk"
             ],
             "synopsis": "Manage your servers with ease !",
-            "icon": "linux_icons",
+            "icon": "build/linux_icons",
             "desktop": {
                 "Name": "PocketMine Tools - PMT",
                 "Exec": "pocketmine-tools",

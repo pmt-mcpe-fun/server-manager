@@ -4,7 +4,7 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-require('daemon-plus')(); // creates new child process, exists the parent
+// require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
@@ -33,6 +33,7 @@ try {
 var stopped;
 var startApp = function () {
     ps.get(function (err, processes) {
+        console.log(processes);
         var c = 0;
         processes.forEach(function (elem, key) {
             if (elem.name == "pocketmine-serv" || elem.name == "electron") {
@@ -82,11 +83,11 @@ http.get("https://psm.mcpe.fun/versions.json",
                     exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
                     snackbar.show({
     				    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-                        actionText: "Dismiss",
+                        actionText: "Download",
                         actionHandler: function() {
 							require('electron').shell.openExternal('https://psm.mcpe.fun/download');
 						},
-                        multiline: false,
+                        multiline: true,
                         actionOnBottom: true,
                         timeout: 10000
                     });`)
@@ -97,7 +98,7 @@ http.get("https://psm.mcpe.fun/versions.json",
                             mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
                     		snackbar.show({
     						    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-                    		    actionText: "Dismiss",
+                    		    actionText: "Download",
                     		    actionHandler: function() {
 									require('electron').shell.openExternal('https://psm.mcpe.fun/download');
 								},

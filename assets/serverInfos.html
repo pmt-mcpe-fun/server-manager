@@ -59,13 +59,13 @@
                 <form id="editServerForm">
                     <!-- MOTD -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
-                        <input type="text" id="serverName" class="mdc-textfield__input mdc-textfield__label--float-above" pattern="^[\w\-\._]+$"
+                        <input type="text" id="serverName" class="mdc-textfield__input" pattern="^[\w\-\._]+$"
                         />
-                        <label class="mdc-textfield__label" for="serverMOTD">MOTD</label>
+                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverMOTD">MOTD</label>
                     </div>
                     <br>
                     <!-- Server port -->
-                    <span class="inline">
+                    <div class="inline">
                         <div class="mdc-textfield mdc-textfield--upgraded">
                             <input class="mdc-textfield__input" type="number" id="serverPort" aria-controls="restart-helptext" />
                             <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Server Port</label>
@@ -73,7 +73,7 @@
                         <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true">
                             <br><i class="material-icons">autorenew</i><small>Require server restart</small>
                         </span>
-                    </span>
+                    </div>
                     <br>
                     <!--Difficulty-->
                     <div class="mdc-select" role="listbox" tabindex="0">

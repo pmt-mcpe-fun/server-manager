@@ -12,7 +12,6 @@ const fs = require('fs');
 const http = require('https');
 const tarGz = require('node-targz');
 const properties = require("./lib/properties.js");
-const replace = require('replace-in-file');
 const PHP_VERSION = "7.0.3";
 
 /**
