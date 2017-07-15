@@ -17,8 +17,8 @@ const properties = require("./js/properties.js");
 const main = require('./js/main.js');
 const serverF = require('./js/server.js');
 
-window.addEventListener("load", function () {
-    document.querySelectorAll(".mdc-textfield").forEach(function (elem) {
+window.addEventListener("load", function() {
+    document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
         new mdc.textfield.MDCTextfield(elem);
     });
 });
@@ -40,18 +40,23 @@ function define(serverR) {
 }
 
 
-document.getElementById("startServer").addEventListener("click", function (event) {
+document.getElementById("startServer").addEventListener("click", function(event) {
     server.start();
     queuing = true;
 });
-document.getElementById("stopServer").addEventListener("click", function (event) {
+document.getElementById("stopServer").addEventListener("click", function(event) {
     server.stop();
     queuing = true;
 });
-document.getElementById("EditServerPropertiesBtn").addEventListener("click", function (event) {
+document.getElementById("EditServerPropertiesBtn").addEventListener("click", function(event) {
     document.getElementById("editServerDialog").MDCDialog.show();
+    // Server editing dialog
+    document.querySelectorAll('.mdc-slider').forEach(function(elem) {
+        new mdc.select.MDCSelect(document.querySelector(".mdc-select"));
+        new mdc.slider.MDCSlider(elem);
+    });
 });
-document.getElementById("commandEnter").addEventListener("keypress", function () {
+document.getElementById("commandEnter").addEventListener("keypress", function() {
     if (event.keyCode == 13) {
         server.commands.push(this.value);
         this.value = "";
@@ -59,14 +64,10 @@ document.getElementById("commandEnter").addEventListener("keypress", function ()
         first = 3; //Scroll to bottom when received text
     }
 })
-setInterval(function () {
+setInterval(function() {
     if (queuing) {
         ipcRenderer.send("setServer", server);
         queuing = false;
     }
     serverF.getServer(location.hash.substr(1), define);
 }, 500);
-
-
-// Server editing dialog
-new mdc.select.MDCSelect(document.querySelector(".mdc-select"));

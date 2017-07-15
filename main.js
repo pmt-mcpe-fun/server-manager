@@ -31,11 +31,11 @@ try {
 
 // Checking for already running processes and kill 'em
 var stopped;
-var startApp = function () {
-    ps.get(function (err, processes) {
+var startApp = function() {
+    ps.get(function(err, processes) {
         console.log(processes);
         var c = 0;
-        processes.forEach(function (elem, key) {
+        processes.forEach(function(elem, key) {
             if (elem.name == "pocketmine-serv" || elem.name == "electron") {
                 console.log(elem.pid);
                 c++; // Snif
@@ -55,13 +55,13 @@ var this2 = this;
 
 // Checking for updates
 http.get("https://psm.mcpe.fun/versions.json",
-    function (response) {
+    function(response) {
         var completeResponse = '';
-        response.on('data', function (chunk) {
+        response.on('data', function(chunk) {
             completeResponse += chunk;
             console.log("Current res: " + completeResponse);
         });
-        response.on('end', function () { // Here we have the final result
+        response.on('end', function() { // Here we have the final result
             console.log("Finished !" + completeResponse);
             try {
                 var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
@@ -71,7 +71,7 @@ http.get("https://psm.mcpe.fun/versions.json",
             var newData;
             try {
                 newData = JSON.parse(completeResponse);
-            } catch(e) {
+            } catch (e) {
                 newData = {};
             }
             if (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0) { // New version out for PMMP soft & no timeout
@@ -92,7 +92,7 @@ http.get("https://psm.mcpe.fun/versions.json",
                         timeout: 10000
                     });`)
                 } else {
-                    var f = setInterval(function (mainWindow) {
+                    var f = setInterval(function(mainWindow) {
                         console.log("exports.mainWindow");
                         if (mainWindow instanceof BrowserWindow) {
                             mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
@@ -113,7 +113,7 @@ http.get("https://psm.mcpe.fun/versions.json",
             }
         });
     }
-).on('error', function (e) { // An error occured. Do nothing
+).on('error', function(e) { // An error occured. Do nothing
     console.log(`Got error: ${e.message}`);
 });
 
@@ -136,7 +136,7 @@ function createWindow() {
     // Open the DevTools.
     // exports.mainWindow.webContents.openDevTools()
     // Emitted when the window is closed.
-    exports.mainWindow.on('closed', function () {
+    exports.mainWindow.on('closed', function() {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
@@ -156,13 +156,13 @@ function createWindow() {
 app.on('ready', startApp);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
     console.log(exports.servers);
     // Not killing process unitl used by force killing. Let servers running.
 });
 
 
-app.on('activate', function () {
+app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
@@ -170,7 +170,7 @@ app.on('activate', function () {
     }
 })
 
-app.on('activate', function () {
+app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
@@ -190,7 +190,7 @@ app.on('activate', function () {
  * @param {*} event
  * @param {String} varN
  */
-ipcMain.on('getVar', function (event, varN) {
+ipcMain.on('getVar', function(event, varN) {
     if (exports[varN]) {
         event.returnValue = exports[varN];
     } else {
@@ -203,14 +203,14 @@ ipcMain.on('getVar', function (event, varN) {
  * @param {*} event
  * @param {String} serverName
  */
-ipcMain.on('getServer', function (event, serverName) {
+ipcMain.on('getServer', function(event, serverName) {
     if (!exports.servers[serverName]) {
         if (fs.existsSync(path.join(exports.serverFolder, serverName))) {
             exports.servers[serverName] = new server.Server(serverName, php);
         }
     } else {
         if (!fs.existsSync(path.join(exports.serverFolder, serverName))) { // Server has been deleted
-            exports.servers[serverName] = undefined;
+            delete exports.servers[serverName];
         }
     }
     if (exports.servers[serverName]) {
@@ -225,10 +225,10 @@ ipcMain.on('getServer', function (event, serverName) {
  * @param {*} event
  * @param {{}} serverR
  */
-ipcMain.on("setServer", function(event, serverR){
+ipcMain.on("setServer", function(event, serverR) {
     var export2 = function(obj, Server) {
-        if (obj.isStarted 
-            && !Server.isStarted) {
+        if (obj.isStarted &&
+            !Server.isStarted) {
             Server.start();
         }
         Server.log = obj.log;
@@ -246,10 +246,10 @@ ipcMain.on("setServer", function(event, serverR){
  * @param {*} event
  * @return {Boolean}
  */
-ipcMain.on("save", function(event){
-    Object.keys(exports.servers).forEach(function(name){
+ipcMain.on("save", function(event) {
+    Object.keys(exports.servers).forEach(function(name) {
         var serv = exports.servers[name];
-        if(!serv.save()) event.returnValue = false;
+        if (!serv.save()) event.returnValue = false;
     })
 });
 
@@ -261,12 +261,12 @@ function define() {
     php.define();
     // Checking for servers;
     var servers = fs.readdirSync(exports.serverFolder);
-    servers.forEach(function (folder) {
+    servers.forEach(function(folder) {
         exports.servers[folder] = new server.Server(folder, php);
     }, this);
 
     // Setting app clock (1 second based)
-    setInterval(function () {
+    setInterval(function() {
         // Listening to relaunch
         // if (stopped) process.kill(process.pid, "SIGKILL");
         if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
@@ -282,7 +282,7 @@ function define() {
         ipcMain.main = this;
         // Servers refreshing
         var name;
-        Object.keys(exports.servers).forEach(function (name) {
+        Object.keys(exports.servers).forEach(function(name) {
             var server = exports.servers[name];
             if (server.changed) {
                 server.changed = false;

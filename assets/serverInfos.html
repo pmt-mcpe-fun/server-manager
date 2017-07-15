@@ -46,8 +46,7 @@
     </div>
 
     <!-- Server properties dialog -->
-    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle"
-        aria-describedby="editServerBody">
+    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
         <div class="mdc-dialog__surface">
             <header class="mdc-dialog__header">
                 <h2 id="editServerTitle" class="mdc-dialog__header__title">
@@ -84,6 +83,71 @@
                             <br><i class="material-icons">autorenew</i><small>Require server restart</small>
                         </span>
                     </div>
+                    <!-- Whitelist -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerWhitelist?" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerWhitelist?" class="mdc-switch-label">Enable whitelist</label>
+                    <br><br>
+                    <!-- View distance -->
+                    <label for="editServerViewDistance" id="viewDistanceLabel">View distance</label>
+                    <div id="editServerViewDistance" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="105" aria-valuenow="0" data-step="2" aria-labelledby="viewDistanceLabel">
+                        <div class="mdc-slider__track-container">
+                            <div class="mdc-slider__track"></div>
+                        </div>
+                        <div class="mdc-slider__thumb-container">
+                            <svg class="mdc-slider__thumb" width="21" height="21">
+                                <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                            </svg>
+                            <div class="mdc-slider__focus-ring"></div>
+                        </div>
+                    </div>
+                    <!-- Spawn protection -->
+                    <label for="editServerSpawnProtection" id="spawnProtectionLabel">Spawn protection (chunk radius)</label>
+                    <div id="editServerSpawnProtection" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="105" aria-valuenow="0" data-step="2" aria-labelledby="spawnProtectionLabel">
+                        <div class="mdc-slider__track-container">
+                            <div class="mdc-slider__track"></div>
+                        </div>
+                        <div class="mdc-slider__thumb-container">
+                            <svg class="mdc-slider__thumb" width="21" height="21">
+                                <circle cx="10.5" cy="10.5" r="7.875"></circle>
+                            </svg>
+                            <div class="mdc-slider__focus-ring"></div>
+                        </div>
+                    </div>
+                    <!--Gamemode-->
+                    <div class="mdc-select" role="listbox" tabindex="0">
+                        <span class="mdc-select__selected-text" id="basedText">Gamemode</span>
+                        <div class="mdc-simple-menu mdc-select__menu" id="editServerGamemode">
+                            <ul class="mdc-list mdc-simple-menu__items" id="versionList">
+                                <li class="mdc-list-item" role="option" id="gamemode0">
+                                    Survival
+                                </li>
+                                <li class="mdc-list-item" role="option" id="gamemode1">
+                                    Creative
+                                </li>
+                                <li class="mdc-list-item" role="option" id="gamemode2">
+                                    Adventure
+                                </li>
+                                <li class="mdc-list-item" role="option" id="gamemode3">
+                                    Spectator
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br><br>
+                    <!-- Force defaulf gamemode -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerForceDefaultGamemode" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerForceDefaultGamemode" class="mdc-switch-label">Force default gamemode</label>
+                    <br>
                     <!--Difficulty-->
                     <div class="mdc-select" role="listbox" tabindex="0">
                         <span class="mdc-select__selected-text" id="basedText">Difficulty</span>
@@ -105,6 +169,42 @@
                         </div>
                     </div>
                     <br><br>
+                    <!-- PVP -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerPVP" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerPVP" class="mdc-switch-label">Player versus player (PvP)</label>
+                    <br><br>
+                    <!-- Hardcord mode -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerHardcord" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerHardcord" class="mdc-switch-label">Enable hardcord mode.</label>
+                    <br><br>
+                    <!-- Animals spawning -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerAnimals?" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerAnimals?" class="mdc-switch-label">Enable animal spawning</label>
+                    <br><br>
+                    <!-- Mobs spawning -->
+                    <div class="mdc-switch">
+                        <input type="checkbox" id="editServerMonters?" class="mdc-switch__native-control" />
+                        <div class="mdc-switch__background">
+                            <div class="mdc-switch__knob"></div>
+                        </div>
+                    </div>
+                    <label for="editServerMonters?" class="mdc-switch-label">Enable monster spawning</label>
+                    <br><br>
                     <!-- Auto world save -->
                     <div class="mdc-switch">
                         <input type="checkbox" id="editServerAutoSave" class="mdc-switch__native-control" />
@@ -114,38 +214,11 @@
                     </div>
                     <label for="editServerAutoSave" class="mdc-switch-label">Auto world saving</label>
                     <br><br>
-                    <!-- Animals spawning -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerAnimals?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
-                        </div>
-                    </div>
-                    <label for="editServerAnimals?" class="mdc-switch-label">Should animals spawn?</label>
-                    <br><br>
-                    <!-- Mobs spawning -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerMonters?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
-                        </div>
-                    </div>
-                    <label for="editServerMonters?" class="mdc-switch-label">Should monters spawn?</label>
-                    <!-- Whitelist -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerWhitelist?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
-                        </div>
-                    </div>
-                    <label for="editServerWhitelist?" class="mdc-switch-label">Whitelist</label>
                 </form>
             </section>
             <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised"
-                    data-mdc-auto-init="MDCRipple">Close</button>
-                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised"
-                    data-mdc-auto-init="MDCRipple">Edit server</button>
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
+                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" data-mdc-auto-init="MDCRipple">Edit server</button>
             </footer>
         </div>
         <div class="mdc-dialog__backdrop"></div>
@@ -155,7 +228,6 @@
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
     mdc.autoInit()
-
 </script>
 <script src="js/serverInfos.js"></script>
 
