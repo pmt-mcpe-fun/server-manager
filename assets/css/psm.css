@@ -112,3 +112,43 @@ input[pattern]:invalid {
         width: 90%;
     }
 }
+
+.shown {
+    display: block;
+    animation-name: entrance;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+    position: absolute;
+    margin-left: -50px;
+    animation-name: exit;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes entrance {
+    from {
+        margin-left: -50px;
+        opacity: 0;
+    }
+    to {
+        margin-left: 0px;
+        opacity: 1;
+    }
+}
+
+@keyframes exit {
+    from {
+        margin-left: 0px;
+        opacity: 1;
+        position: relative;
+    }
+    to {
+        margin-left: -50px;
+        opacity: 0;
+        position: relative;
+    }
+}

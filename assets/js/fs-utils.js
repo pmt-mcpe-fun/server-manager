@@ -67,7 +67,7 @@ exports.rmdir = function(dir) {
             // pass these files
         } else if (stat.isDirectory()) {
             // rmdir recursively
-            rmdir(filename);
+            exports.rmdir(filename);
         } else {
             // rm fiilename
             fs.unlinkSync(filename);

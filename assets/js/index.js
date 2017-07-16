@@ -45,6 +45,13 @@ window.addEventListener("load", function() {
 
     // Exiting
     document.getElementById("exitPSM").addEventListener("click", main.exit);
+    // Modifying servers
+    document.getElementById("modifyServerBtn").addEventListener('click', function(evt) {
+        document.getElementById("frame").contentWindow.document.querySelectorAll(".removeServerBtn").forEach(function(elem) {
+            elem.classList.toggle("shown");
+            elem.classList.toggle("hidden");
+        })
+    });
 
     /**
      * Add Server Dialog

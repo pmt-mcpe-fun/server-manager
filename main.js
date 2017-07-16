@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 const url = require('url');
 const os = require('os');
-const http = require('https');
+const http = require('http');
 const ps = require('current-processes');
 const ipcMain = electron.ipcMain;
 const php = require("./server/php");
@@ -33,11 +33,9 @@ try {
 var stopped;
 var startApp = function() {
     ps.get(function(err, processes) {
-        console.log(processes);
         var c = 0;
         processes.forEach(function(elem, key) {
             if (elem.name == "pocketmine-serv" || elem.name == "electron") {
-                console.log(elem.pid);
                 c++; // Snif
             }
         });
@@ -54,7 +52,7 @@ var startApp = function() {
 var this2 = this;
 
 // Checking for updates
-http.get("https://psm.mcpe.fun/versions.json",
+http.get("http://psm.mcpe.fun/versions.json",
     function(response) {
         var completeResponse = '';
         response.on('data', function(chunk) {
@@ -74,11 +72,10 @@ http.get("https://psm.mcpe.fun/versions.json",
             } catch (e) {
                 newData = {};
             }
-            if (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0) { // New version out for PMMP soft & no timeout
+            if (!fs.existsSync(path.join(exports.appFolder, "versions.json")) || (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0)) { // New version out for PMMP soft & no timeout
                 fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
             }
             if (newData.version !== data.version) { // New app version is out
-                console.log("exports.mainWindow");
                 if (exports.mainWindow instanceof BrowserWindow) {
                     exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
                     snackbar.show({
@@ -210,6 +207,7 @@ ipcMain.on('getServer', function(event, serverName) {
         }
     } else {
         if (!fs.existsSync(path.join(exports.serverFolder, serverName))) { // Server has been deleted
+            exports.servers[serverName].settings = {};
             delete exports.servers[serverName];
         }
     }

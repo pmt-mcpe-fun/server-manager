@@ -15,6 +15,7 @@ const http = require('https');
 const tarGz = require('node-targz');
 const properties = require("./properties.js");
 const fs_utils = require("./fs-utils.js");
+const server = require("./server.js");
 const ps = require('current-processes');
 const ipcRenderer = require('electron').ipcRenderer;
 
@@ -168,6 +169,7 @@ exports.createPMServer = function(name, port, version) {
                                     console.error(err);
                                 } else {
                                     snackbar("Sucessfully created server " + name + "!");
+                                    console.log("Finished !")
                                 }
                             });
 
@@ -183,4 +185,17 @@ exports.createPMServer = function(name, port, version) {
             console.error(err.message);
         }
     });
+}
+
+/**
+ * Removes a server from the list
+ */
+exports.removeServer = function(serverName) {
+    server.getServer(serverName, function(srv) {
+        if (srv.isStarted) {
+            snackbar("Cannot delete a started server !");
+        } else {
+            fs_utils.rmdir(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), serverName))
+        }
+    })
 }

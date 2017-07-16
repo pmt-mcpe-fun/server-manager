@@ -56,10 +56,12 @@ function define(serverR) {
 document.getElementById("startServer").addEventListener("click", function(event) {
     server.start();
     queuing = true;
+    first = 3;
 });
 document.getElementById("stopServer").addEventListener("click", function(event) {
     server.stop();
     queuing = true;
+    first = 3;
 });
 document.getElementById("EditServerPropertiesBtn").addEventListener("click", function(event) {
     document.getElementById("editServerDialog").MDCDialog.show();
@@ -85,7 +87,7 @@ document.getElementById("EditServerPropertiesBtn").addEventListener("click", fun
 });
 document.getElementById("commandEnter").addEventListener("keypress", function() {
     if (event.keyCode == 13) {
-        server.commands.push(value);
+        server.commands.push(this.value);
         this.value = "";
         queuing = true;
         first = 3; //Scroll to bottom when received text
