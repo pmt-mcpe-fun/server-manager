@@ -19,6 +19,8 @@ body {
     width: calc(100% - 5px);
     overflow-x: hidden;
     user-select: none;
+    --mdc-theme-primary: #4CAF50;
+    --mdc-theme-accent: #B0FF59;
 }
 
 ::-webkit-scrollbar {
