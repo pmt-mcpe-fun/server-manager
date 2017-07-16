@@ -5,6 +5,7 @@
  * @version 1.0.0
  * @license CC-BY-NC-SA-4.0
  * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
  */
 
 const { spawn } = require('child_process');
@@ -34,9 +35,9 @@ exports.Server = function(name, php) {
      * Starts the server
      */
     this.start = function() {
-        if(this.isStarted) return; // DO NOT CREATE IT TWO TIMES !
+        if (this.isStarted) return; // DO NOT CREATE IT TWO TIMES !
         this.log += "[PMS] Starting server " + this.name + "...\n";
-        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "enable-ansi"], {cwd: this.folder});
+        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "enable-ansi"], { cwd: this.folder });
         this.isStarted = true;
 
         this.proc.stdout.on('data', (data) => {
@@ -63,7 +64,7 @@ exports.Server = function(name, php) {
         try {
             this.proc.stdin.write(Command + "\n");
             this.log += "> " + Command + "\n";
-        } catch(e) { // Process has ended
+        } catch (e) { // Process has ended
             this.isStarted = false;
         }
     };
@@ -71,7 +72,7 @@ exports.Server = function(name, php) {
     /**
      * Stops the server
      */
-    this.stop = function(){
+    this.stop = function() {
         this.inputCommand("stop")
     }
 
@@ -80,8 +81,8 @@ exports.Server = function(name, php) {
      * 
      * @return {Boolean}
      */
-    this.save = function(){
-        if(this.isStarted){
+    this.save = function() {
+        if (this.isStarted) {
             return false;
         }
         fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));

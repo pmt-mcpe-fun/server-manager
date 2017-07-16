@@ -1,7 +1,15 @@
+/**
+ * main.js - NodeJS script that runs the app.
+ * 
+ * @author Ad5001
+ * @version 1.0.0
+ * @license CC-BY-NC-SA-4.0
+ * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
+ */
+
 const electron = require('electron');
-// Module to control application life.
 const app = electron.app;
-// Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
 // require('daemon-plus')(); // creates new child process, exists the parent

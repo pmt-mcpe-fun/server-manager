@@ -5,6 +5,7 @@
  * @version 1.0.0
  * @license CC-BY-NC-SA-4.0
  * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
  */
 const ipcRenderer = require('electron').ipcRenderer;
 
@@ -44,7 +45,7 @@ var Server = function(name) {
     this.insertCommand = function(cmd) {
         this.commands.push(cmd);
     }
-    this.send = function(){
+    this.send = function() {
         exports.setServer(this);
     }
 }
@@ -54,7 +55,7 @@ var Server = function(name) {
  * 
  * @param {String} name
  * @param {Function} cb
- */ 
+ */
 exports.getServer = function(name, cb) {
     // Saving callback
     cbs[name] = cb;
@@ -68,6 +69,6 @@ exports.getServer = function(name, cb) {
  * 
  * @param {Server} server
  */
-exports.setServer = function(server){
+exports.setServer = function(server) {
     ipcRenderer.send("setServer", server);
 }

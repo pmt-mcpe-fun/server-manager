@@ -1,3 +1,12 @@
+/**
+ * properties.js - Parses .properties file
+ * 
+ * @author Ad5001, NFGamerMC
+ * @version 1.0.0
+ * @license CC-BY-NC-SA-4.0
+ * @package PocketMine Server Manager
+ */
+
 const electron = require('electron')
 const Menu = electron.Menu;
 const app = electron.app

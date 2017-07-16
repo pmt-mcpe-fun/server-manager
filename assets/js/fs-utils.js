@@ -1,10 +1,17 @@
-// From https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
+/**
+ * fs-utils.js - Various file utils from stackverflow.com
+ * 
+ * @author Various
+ * @version 1.0.0
+ * @license CC0
+ * @package PocketMine Server Manager
+ */
 const path = require('path');
 const fs = require('fs');
 
 
 /**
- * Copies a file syncronously
+ * Copies a file syncronously - https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
  * 
  * @param {String} source 
  * @param {String} target 
@@ -24,7 +31,7 @@ exports.copyFileSync = function(source, target) {
 }
 
 /**
- * Copies a direcory recursivly
+ * Copies a direcory recursivly - https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
  * 
  * @param {String} source 
  * @param {String} target 
