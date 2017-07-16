@@ -232,7 +232,11 @@ ipcMain.on("setServer", function(event, serverR) {
             Server.start();
         }
         Server.log = obj.log;
-        Server.settings = obj.settings;
+        if (Server.settings !== obj.settings) {
+            console.log(obj.settings);
+            Server.settings = obj.settings;
+            Server.save();
+        }
         console.log(obj.commands);
         obj.commands.forEach(function(cmd) {
             Server.inputCommand(cmd);

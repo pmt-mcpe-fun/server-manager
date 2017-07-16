@@ -50,7 +50,6 @@ p#consoleContent::-webkit-scrollbar-thumb {
     border-radius: 5px;
 }
 
-
 section#editServerBody::-webkit-scrollbar {
     display: block;
 }
@@ -93,4 +92,34 @@ section#editServerBody::-webkit-scrollbar-thumb {
 
 #commandEnter:hover {
     border-bottom-right-radius: 10px;
+}
+
+.mdc-slider__pin {
+    -webkit-transform: rotate(-45deg) scale(1) translate(19px, -20px);
+    transform: rotate(-45deg) scale(1) translate(19px, -20px);
+    background-color: var(--mdc-theme-primary, #212121);
+    color: var(--mdc-theme-text-primary-on-primary, white);
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-top: -2px;
+    margin-left: -2px;
+    transition: transform 100ms ease-out, -webkit-transform 100ms ease-out;
+    border-radius: 50% 50% 50% 0%;
+    z-index: 1;
+}
+
+.mdc-slider__pin-value-marker {
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.25rem;
+    transform: rotate(45deg);
 }
