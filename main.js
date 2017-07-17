@@ -26,17 +26,27 @@ const server = require("./server/server");
 exports.php = php;
 exports.servers = {};
 
-// Making folder
+// Making folders
 exports.appFolder = path.join(os.homedir(), ".pocketmine");
 exports.serverFolder = path.join(exports.appFolder, "servers");
 exports.phpFolder = path.join(exports.appFolder, "php");
+exports.pharsFolder = path.join(os.homedir(), ".cache", "PSM");
 try {
     fs.accessSync(exports.appFolder);
 } catch (e) { // No .pocketmine folder
     fs.mkdirSync(exports.appFolder);
     fs.mkdirSync(exports.serverFolder);
 }
-
+try {
+    fs.accessSync(path.join(os.homedir(), ".cache"));
+} catch (e) {
+    fs.mkdirSync(path.join(os.homedir(), ".cache"));
+}
+try {
+    fs.accessSync(exports.pharsFolder);
+} catch (e) {
+    fs.mkdirSync(exports.pharsFolder);
+}
 // Checking for already running processes and kill 'em
 var stopped;
 var startApp = function() {
@@ -60,6 +70,8 @@ var startApp = function() {
 var this2 = this;
 
 // Checking for updates
+var updateAvailable = false;
+var newData;
 http.get("http://psm.mcpe.fun/versions.json",
     function(response) {
         var completeResponse = '';
@@ -74,7 +86,6 @@ http.get("http://psm.mcpe.fun/versions.json",
             } catch (e) {
                 var data = {};
             }
-            var newData;
             try {
                 newData = JSON.parse(completeResponse);
             } catch (e) {
@@ -94,26 +105,10 @@ http.get("http://psm.mcpe.fun/versions.json",
 						},
                         multiline: true,
                         actionOnBottom: true,
-                        timeout: 10000
-                    });`)
+                        timeout: 1000000000
+                    });`);
                 } else {
-                    var f = setInterval(function(mainWindow) {
-                        console.log("exports.mainWindow");
-                        if (mainWindow instanceof BrowserWindow) {
-                            mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
-                    		snackbar.show({
-    						    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-                    		    actionText: "Download",
-                    		    actionHandler: function() {
-									require('electron').shell.openExternal('https://psm.mcpe.fun/download');
-								},
-                    		    multiline: false,
-                    		    actionOnBottom: true,
-                    		    timeout: 10000
-                    		});`);
-                            clearInterval(f);
-                        }
-                    }, 1000, exports.mainWindow);
+                    updateAvailable = true;
                 }
             }
         });
@@ -265,6 +260,19 @@ ipcMain.on("save", function(event) {
 
 // Defines everything when window loads
 function define() {
+    if (updateAvailable) {
+        exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+        snackbar.show({
+    	    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
+            actionText: "Download",
+            actionHandler: function() {
+				require('electron').shell.openExternal('https://psm.mcpe.fun/download');
+			},
+            multiline: true,
+            actionOnBottom: true,
+            timeout: 1000000000
+        });`);
+    }
     console.log('Loaded !');
     // Defining php
     php.setApp(this.app);
