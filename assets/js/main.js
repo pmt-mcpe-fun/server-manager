@@ -157,23 +157,43 @@ exports.createPMServer = function(name, port, version) {
                         fs_utils.rmdir(serverPath);
                         console.error(err);
                     } else {
-                        var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
-                        console.log("Sucessfully getted list. Heading torwards to: " + data[version]);
-                        console.log(serverPath);
-                        exports.download(data[version], // Getting the phar for our version
-                            path.join(serverPath, "PocketMine-MP.phar"),
-                            function(err) {
-                                if (err) {
-                                    snackbar("Could not download latest Jenkins phar.\nAre you connected to the internet?");
-                                    console.log("Could not get " + data[version]);
-                                    fs_utils.rmdir(serverPath);
-                                    console.error(err);
-                                } else {
+                        if (!fs.existsSync(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"))) {
+                            var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
+                            console.log("Sucessfully getted list. Heading torwards to: " + data[version]);
+                            console.log(serverPath);
+                            exports.download(data[version], // Getting the phar for our version
+                                path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
+                                function(err) {
+                                    if (err) {
+                                        snackbar("Could not download latest Jenkins phar.\nAre you connected to the internet?");
+                                        console.log("Could not get " + data[version]);
+                                        fs_utils.rmdir(serverPath);
+                                        console.error(err);
+                                    } else {
+                                        fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
+                                            if (!err) {
+                                                snackbar("Sucessfully created server " + name + "!");
+                                                console.log("Finished !")
+                                                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString());
+                                            } else {
+                                                snackbar("An error occured while creating the server.");
+                                                console.error(err);
+                                            }
+                                        })
+                                    }
+                                });
+                        } else {
+                            fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
+                                if (!err) {
                                     snackbar("Sucessfully created server " + name + "!");
                                     console.log("Finished !")
+                                    fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString());
+                                } else {
+                                    snackbar("An error occured while creating the server.");
+                                    console.error(err);
                                 }
-                            });
-
+                            })
+                        }
                     }
                 });
             } catch (e) {
