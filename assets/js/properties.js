@@ -8,6 +8,7 @@
  * @package PocketMine Server Manager
  */
 
+const os = require("os");
 /**
  * Parse properties string
  * 
@@ -17,7 +18,7 @@
  */
 exports.parseProperties = function(properties) {
     returning = {};
-    properties.split("\n").forEach(function(elem) {
+    properties.split(os.EOL).forEach(function(elem) {
         if (elem.indexOf("=") > 0) returning[elem.split("=")[0]] = elem.split("=")[1];
     }, this);
     return returning;
@@ -33,7 +34,7 @@ exports.parseProperties = function(properties) {
 exports.emitProperties = function(properties) {
     returning = "";
     Object.keys(properties).forEach(function(key) {
-        returning += key + "=" + properties[key] + "\n";
+        returning += key + "=" + properties[key] + os.EOL;
     });
     return returning;
 }

@@ -83,8 +83,8 @@ function snackbar(error) {
         message: error,
         actionText: "Dismiss",
         actionHandler: function() {},
-        multiline: error.indexOf("\n") > 0,
-        actionOnBottom: error.indexOf("\n") > 0,
+        multiline: error.indexOf(os.EOL) > 0,
+        actionOnBottom: error.indexOf(os.EOL) > 0,
         timeout: error.length * 100
     });
 }
@@ -165,7 +165,7 @@ exports.createPMServer = function(name, port, version) {
                                 path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
                                 function(err) {
                                     if (err) {
-                                        snackbar("Could not download latest Jenkins phar.\nAre you connected to the internet?");
+                                        snackbar("Could not download latest Jenkins phar." + os.EOL + "Are you connected to the internet?");
                                         console.log("Could not get " + data[version]);
                                         fs_utils.rmdir(serverPath);
                                         console.error(err);
@@ -197,12 +197,12 @@ exports.createPMServer = function(name, port, version) {
                     }
                 });
             } catch (e) {
-                snackbar("Could not create server's folders.\nDo you have perms on your home folder?");
+                snackbar("Could not create server's folders." + os.EOL + "Do you have perms on your home folder?");
                 fs_utils.rmdir(serverPath);
                 console.error(e.message);
             }
         } else {
-            snackbar("Could not create server's folder.\nAre you sure a server with that name doesn't exists already?");
+            snackbar("Could not create server's folder." + os.EOL + "Are you sure a server with that name doesn't exists already?");
             console.error(err.message);
         }
     });

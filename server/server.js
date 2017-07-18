@@ -12,6 +12,7 @@ const { spawn } = require('child_process');
 const { app } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const os = require("os");
 const properties = require('./lib/properties');
 
 /**
@@ -29,6 +30,7 @@ exports.Server = function(name, php) {
     this.log = "";
     this.php = php;
     this.changed = false;
+    this.getPlayers = false;
     this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
 
     /**
@@ -36,12 +38,21 @@ exports.Server = function(name, php) {
      */
     this.start = function() {
         if (this.isStarted) return; // DO NOT CREATE IT TWO TIMES !
-        this.log += "[PMS] Starting server " + this.name + "...\n";
+        this.log += "[PMS] Starting server " + this.name + "..." + os.EOL;
         this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "enable-ansi"], { cwd: this.folder });
         this.isStarted = true;
 
         this.proc.stdout.on('data', (data) => {
-            this.log += data;
+            if (this.getPlayers) {
+                try {
+                    this.players = JSON.parse(data);
+                    this.getPlayers = false;
+                } catch (e) {
+                    // If couldn't succed, that means that this was not JSON so not the accepted input
+                }
+            } else {
+                this.log += data;
+            }
         });
 
         this.proc.stderr.on('data', (data) => {
@@ -62,8 +73,8 @@ exports.Server = function(name, php) {
      */
     this.inputCommand = function(Command) {
         try {
-            this.proc.stdin.write(Command + "\n");
-            this.log += "> " + Command + "\n";
+            this.proc.stdin.write(Command + os.EOL);
+            this.log += "> " + Command + os.EOL;
         } catch (e) { // Process has ended
             this.isStarted = false;
         }
@@ -89,6 +100,10 @@ exports.Server = function(name, php) {
         return true;
     }
 
+
+    this.refresh = function() {
+        if (this.isStarted) this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound"); // If they find this command without going into the code Idk how they did.
+    }
 }
 
 

@@ -99,7 +99,7 @@ window.addEventListener("load", function() {
      */
     addServerDialog.listen('MDCDialog:accept', function() {
         if (!document.getElementById("serverName").value.match(/^[\w\-._]+$/)) {
-            main.snackbar("Please enter a server name only with alphanumerical\n, dots (.), underscores (_)\nand hyphens (-) caracters.");
+            main.snackbar("Please enter a server name only with alphanumerical" + os.EOL + ", dots (.), underscores (_)" + os.EOL + "and hyphens (-) caracters.");
             return false;
         }
         if (main.selects[0].value <= 0.1) {
