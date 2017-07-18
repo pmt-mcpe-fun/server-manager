@@ -32,6 +32,10 @@
         <button class="mdc-button mdc-button--raised" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
             Edit server properties
         </button>
+        <br>
+        <button class="mdc-button mdc-button--raised" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
+            Edit whitelist
+        </button>
     </div>
     <div class="half">
         <!-- Right tab -->
@@ -44,6 +48,9 @@
             <input type="text" id="commandEnter" class="mdc-textfield__input inner" placeholder="Type a command...">
         </div>
     </div>
+
+
+
 
     <!-- Server properties dialog -->
     <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
@@ -229,6 +236,43 @@
         </div>
         <div class="mdc-dialog__backdrop"></div>
     </aside>
+    <!-- whitelist -->
+    <aside id="editWhitelist" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editWhitelistTitle" aria-describedby="editWhitelistBody">
+        <div class="mdc-dialog__surface">
+            <header class="mdc-dialog__header">
+                <h2 id="editWhitelistTitle" class="mdc-dialog__header__title">
+                    Edit whitelist
+                </h2>
+            </header>
+            <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editWhitelistBody">
+                <!-- Dialog content -->
+                <ul class="mdc-list mdc-list--two-line" id="serverPicker"></ul>
+            </section>
+            <footer class="mdc-dialog__footer">
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
+                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" data-mdc-auto-init="MDCRipple">Save changes</button>
+            </footer>
+        </div>
+        <div class="mdc-dialog__backdrop"></div>
+    </aside>
+    <!-- Online players (get data) -->
+    <aside id="editWhitelist" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editWhitelistTitle" aria-describedby="editWhitelistBody">
+        <div class="mdc-dialog__surface">
+            <header class="mdc-dialog__header">
+                <h2 id="editWhitelistTitle" class="mdc-dialog__header__title">
+                    Edit whitelist
+                </h2>
+            </header>
+            <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editWhitelistBody">
+                <!-- Dialog content -->
+                <ul class="mdc-list mdc-list--two-line" id="whiteListPlayers"></ul>
+            </section>
+            <footer class="mdc-dialog__footer">
+                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel mdc-button--raised" data-mdc-auto-init="MDCRipple">Close</button>
+            </footer>
+        </div>
+        <div class="mdc-dialog__backdrop"></div>
+    </aside>
 </body>
 
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
@@ -237,5 +281,6 @@
 </script>
 <script src="js/serverInfos/serverInfos.js"></script>
 <script src="js/serverInfos/editServerProperties.js"></script>
+<script src="js/serverInfos/whitelist.js"></script>
 
 </html>

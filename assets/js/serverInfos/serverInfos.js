@@ -20,6 +20,7 @@ const serverF = require('./js/server.js');
 
 var queuing = false; // TODO: Find a better var name.
 var first = 1;
+window.serverCallbacks = [];
 
 function define(serverR) {
     window.server = serverR;
@@ -31,6 +32,10 @@ function define(serverR) {
         document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
         first--;
     }
+    window.serverCallbacks.forEach(function(cb, index) {
+        cb(serverR);
+        delete serverCallbacks[index];
+    }, this);
 }
 document.getElementById("startServer").addEventListener("click", function(event) {
     window.server.start();
@@ -42,14 +47,14 @@ document.getElementById("stopServer").addEventListener("click", function(event) 
     queuing = true;
     first = 3;
 });
-document.getElementById("commandEnter").addEventListener("keypress", function() {
+document.getElementById("commandEnter").addEventListener("keypress", function(event) {
     if (event.keyCode == 13) {
         window.server.commands.push(this.value);
         this.value = "";
         queuing = true;
         first = 3; //Scroll to bottom when received text
     }
-})
+});
 setInterval(function() {
     if (queuing) {
         ipcRenderer.send("setServer", window.server);

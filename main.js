@@ -312,3 +312,13 @@ function define() {
     }, 1000);
     exports.mainWindow.show();
 }
+
+/**
+ * Refresh server clock
+ */
+setInterval(function() {
+    Object.keys(exports.servers).forEach(function(key) {
+        var serv = exports.servers[key];
+        serv.refresh();
+    })
+}, 500)

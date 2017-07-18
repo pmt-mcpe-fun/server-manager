@@ -27,6 +27,12 @@
     height: 75%;
     overflow-y: scroll;
     width: 100%;
+    user-select: text;
+}
+
+div.console::selection {
+    color: black;
+    background-color: white;
 }
 
 .console * {

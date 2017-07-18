@@ -8,15 +8,6 @@
  * @package PocketMine Server Manager
  */
 
-if (top) require = top.require;
-const path = require('path');
-const ipcRenderer = require('electron').ipcRenderer;
-const fs = require('fs');
-const os = require('os');
-const properties = require("./js/properties.js");
-const main = require('./js/main.js');
-const serverF = require('./js/server.js');
-
 var inputs = {};
 window.addEventListener("load", function() {
     document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
