@@ -9,7 +9,7 @@
  */
 
 const { spawn } = require('child_process');
-const { app } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require("os");
@@ -30,7 +30,6 @@ exports.Server = function(name, php) {
     this.log = "";
     this.php = php;
     this.changed = false;
-    this.getPlayers = false;
     this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
 
     /**
@@ -43,14 +42,48 @@ exports.Server = function(name, php) {
         this.isStarted = true;
 
         this.proc.stdout.on('data', (data) => {
-            if (this.getPlayers) {
-                try {
-                    this.players = JSON.parse(data);
-                    this.getPlayers = false;
-                } catch (e) {
-                    // If couldn't succed, that means that this was not JSON so not the accepted input
+            try {
+                var data = JSON.parse(data);
+                if(Object.keys(data).length < 1) {
+                    this.log += JSON.stringify(data);
+                    return;
                 }
-            } else {
+                switch(Object.keys(data)[0]){ // API
+                    case "psmplayers":
+                    this.players = data["psmplayers"];
+                    break;
+                    case "psmlevels":
+                    this.levels = data["levels"];
+                    break;
+                    case "psmplugins":
+                    this.plugins = data["psmplugins"];
+                    break;
+                    case "psmActions":
+                    this.actions = data["psmActions"];
+                    break;
+                    case "psmnotification":
+                    break;
+                    case "psmwindow":
+                    var options = data["psmwindow"];
+                    var winOptions = {};
+                    winOptions.width = options.width ? option.width : 800;
+                    winOptions.height = options.height ? options.height : 600;
+                    winOptions.title = options.title ? options.title : "PocketMine Server Manager";
+                    if(php.app && php.app.mainWindow) winOptions.parent: php.app.mainWindow;
+                    this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
+                    var winId = this.windows.length - 1;
+                    this.windows[winId].id = winId;
+                    this.windows[winId].server = this;
+                    this.windows[winId].on('closed', function() {
+                        delete this.server.windows[this.windId];
+                    });
+                    break;
+                    default:
+                    this.log += JSON.stringify(data);
+                    break;
+                }
+            } catch (e) {
+                // If couldn't succed, that means that this was not JSON so not meant to be used by PSM.
                 this.log += data;
             }
         });
@@ -102,7 +135,12 @@ exports.Server = function(name, php) {
 
 
     this.refresh = function() {
-        if (this.isStarted) this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound"); // If they find this command without going into the code Idk how they did.
+        if (this.isStarted) {
+            this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound\n"); // If they find this command without going into the code Idk how they did.
+            this.proc.stdin.write("getloadedlevelsforpsmthatsasuperlongcommandthatibetyoucannotenterwithoutcopypaste\n"); // Haha !
+            this.proc.stdin.write("getplugins4psmthatwillbejavascriptobjectencodedjsonbutnomanagement\n"); // Always JSON
+            this.proc.stdin.write("getactions4psmplzdontusethiscommandiknowitshardtoresistbutdontwhatdidijustsaidokwateveryoulostafewsecondsofyourlife\n"); // If they use this command, they're stupid !
+        }
     }
 }
 
