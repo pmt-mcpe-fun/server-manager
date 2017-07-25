@@ -64,7 +64,7 @@ window.refreshFolders = function() {
     if (serversC == 0) {
         document.getElementById("contents").innerHTML += `<h2 id='head1' style='margin-left: 50px;' class='mdc-typography--subheading2'>No server created for the moment.</h2>
 	<button style='margin-left: 50px;' id='addServerButton'
-	 class='mdc-button mdc-button--raised'  data-mdc-auto-init='MDCRipple'
+	 class='mdc-button'  data-mdc-auto-init='MDCRipple'
 	 onclick='top.document.getElementById(\"createServerDialog\").MDCDialog.show();'>Create one</button>`;
     }
 }
