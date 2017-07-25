@@ -13,9 +13,9 @@ const path = require('path');
 const ipcRenderer = require('electron').ipcRenderer;
 const fs = require('fs');
 const os = require('os');
-const properties = require("./js/properties.js");
+const properties = require("./js/lib/properties.js");
 const main = require('./js/main.js');
-const server = require('./js/server.js');
+const server = require('./js/lib/server.js');
 
 // Defining custom left click element
 document.body.addEventListener("contextmenu", function(event) {

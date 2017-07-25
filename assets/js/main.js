@@ -14,9 +14,9 @@ const fs = require('fs');
 const os = require('os');
 const http = require('https');
 const tarGz = require('node-targz');
-const properties = require("./properties.js");
-const fs_utils = require("./fs-utils.js");
-const server = require("./server.js");
+const properties = require("./lib/properties.js");
+const fs_utils = require("./lib/fs-utils.js");
+const server = require("./lib/server.js");
 const ps = require('current-processes');
 const ipcRenderer = require('electron').ipcRenderer;
 
