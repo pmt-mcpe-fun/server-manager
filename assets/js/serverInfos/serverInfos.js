@@ -14,9 +14,9 @@ const path = require('path');
 const ipcRenderer = require('electron').ipcRenderer;
 const fs = require('fs');
 const os = require('os');
-const properties = require("./js/properties.js");
+const properties = require("./js/lib/properties.js");
 const main = require('./js/main.js');
-const serverF = require('./js/server.js');
+const serverF = require('./js/lib/server.js');
 
 var queuing = false; // TODO: Find a better var name.
 var first = 1;

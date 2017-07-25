@@ -16,7 +16,7 @@ window.serverCallbacks.push(function(server) {
     setInterval(function() {
         if (fs.existsSync(wlPath)) {
             fs.readFile(wlPath, function(err, data) {
-                players = data.split(os.EOL);
+                if (!err) players = data.toString().split(os.EOL);
             })
         }
     })
@@ -37,9 +37,9 @@ window.serverCallbacks.push(function(server) {
     })
 });
 
-document.getElementById("addPlayerToWLBtn").addEventListener("click", function(ev){
+document.getElementById("addPlayerToWLBtn").addEventListener("click", function(ev) {
     addPlayerToWL(prompt("Enter the player name you want to add to the whitelist"));
-}
+});
 
 
 

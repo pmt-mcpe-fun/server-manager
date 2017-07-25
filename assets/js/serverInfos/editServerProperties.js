@@ -40,7 +40,7 @@ document.getElementById("EditServerPropertiesBtn").addEventListener("click", fun
     inputs["editServerSpawnProtection"].root_.childNodes[3].childNodes[1].childNodes[1].innerHTML = window.server.settings["spawn-protection"];
     inputs["editServerViewDistance"].value = window.server.settings["view-distance"];
     inputs["editServerViewDistance"].root_.childNodes[3].childNodes[1].childNodes[1].innerHTML = window.server.settings["view-distance"];
-    inputs["editServerGamemode"].selectedIndex = window.server.settings["gamemode"];
+    inputs["editServerGamemode"].selectedIndex = "gamemode" + window.server.settings["gamemode"];
     document.getElementById("editServerForceDefaultGamemode").checked = window.server.settings["force-gamemode"] == "on" ? true : false;
     inputs["editServerDifficulty"].selectedIndex = window.server.settings["difficulty"];
     document.getElementById("editServerPVP").checked = window.server.settings["pvp"] == "on" ? true : false;
@@ -123,6 +123,6 @@ new mdc.dialog.MDCDialog(document.getElementById("editServerDialog")).listen('MD
             if (server.isStarted) window.server.commands.push("setcfg spawn-mobs " + window.server.settings["spawn-mobs"]);
         }
         queuing = true;
-        main.snackbar("Saving changes "+ (restart ? "(restart required)" : "") + "...");
+        main.snackbar("Saving changes " + (restart ? "(restart required)" : "") + "...");
     }
 });

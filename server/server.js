@@ -48,43 +48,43 @@ exports.Server = function(name, php) {
         this.proc.stdout.on('data', (data) => {
             try {
                 var data = JSON.parse(data);
-                if(Object.keys(data).length < 1) {
+                if (Object.keys(data).length < 1) {
                     this.log += JSON.stringify(data);
                     return;
                 }
-                switch(Object.keys(data)[0]){ // API
+                switch (Object.keys(data)[0]) { // API
                     case "psmplayers":
-                    this.players = data["psmplayers"];
-                    break;
+                        this.players = data["psmplayers"];
+                        break;
                     case "psmlevels":
-                    this.levels = data["levels"];
-                    break;
+                        this.levels = data["levels"];
+                        break;
                     case "psmplugins":
-                    this.plugins = data["psmplugins"];
-                    break;
+                        this.plugins = data["psmplugins"];
+                        break;
                     case "psmActions":
-                    this.actions = data["psmActions"];
-                    break;
+                        this.actions = data["psmActions"];
+                        break;
                     case "psmnotification":
-                    break;
+                        break;
                     case "psmwindow":
-                    var options = data["psmwindow"];
-                    var winOptions = {};
-                    winOptions.width = options.width ? option.width : 800;
-                    winOptions.height = options.height ? options.height : 600;
-                    winOptions.title = options.title ? options.title : "PocketMine Server Manager";
-                    if(php.app && php.app.mainWindow) winOptions.parent: php.app.mainWindow;
-                    this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
-                    var winId = this.windows.length - 1;
-                    this.windows[winId].id = winId;
-                    this.windows[winId].server = this;
-                    this.windows[winId].on('closed', function() {
-                        delete this.server.windows[this.windId];
-                    });
-                    break;
+                        var options = data["psmwindow"];
+                        var winOptions = {};
+                        winOptions.width = options.width ? option.width : 800;
+                        winOptions.height = options.height ? options.height : 600;
+                        winOptions.title = options.title ? options.title : "PocketMine Server Manager";
+                        if (php.app && php.app.mainWindow) winOptions.parent = php.app.mainWindow;
+                        this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
+                        var winId = this.windows.length - 1;
+                        this.windows[winId].id = winId;
+                        this.windows[winId].server = this;
+                        this.windows[winId].on('closed', function() {
+                            delete this.server.windows[this.windId];
+                        });
+                        break;
                     default:
-                    this.log += JSON.stringify(data);
-                    break;
+                        this.log += JSON.stringify(data);
+                        break;
                 }
             } catch (e) {
                 // If couldn't succed, that means that this was not JSON so not meant to be used by PSM.
