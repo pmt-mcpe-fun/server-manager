@@ -25,6 +25,10 @@ ipcRenderer.on("sendServer", function(event, server) {
     servers[server.name].players = server.players;
     servers[server.name].log = server.log;
     servers[server.name].settings = server.settings;
+    servers[server.name].windows = server.windows;
+    servers[server.name].players = server.players;
+    servers[server.name].levels = server.levels;
+    servers[server.name].plugins = server.plugins;
     cbs[server.name](servers[server.name]);
 });
 
@@ -36,6 +40,11 @@ var Server = function(name) {
     this.log = "";
     this.commands = [];
     this.settings = [];
+    this.windows = [];
+    this.players = {};
+    this.levels = {};
+    this.plugins = {};
+
     this.start = function() {
         this.isStarted = true;
     };

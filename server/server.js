@@ -31,6 +31,10 @@ exports.Server = function(name, php) {
     this.php = php;
     this.changed = false;
     this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
+    this.windows = [];
+    this.players = {};
+    this.levels = {};
+    this.plugins = {};
 
     /**
      * Starts the server
@@ -161,6 +165,11 @@ exports.ServerExportable = function() {
         this.players = Server.players;
         this.log = Server.log;
         this.commands = [];
+        this.players = Server.players;
+        this.levels = Server.levels;
+        this.plugins = Server.plugins;
+        this.windows = Server.windows;
+        this.actions = Server.actions;
         this.settings = Server.settings
     }
 }
