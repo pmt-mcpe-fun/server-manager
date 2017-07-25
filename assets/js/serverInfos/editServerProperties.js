@@ -123,6 +123,6 @@ new mdc.dialog.MDCDialog(document.getElementById("editServerDialog")).listen('MD
             if (server.isStarted) window.server.commands.push("setcfg spawn-mobs " + window.server.settings["spawn-mobs"]);
         }
         queuing = true;
-        main.snackbar("Saving changes...");
+        main.snackbar("Saving changes "+ (restart ? "(restart required)" : "") + "...");
     }
 });

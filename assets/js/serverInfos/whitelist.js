@@ -37,6 +37,31 @@ window.serverCallbacks.push(function(server) {
     })
 });
 
+document.getElementById("addPlayerToWLBtn").addEventListener("click", function(ev){
+    addPlayerToWL(prompt("Enter the player name you want to add to the whitelist"));
+}
+
+
+
+/**
+ * Adds a player to the whitelist
+ * @param {string} playerName 
+ */
+function addPlayerToWL(playerName) {
+    if (!players.indexOf(playerName)) {
+        playes.push(playerName);
+        fs.writeFile(wlPath, players.join(os.EOL), function(e) {
+            if (e) {
+                min.snackbar(`Could not add ${playerName} to the whitelist.`);
+            } else {
+                if (window.server) {
+                    window.server.commands.push(`whitelist add ${playerName}`);
+                }
+            }
+        });
+    }
+}
+
 
 
 /**
