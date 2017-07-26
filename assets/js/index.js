@@ -58,7 +58,6 @@ window.addEventListener("load", function() {
      * Add Server Dialog
      */
     var addServerOpen = document.getElementById("addServerOpen");
-    var addServerOpen2 = document.getElementById("footerAddServer");
     var addServerDialog = document.getElementById("createServerDialog").MDCDialog;
     var addServerForm = document.getElementById("addServerForm");
 
@@ -86,10 +85,6 @@ window.addEventListener("load", function() {
      * Opening buttons
      */
     addServerOpen.addEventListener('click', function(evt) {
-        addServerDialog.lastFocusedTarget = evt.target;
-        addServerDialog.show();
-    });
-    addServerOpen2.addEventListener('click', function(evt) {
         addServerDialog.lastFocusedTarget = evt.target;
         addServerDialog.show();
     });

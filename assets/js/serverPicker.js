@@ -32,7 +32,12 @@ document.getElementById("addServerOpen").addEventListener('click', function(evt)
     addServerDialog.lastFocusedTarget = evt.target;
     addServerDialog.show();
 });
-// Adding add server button
+document.getElementById("footerAddServer").addEventListener('click', function(evt) {
+    var addServerDialog = top.document.getElementById("createServerDialog").MDCDialog;
+    addServerDialog.lastFocusedTarget = evt.target;
+    addServerDialog.show();
+});
+// Modify server circle
 document.getElementById("modifyServerBtn").addEventListener('click', function(evt) {
     document.querySelectorAll(".removeServerBtn").forEach(function(elem) {
         elem.classList.toggle("shown");
@@ -41,7 +46,7 @@ document.getElementById("modifyServerBtn").addEventListener('click', function(ev
 });
 
 /**
- * Refreshes forlders from home
+ * Refreshes folders from home
  * 
  */
 window.refreshFolders = function() {
