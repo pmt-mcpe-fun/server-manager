@@ -10,232 +10,258 @@
     <link rel="stylesheet" href="css/serverInfos.css">
     <link rel="stylesheet" href="css/icon.css">
     <link rel="stylesheet" href="css/roboto.css">
+    <link rel="stylesheet" href="css/tabs.css">
     <!-- Material Design -->
     <link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
 </head>
 
 
-<body class="mdc-typography inline">
+<body class="mdc-typography">
+
+    <nav id="tab-bar" class="mdc-tab-bar mdc-tab-bar--icons-with-text">
+        <a class="mdc-tab mdc-tab--with-icon-and-text mdc-tab--active" data-go-tab="main">
+            <i class="material-icons mdc-tab__icon" aria-hidden="true">build</i>
+            <span class="mdc-tab__icon-text">Managament</span>
+        </a>
+        <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="players">
+            <i class="material-icons mdc-tab__icon" aria-hidden="true">people</i>
+            <span class="mdc-tab__icon-text">Players</span>
+        </a>
+        <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="levels">
+            <i class="material-icons mdc-tab__icon" aria-hidden="true">public</i>
+            <span class="mdc-tab__icon-text">Worlds</span>
+        </a>
+        <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="plugins">
+            <i class="material-icons mdc-tab__icon" aria-hidden="true">settings</i>
+            <span class="mdc-tab__icon-text">Plugins</span>
+        </a>
+        <span class="mdc-tab-bar__indicator"></span>
+    </nav>
+
+
+
     <!-- Main contents -->
-    <div class="half">
-        <!-- Left Tab -->
-        <div class="inline">
-            <h1 class="mdc-typography--display2" style="align-self: stretch;"><i id="started?" class="material-icons">play_arrow</i>&nbsp;&nbsp;&nbsp;<span id="serverName">ServerName</span></h1>
+    <data-tab class="inline active" data-tab-id="main">
+        <div class="half">
+            <!-- Left Tab -->
+            <div class="inline">
+                <h1 class="mdc-typography--display2" style="align-self: stretch;"><i id="started?" class="material-icons">play_arrow</i>&nbsp;&nbsp;&nbsp;<span id="serverName">ServerName</span></h1>
+            </div>
+            <button class="mdc-button mdc-button--raised inline" id="startServer" data-mdc-auto-init="MDCRipple">
+                <i class="material-icons">play_arrow</i>&nbsp;Start
+            </button>
+            <button class="mdc-button mdc-button--raised inline" id="stopServer" data-mdc-auto-init="MDCRipple">
+                <i class="material-icons">stop</i>&nbsp;Stop
+            </button>
+            <br>
+            <button class="mdc-button mdc-button--raised inline" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
+                <i class="material-icons">build</i>&nbsp;Edit server properties
+            </button>
+            <br>
+            <button class="mdc-button mdc-button--raised" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
+                Edit whitelist
+            </button>
         </div>
-        <button class="mdc-button mdc-button--raised" id="startServer" data-mdc-auto-init="MDCRipple">
-            Start
-        </button>
-        <button class="mdc-button mdc-button--raised" id="stopServer" data-mdc-auto-init="MDCRipple">
-            Stop
-        </button>
-        <br>
-        <button class="mdc-button mdc-button--raised" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
-            Edit server properties
-        </button>
-        <br>
-        <button class="mdc-button mdc-button--raised" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
-            Edit whitelist
-        </button>
-    </div>
-    <div class="half">
-        <!-- Right tab -->
-        <h1 class="mdc-typography--display1">Console</h1>
-        <div class="console">
-            <p id="consoleContent" class="mdc-typography--body1">This is an example console text</p>
+        <div class="half">
+            <!-- Right tab -->
+            <h1 class="mdc-typography--display1">Console</h1>
+            <div class="console">
+                <p id="consoleContent" class="mdc-typography--body1">This is an example console text</p>
+            </div>
+            <div class="inline" id="commandHolder">
+                <span class="material-icons">navigate_next</span>
+                <input type="text" id="commandEnter" class="mdc-textfield__input inner" placeholder="Type a command...">
+            </div>
         </div>
-        <div class="inline" id="commandHolder">
-            <span class="material-icons">navigate_next</span>
-            <input type="text" id="commandEnter" class="mdc-textfield__input inner" placeholder="Type a command...">
-        </div>
-    </div>
-
-
-
-
-    <!-- Server properties dialog -->
-    <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
-        <div class="mdc-dialog__surface">
-            <header class="mdc-dialog__header">
-                <h2 id="editServerTitle" class="mdc-dialog__header__title">
-                    Edit Server
-                </h2>
-            </header>
-            <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editServerBody">
-                <!-- Dialog content -->
-                <form id="editServerForm">
-                    <!-- MOTD -->
-                    <div class="mdc-textfield mdc-textfield--upgraded">
-                        <input type="text" id="serverMOTD" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
-                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverMOTD">MOTD</label>
-                    </div>
-                    <br>
-                    <!-- Server port -->
-                    <div class="inline">
+        <!-- Server properties dialog -->
+        <aside id="editServerDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerTitle" aria-describedby="editServerBody">
+            <div class="mdc-dialog__surface">
+                <header class="mdc-dialog__header">
+                    <h2 id="editServerTitle" class="mdc-dialog__header__title">
+                        Edit Server
+                    </h2>
+                </header>
+                <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editServerBody">
+                    <!-- Dialog content -->
+                    <form id="editServerForm">
+                        <!-- MOTD -->
                         <div class="mdc-textfield mdc-textfield--upgraded">
-                            <input class="mdc-textfield__input" type="number" id="serverPort" aria-controls="restart-helptext" />
-                            <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Server Port</label>
+                            <input type="text" id="serverMOTD" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                            <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverMOTD">MOTD</label>
                         </div>
-                        <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true" tabindex="1">
+                        <br>
+                        <!-- Server port -->
+                        <div class="inline">
+                            <div class="mdc-textfield mdc-textfield--upgraded">
+                                <input class="mdc-textfield__input" type="number" id="serverPort" aria-controls="restart-helptext" />
+                                <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverPort">Server Port</label>
+                            </div>
+                            <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true" tabindex="1">
                             <br><i class="material-icons">autorenew</i><small>Require server restart</small>
                         </span>
-                    </div>
-                    <br>
-                    <!-- Max players -->
-                    <div class="inline">
-                        <div class="mdc-textfield mdc-textfield--upgraded">
-                            <input class="mdc-textfield__input" type="number" id="maxPlayers" aria-controls="restart-helptext" />
-                            <label class="mdc-textfield__label mdc-textfield__label--float-above" for="maxPlayers">Max players</label>
                         </div>
-                        <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true" tabindex="1">
+                        <br>
+                        <!-- Max players -->
+                        <div class="inline">
+                            <div class="mdc-textfield mdc-textfield--upgraded">
+                                <input class="mdc-textfield__input" type="number" id="maxPlayers" aria-controls="restart-helptext" />
+                                <label class="mdc-textfield__label mdc-textfield__label--float-above" for="maxPlayers">Max players</label>
+                            </div>
+                            <span id="restart-helptext" class="inline mdc-textfield-helptext" style="vertical-align: center; width: 100%;" aria-hidden="true" tabindex="1">
                             <br><i class="material-icons">autorenew</i><small>Require server restart</small>
                         </span>
-                    </div>
-                    <!-- Whitelist -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerWhitelist?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
                         </div>
-                    </div>
-                    <label for="editServerWhitelist?" class="mdc-switch-label">Enable whitelist</label>
-                    <br><br>
-                    <!-- View distance -->
-                    <label for="editServerViewDistance" id="viewDistanceLabel">View distance</label>
-                    <div id="editServerViewDistance" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="2" aria-valuemax="32" aria-valuenow="0" data-step="1" aria-labelledby="viewDistanceLabel">
-                        <div class="mdc-slider__track-container">
-                            <div class="mdc-slider__track"></div>
-                        </div>
-                        <div class="mdc-slider__thumb-container">
-                            <div class="mdc-slider__pin">
-                                <span class="mdc-slider__pin-value-marker"></span>
+                        <!-- Whitelist -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerWhitelist?" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
                             </div>
-                            <svg class="mdc-slider__thumb" width="21" height="21">
+                        </div>
+                        <label for="editServerWhitelist?" class="mdc-switch-label">Enable whitelist</label>
+                        <br><br>
+                        <!-- View distance -->
+                        <label for="editServerViewDistance" id="viewDistanceLabel">View distance</label>
+                        <div id="editServerViewDistance" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="2" aria-valuemax="32" aria-valuenow="0" data-step="1" aria-labelledby="viewDistanceLabel">
+                            <div class="mdc-slider__track-container">
+                                <div class="mdc-slider__track"></div>
+                            </div>
+                            <div class="mdc-slider__thumb-container">
+                                <div class="mdc-slider__pin">
+                                    <span class="mdc-slider__pin-value-marker"></span>
+                                </div>
+                                <svg class="mdc-slider__thumb" width="21" height="21">
                                 <circle cx="10.5" cy="10.5" r="7.875"></circle>
                             </svg>
-                            <div class="mdc-slider__focus-ring"></div>
-                        </div>
-                    </div>
-                    <!-- Spawn protection -->
-                    <label for="editServerSpawnProtection" id="spawnProtectionLabel">Spawn protection (chunk radius)</label>
-                    <div id="editServerSpawnProtection" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="2" aria-valuemax="32" aria-valuenow="0" data-step="2" aria-labelledby="spawnProtectionLabel">
-                        <div class="mdc-slider__track-container">
-                            <div class="mdc-slider__track"></div>
-                        </div>
-                        <div class="mdc-slider__thumb-container">
-                            <div class="mdc-slider__pin">
-                                <span class="mdc-slider__pin-value-marker"></span>
+                                <div class="mdc-slider__focus-ring"></div>
                             </div>
-                            <svg class="mdc-slider__thumb" width="21" height="21">
+                        </div>
+                        <!-- Spawn protection -->
+                        <label for="editServerSpawnProtection" id="spawnProtectionLabel">Spawn protection (chunk radius)</label>
+                        <div id="editServerSpawnProtection" class="mdc-slider mdc-slider--discrete mdc-slider--off" tabindex="0" role="slider" aria-valuemin="2" aria-valuemax="32" aria-valuenow="0" data-step="2" aria-labelledby="spawnProtectionLabel">
+                            <div class="mdc-slider__track-container">
+                                <div class="mdc-slider__track"></div>
+                            </div>
+                            <div class="mdc-slider__thumb-container">
+                                <div class="mdc-slider__pin">
+                                    <span class="mdc-slider__pin-value-marker"></span>
+                                </div>
+                                <svg class="mdc-slider__thumb" width="21" height="21">
                                 <circle cx="10.5" cy="10.5" r="7.875"></circle>
                             </svg>
-                            <div class="mdc-slider__focus-ring"></div>
+                                <div class="mdc-slider__focus-ring"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!--Gamemode-->
-                    <div class="mdc-select" role="listbox" tabindex="0" id="editServerGamemode">
-                        <span class="mdc-select__selected-text" id="basedText">Gamemode</span>
-                        <div class="mdc-simple-menu mdc-select__menu">
-                            <ul class="mdc-list mdc-simple-menu__items" id="versionList">
-                                <li class="mdc-list-item" role="option" id="gamemode0">
-                                    Survival
-                                </li>
-                                <li class="mdc-list-item" role="option" id="gamemode1">
-                                    Creative
-                                </li>
-                                <li class="mdc-list-item" role="option" id="gamemode2">
-                                    Adventure
-                                </li>
-                                <li class="mdc-list-item" role="option" id="gamemode3">
-                                    Spectator
-                                </li>
-                            </ul>
+                        <!--Gamemode-->
+                        <div class="mdc-select" role="listbox" tabindex="0" id="editServerGamemode">
+                            <span class="mdc-select__selected-text" id="basedText">Gamemode</span>
+                            <div class="mdc-simple-menu mdc-select__menu">
+                                <ul class="mdc-list mdc-simple-menu__items" id="versionList">
+                                    <li class="mdc-list-item" role="option" id="gamemode0">
+                                        Survival
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="gamemode1">
+                                        Creative
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="gamemode2">
+                                        Adventure
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="gamemode3">
+                                        Spectator
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
-                    <!-- Force default gamemode -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerForceDefaultGamemode" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <br><br>
+                        <!-- Force default gamemode -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerForceDefaultGamemode" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerForceDefaultGamemode" class="mdc-switch-label">Force default gamemode</label>
-                    <br>
-                    <!--Difficulty-->
-                    <div class="mdc-select" role="listbox" tabindex="0" id="editServerDifficulty">
-                        <span class="mdc-select__selected-text" id="basedText">Difficulty</span>
-                        <div class="mdc-simple-menu mdc-select__menu">
-                            <ul class="mdc-list mdc-simple-menu__items" id="versionList">
-                                <li class="mdc-list-item" role="option" id="difficulty0">
-                                    Peaceful
-                                </li>
-                                <li class="mdc-list-item" role="option" id="difficulty1">
-                                    Easy
-                                </li>
-                                <li class="mdc-list-item" role="option" id="difficulty2">
-                                    Normal
-                                </li>
-                                <li class="mdc-list-item" role="option" id="difficulty3">
-                                    Hard
-                                </li>
-                            </ul>
+                        <label for="editServerForceDefaultGamemode" class="mdc-switch-label">Force default gamemode</label>
+                        <br>
+                        <!--Difficulty-->
+                        <div class="mdc-select" role="listbox" tabindex="0" id="editServerDifficulty">
+                            <span class="mdc-select__selected-text" id="basedText">Difficulty</span>
+                            <div class="mdc-simple-menu mdc-select__menu">
+                                <ul class="mdc-list mdc-simple-menu__items" id="versionList">
+                                    <li class="mdc-list-item" role="option" id="difficulty0">
+                                        Peaceful
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="difficulty1">
+                                        Easy
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="difficulty2">
+                                        Normal
+                                    </li>
+                                    <li class="mdc-list-item" role="option" id="difficulty3">
+                                        Hard
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
-                    <!-- PVP -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerPVP" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <br><br>
+                        <!-- PVP -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerPVP" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerPVP" class="mdc-switch-label">Player versus player (PvP)</label>
-                    <br><br>
-                    <!-- hardcore mode -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerHardcore" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <label for="editServerPVP" class="mdc-switch-label">Player versus player (PvP)</label>
+                        <br><br>
+                        <!-- hardcore mode -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerHardcore" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerHardcore" class="mdc-switch-label">Enable hardcore mode.</label>
-                    <br><br>
-                    <!-- Animals spawning -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerAnimals?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <label for="editServerHardcore" class="mdc-switch-label">Enable hardcore mode.</label>
+                        <br><br>
+                        <!-- Animals spawning -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerAnimals?" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerAnimals?" class="mdc-switch-label">Enable animal spawning</label>
-                    <br><br>
-                    <!-- Mobs spawning -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerMonters?" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <label for="editServerAnimals?" class="mdc-switch-label">Enable animal spawning</label>
+                        <br><br>
+                        <!-- Mobs spawning -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerMonters?" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerMonters?" class="mdc-switch-label">Enable monster spawning</label>
-                    <br><br>
-                    <!-- Auto world save -->
-                    <div class="mdc-switch">
-                        <input type="checkbox" id="editServerAutoSave" class="mdc-switch__native-control" />
-                        <div class="mdc-switch__background">
-                            <div class="mdc-switch__knob"></div>
+                        <label for="editServerMonters?" class="mdc-switch-label">Enable monster spawning</label>
+                        <br><br>
+                        <!-- Auto world save -->
+                        <div class="mdc-switch">
+                            <input type="checkbox" id="editServerAutoSave" class="mdc-switch__native-control" />
+                            <div class="mdc-switch__background">
+                                <div class="mdc-switch__knob"></div>
+                            </div>
                         </div>
-                    </div>
-                    <label for="editServerAutoSave" class="mdc-switch-label">Auto world saving</label>
-                    <br><br>
-                </form>
-            </section>
-            <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
-                <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple">Save changes</button>
-            </footer>
-        </div>
-        <div class="mdc-dialog__backdrop"></div>
-    </aside>
+                        <label for="editServerAutoSave" class="mdc-switch-label">Auto world saving</label>
+                        <br><br>
+                    </form>
+                </section>
+                <footer class="mdc-dialog__footer">
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
+                    <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple">Save changes</button>
+                </footer>
+            </div>
+            <div class="mdc-dialog__backdrop"></div>
+        </aside>
+    </data-tab>
+
+
+
+
     <!-- whitelist -->
     <aside id="editWhitelist" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editWhitelistTitle" aria-describedby="editWhitelistBody">
         <div class="mdc-dialog__surface">
@@ -256,23 +282,9 @@
         <div class="mdc-dialog__backdrop"></div>
     </aside>
     <!-- Online players (get data) -->
-    <aside id="managePlayers" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="managePlayersTitle" aria-describedby="managePlayersBody">
-        <div class="mdc-dialog__surface">
-            <header class="mdc-dialog__header">
-                <h2 id="managePlayersTitle" class="mdc-dialog__header__title">
-                    Manage players
-                </h2>
-            </header>
-            <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="managePlayersBody">
-                <!-- Dialog content -->
-                <ul class="mdc-list mdc-list--two-line" id="managePlayersList"></ul>
-            </section>
-            <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
-            </footer>
-        </div>
-        <div class="mdc-dialog__backdrop"></div>
-    </aside>
+    <data-tab data-tab-id="players">
+        <ul class="mdc-list mdc-list--two-line" id="managePlayersList"></ul>
+    </data-tab>
 </body>
 
 <script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
@@ -282,5 +294,7 @@
 <script src="js/serverInfos/serverInfos.js"></script>
 <script src="js/serverInfos/editServerProperties.js"></script>
 <script src="js/serverInfos/whitelist.js"></script>
+<script src="js/serverInfos/managePlayers.js"></script>
+<script src="js/serverInfos/tabs.js"></script>
 
 </html>

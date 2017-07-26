@@ -1,5 +1,5 @@
 /**
- * window.serverInfos.js - Server Infos js file
+ * serverInfos.js - Server Infos js file
  * 
  * @author Ad5001
  * @version 1.0.0
@@ -62,3 +62,11 @@ setInterval(function() {
     }
     serverF.getServer(location.hash.substr(1), define);
 }, 500);
+
+// MDC Installation
+document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
+    new mdc.textfield.MDCTextfield(elem);
+});
+mdc.tabs.MDCTabBar.attachTo(document.querySelector('.mdc-tab-bar'));
+// Removing shadow from top so tool bar intergates correctly
+top.document.querySelector("header.mdc-toolbar").style.boxShadow = "0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12)";

@@ -2,9 +2,11 @@
  *
  * PocketMine Server Manager design
  * 
+ * @author Ad5001
  * @version 1.0.0
  * @license CC-BY-NC-SA-4.0
- * @copyright Ad5001 2017
+ * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
  *
  */
 
@@ -15,8 +17,10 @@
 
  :root,
 body {
-    height: calc(100% - 9px);
-    width: calc(100% - 5px);
+    height: calc(100% - 5px);
+    width: 100%;
+    margin-top: 0px;
+    margin-left: 0px;
     overflow-x: hidden;
     user-select: none;
     --mdc-theme-primary: #4CAF50;
@@ -51,8 +55,8 @@ p {
 iframe {
     left: 0px;
     position: fixed;
-    top: 58px;
-    width: calc(100% - 1px);
+    top: 56px;
+    width: 100%;
     height: calc(100% - 61px);
     overflow: hidden;
 }

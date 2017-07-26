@@ -110,3 +110,5 @@ function addServer(server) {
 
 window.refreshFolders();
 setInterval(window.refreshFolders, 5000);
+
+top.document.querySelector("header.mdc-toolbar").setAttribute("style", "");

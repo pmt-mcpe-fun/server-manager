@@ -10,9 +10,6 @@
 
 var inputs = {};
 window.addEventListener("load", function() {
-    document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
-        new mdc.textfield.MDCTextfield(elem);
-    });
     // Server editing dialog
     document.querySelectorAll('.mdc-slider').forEach(function(elem) {
         inputs[elem.id] = new mdc.slider.MDCSlider(elem);

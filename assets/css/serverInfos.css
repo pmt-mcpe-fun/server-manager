@@ -1,6 +1,6 @@
 /**
  *
- * PocketMine Server Manager design
+ * PocketMine Server Manager design for Server Infos & management page.
  * 
  * @version 1.0.0
  * @license CC-BY-NC-SA-4.0
@@ -13,12 +13,17 @@
 =               Page contents                 =
 =============================================*/
 
+:root,
+body {
+    width: 100% !important;
+}
+
 .console {
     background: black;
     color: white;
     font-family: "monospace";
-    font-size: 12px;
     /* Don"'t forget ANSII ART ! */
+    font-size: 12px;
     border: solid 1px black;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -42,7 +47,7 @@ div.console::selection {
 #consoleContent {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 100%;
+    height: 75%;
 }
 
 p#consoleContent::-webkit-scrollbar {
