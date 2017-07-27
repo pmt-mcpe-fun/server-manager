@@ -8,7 +8,7 @@
  * @package PocketMine Server Manager
  */
 
-var players = [""];
+var players = [];
 var wlPath = "";
 
 window.serverCallbacks.push(function(server) {
@@ -16,14 +16,20 @@ window.serverCallbacks.push(function(server) {
     setInterval(function() {
         if (fs.existsSync(wlPath)) {
             fs.readFile(wlPath, function(err, data) {
-                if (!err) players = data.toString().split(os.EOL);
+                if (!err) {
+                    players = data.toString().split(os.EOL);
+                    players.forEach(function(playerName, index) {
+                        if (!playerName.match(/^[a-zA-Z0-9_.-]+$/)) delete players[index];
+                    });
+                }
             })
         }
     })
-    document.getElementById("EditWhitelistBtn").addEventListener("click", function() {
-        document.getElementById("whiteListPlayers").innerHTML = "";
-        players.forEach(function(player) {
-            document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="whiteList${player}">
+});
+document.getElementById("EditWhitelistBtn").addEventListener("click", function() {
+    document.getElementById("whiteListPlayers").innerHTML = "";
+    players.forEach(function(player) {
+        document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="whiteList${player}">
     		<i class="material-icons mdc-list-item__start-detail" style="color: red;" onclick="removePlayerFromWL('${player}');event.stopPropagation();">
       			remove_circle
     		</i>
@@ -31,11 +37,17 @@ window.serverCallbacks.push(function(server) {
     		    ${player}
             </span>
           </li>`;
-            new mdc.ripple.MDCRipple(document.getElementById(`whiteList${player}`));
-            document.getElementById("editWhitelist").MDCDialog.show();
-        });
-    })
-});
+        new mdc.ripple.MDCRipple(document.getElementById(`whiteList${player}`));
+        document.getElementById("editWhitelist").MDCDialog.show();
+    });
+    if (players.length < 1 && !document.getElementById("noPlayer")) {
+        document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="noPlayer">
+            <span class="mdc-list-item__text">
+    		    No player is currently whitelisted on your server.
+            </span>
+          </li>`;
+    }
+})
 
 document.getElementById("addPlayerToWLBtn").addEventListener("click", function(ev) {
     addPlayerToWL(prompt("Enter the player name you want to add to the whitelist"));

@@ -16,6 +16,7 @@
 :root,
 body {
     width: 100% !important;
+    overflow: hidden;
 }
 
 .console {
@@ -29,7 +30,7 @@ body {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    height: 75%;
+    height: 260px;
     overflow-y: scroll;
     width: 100%;
     user-select: text;
@@ -47,7 +48,7 @@ div.console::selection {
 #consoleContent {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 75%;
+    height: 100%;
 }
 
 p#consoleContent::-webkit-scrollbar {

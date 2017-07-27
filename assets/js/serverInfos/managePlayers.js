@@ -9,10 +9,20 @@
  */
 openMenu = undefined;
 window.serverCallbacks.push(function(server) {
-    Object.keys(server.players).forEach(function(key) {
-        if (!document.getElementById(`managePlayer${key}`)) {
-            document.getElementById("managePlayersList").innerHTML += `
-            <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlayer${key}">
+    var playersList = document.getElementById("managePlayersList").children;
+    for (var i = 0; i < playersList.length; i++) {
+        if (!server.players[playersList[i].id.substring(12)]) {
+            playersList[i].remove();
+        }
+    }
+    if (Object.keys(server.players).length < 1) {
+        document.getElementById("noPlayer").style.display = "block";
+    } else {
+        document.getElementById("noPlayer").style.display = "none";
+        Object.keys(server.players).forEach(function(key) {
+            if (!document.getElementById(`managePlayer${key}`)) {
+                document.getElementById("managePlayersList").innerHTML += `
+            <li onclass="mdc-list-item" id="managePlayer${key}">
                 <span id="managePlayer${key}Props" class=" mdc-list-item__start-detail">
     		    </span>
                 <span class="mdc-list-item__text">
@@ -26,38 +36,41 @@ window.serverCallbacks.push(function(server) {
                     </div>
                 </span>
             </li>`;
-            // Adding actions of player
-            document.getElementById("actionsPlayer" + key).addEventListener("click", function() {
-                if (openMenu) {
-                    openMenu.open = false;
-                }
-                Object.keys(server.actions.playerActions).forEach(function(name) {
-                    // Actions to remove
-                    if (name == "Add to whitelist" && window.server.players[key].whitelisted) return;
-                    if (name == "Remove from whitelist" && !window.server.players[key].whitelisted) return;
-                    if (name == "OP" && window.server.players[key].op) return;
-                    if (name == "DeOP" && !window.server.players[key].op) return;
-                    // Adding action
-                    var nameAsId = name.replace(/ /g, "_");
-                    document.getElementById("menuActionsPlayer" + key + "List").innerHTML += `
+                new mdc.ripple.MDCRipple(document.getElementById("managePlayer" + key));
+                document.getElementById(`menuActionsPlayer${key}`).MDCMenu = new mdc.menu.MDCMenu(document.getElementById(`menuActionsPlayer${key}`)); // Defining real menu
+                // Adding actions of player
+                document.getElementById("actionsPlayer" + key).addEventListener("click", function() {
+                    if (openMenu) {
+                        openMenu.open = false;
+                    }
+                    Object.keys(server.actions.playerActions).forEach(function(name) {
+                        // Actions to remove
+                        if (name == "Add to whitelist" && window.server.players[key].whitelisted) return;
+                        if (name == "Remove from whitelist" && !window.server.players[key].whitelisted) return;
+                        if (name == "OP" && window.server.players[key].op) return;
+                        if (name == "DeOP" && !window.server.players[key].op) return;
+                        // Adding action
+                        var nameAsId = name.replace(/ /g, "_");
+                        document.getElementById("menuActionsPlayer" + key + "List").innerHTML += `
                      <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlayer${key}Action${nameAsId}">
                          ${name}
                      </li>`;
-                    document.getElementById("managePlayer" + key + "Action" + nameAsId)
-                        .setAttribute("cmd", server.actions.playerActions[name])
-                        .setAttribute("player", key)
-                        .addEventListener("click", function() {
-                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
-                        });
+                        new mdc.ripple.MDCRipple(document.getElementById(`managePlayer${key}Action${nameAsId}`));
+                        document.getElementById(`managePlayer${key}Action${nameAsId}`)
+                            .setAttribute("cmd", server.actions.playerActions[name])
+                            .setAttribute("player", key)
+                            .addEventListener("click", function() {
+                                window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
+                            });
+                    });
+                    document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
                 });
-                document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
-            });
-            // Adding player's attribute
-            if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>build</i>";
-            if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>verified user</i>";
-        }
-    });
-    mdc.autoInit();
+                // Adding player's attribute
+                if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>build</i>";
+                if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>verified user</i>";
+            }
+        });
+    }
 });
 
 
