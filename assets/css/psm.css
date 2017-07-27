@@ -26,8 +26,9 @@ body {
     --mdc-theme-primary: #4CAF50;
     --mdc-theme-accent: #B0FF59;
     --mdc-theme-background: #fff;
-    --mdc-theme-text-primary-on-primary: rgba(66, 66, 66, 1);
-    --mdc-theme-text-secondary-on-primary: rgba(66, 66, 66, 0.7);
+    /* --mdc-theme-text-primary-on-primary: rgba(66, 66, 66, 1); */
+    --mdc-theme-text-primary-on-primary: rgba(0, 0, 0, 0.87);
+    --mdc-theme-text-secondary-on-primary: rgba(0, 0, 0, 0.54);
     --mdc-theme-text-hint-on-primary: rgba(66, 66, 66, 0.5);
     --mdc-theme-text-disabled-on-primary: rgba(66, 66, 66, 0.5);
     --mdc-theme-text-icon-on-primary: rgba(66, 66, 66, 0.5);
