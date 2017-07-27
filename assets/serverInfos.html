@@ -21,7 +21,7 @@
     <nav id="tab-bar" class="mdc-tab-bar mdc-tab-bar--icons-with-text">
         <a class="mdc-tab mdc-tab--with-icon-and-text mdc-tab--active" data-go-tab="main">
             <i class="material-icons mdc-tab__icon" aria-hidden="true">build</i>
-            <span class="mdc-tab__icon-text">Managament</span>
+            <span class="mdc-tab__icon-text">Manage</span>
         </a>
         <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="players">
             <i class="material-icons mdc-tab__icon" aria-hidden="true">people</i>
@@ -257,34 +257,60 @@
             </div>
             <div class="mdc-dialog__backdrop"></div>
         </aside>
+        <!-- Left click element -->
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
+            <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="startServerLC">Start server</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="stopServerLC">Stop server</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="editServerLC">Edit server proverties</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
     </data-tab>
 
 
 
 
-    <!-- whitelist -->
-    <aside id="editWhitelist" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editWhitelistTitle" aria-describedby="editWhitelistBody">
-        <div class="mdc-dialog__surface">
-            <header class="mdc-dialog__header">
-                <h2 id="editWhitelistTitle" class="mdc-dialog__header__title">
-                    Edit whitelist
-                </h2>
-            </header>
-            <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editWhitelistBody">
-                <!-- Dialog content -->
-                <ul class="mdc-list mdc-list--two-line" id="whiteListPlayers"></ul>
-            </section>
-            <footer class="mdc-dialog__footer">
-                <button type="button" class="mdc-button mdc-dialog__footer__button material-icons" data-mdc-auto-init="MDCRipple" id="addPlayerToWLBtn">add</button>
-                <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
-            </footer>
-        </div>
-        <div class="mdc-dialog__backdrop"></div>
-    </aside>
     <!-- Online players (get data) -->
     <data-tab data-tab-id="players">
         <ul class="mdc-list mdc-list--two-line" id="managePlayersList"></ul>
         <p id="noPlayer" style="padding-left: 10px;">No players are currently connected to your server for the moment.</p>
+        <!-- whitelist -->
+        <aside id="editWhitelist" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editWhitelistTitle" aria-describedby="editWhitelistBody">
+            <div class="mdc-dialog__surface">
+                <header class="mdc-dialog__header">
+                    <h2 id="editWhitelistTitle" class="mdc-dialog__header__title">
+                        Edit whitelist
+                    </h2>
+                </header>
+                <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editWhitelistBody">
+                    <!-- Dialog content -->
+                    <ul class="mdc-list mdc-list--two-line" id="whiteListPlayers"></ul>
+                </section>
+                <footer class="mdc-dialog__footer">
+                    <button type="button" class="mdc-button mdc-dialog__footer__button material-icons" data-mdc-auto-init="MDCRipple" id="addPlayerToWLBtn">add</button>
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
+                </footer>
+            </div>
+            <div class="mdc-dialog__backdrop"></div>
+        </aside>
+        <!-- Left click element -->
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
+            <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="editWhitelistLC">Edit whitelist</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
+        <!-- Add button -->
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="footerAddServer" data-mdc-auto-init="MDCRipple">
+        	<span class="mdc-fab__icon">add</span>
+        </button>
     </data-tab>
 </body>
 

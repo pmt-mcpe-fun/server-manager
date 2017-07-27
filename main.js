@@ -309,16 +309,10 @@ function define() {
                 event.sender.send("sendServer", serv);
             }
         })
-    }, 1000);
+        Object.keys(exports.servers).forEach(function(key) {
+            var serv = exports.servers[key];
+            serv.refresh();
+        })
+    }, 2000);
     exports.mainWindow.show();
 }
-
-/**
- * Refresh server clock
- */
-setInterval(function() {
-    Object.keys(exports.servers).forEach(function(key) {
-        var serv = exports.servers[key];
-        serv.refresh();
-    })
-}, 500)

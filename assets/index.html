@@ -18,26 +18,27 @@
 
 <body class="mdc-typography" style="overflow: hidden;">
     <!-- Menu -->
-    <header class="mdc-toolbar mdc-toolbar--fixed demo-header-toolbar mdc-elevation--z0">
-        <div class="mdc-toolbar__row mdc-elevation--z0">
+    <header class="mdc-toolbar mdc-toolbar--fixed demo-header-toolbar">
+        <div class="mdc-toolbar__row">
             <!-- Header row -->
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-start mdc-elevation--z0">
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
                 <span class="catalog-back">
-					<a id="main-logo" class="unclickable mdl-layout__drawer-button mdc-toolbar__icon--menu" role="button" tabindex="0" target="frame"><i class="material-icons" >home</i></a>
+					<a id="main-logo" class="unclickable mdl-layout__drawer-button mdc-toolbar__icon--menu" role="button" tabindex="0" target="frame"><i class="material-icons">home</i></a>
 				</span>
-                <span class="mdc-toolbar__title catalog-title">PocketMine Server Manager</span>
-            </section>
-            <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
-                <span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions">more_vert</span>
-            </section>
-            <!--Menu Actions-->
-            <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menu1" tabindex="-1">
-                <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
-                    <li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
-                    <li class="mdc-list-item" role="menuitem" tabindex="0" id="modifyServerBtn">Modify servers</li>
-                    <li class="mdc-list-item" role="menuitem" tabindex="0" id="exitPSM">Exit PocketMine Server Manager</li>
-                </ul>
-            </div>
+                <section class="mdc-toolbar__section">
+                    <span class="mdc-toolbar__title catalog-title">PocketMine Server Manager</span>
+                </section>
+                <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+                    <span id="open_menu" class="mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-ripple-surface __icon clickable" aria-label="Actions" alt="Actions">more_vert</span>
+                </section>
+                <!--Menu Actions-->
+                <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menu1" tabindex="-1">
+                    <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                        <li class="mdc-list-item" role="menuitem" tabindex="0" id="addServerOpen">Add server</li>
+                        <li class="mdc-list-item" role="menuitem" tabindex="0" id="modifyServerBtn">Modify servers</li>
+                        <li class="mdc-list-item" role="menuitem" tabindex="0" id="exitPSM">Exit PocketMine Server Manager</li>
+                    </ul>
+                </div>
         </div>
     </header>
 

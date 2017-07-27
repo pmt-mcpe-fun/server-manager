@@ -76,13 +76,13 @@ input[pattern]:invalid {
     float: right;
 }
 
-#footerAddServer {
+button.footerFab {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
 }
 
-#footerAddServer * {
+.footerFab * {
     cursor: pointer;
 }
 
