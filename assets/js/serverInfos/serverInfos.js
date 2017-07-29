@@ -26,7 +26,7 @@ function define(serverR) {
     window.server = serverR;
     document.getElementById("serverName").innerHTML = window.server.name;
     document.getElementById("started?").innerHTML = window.server.isStarted ? "play_arrow" : "stop";
-    document.getElementById("consoleContent").innerHTML = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\n/gim, "<br>");
+    document.getElementById("consoleContent").innerHTML = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\r\n|\n/g, "<br>"); // F*ck this shit of vars.
     if (first > 0) {
         document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
         document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.

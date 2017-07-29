@@ -232,9 +232,7 @@ ipcMain.on("setServer", function(event, serverR) {
             !Server.isStarted) {
             Server.start();
         }
-        Server.log = obj.log;
         if (Server.settings !== obj.settings) {
-            console.log(obj.settings);
             Server.settings = obj.settings;
             Server.save();
         }

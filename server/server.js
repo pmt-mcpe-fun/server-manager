@@ -44,62 +44,68 @@ exports.Server = function(name, php) {
         this.log += "[PMS] Starting server " + this.name + "..." + os.EOL;
         this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "enable-ansi"], { cwd: this.folder });
         this.isStarted = true;
+        var this2 = this;
 
-        this.proc.stdout.on('data', (data) => {
-            try {
-                var data = JSON.parse(data);
-                if (Object.keys(data).length < 1) {
-                    this.log += JSON.stringify(data);
-                    return;
+        this.proc.stdout.on('data', (dataFull) => {
+            var dataLines = dataFull.toString().split(os.EOL);
+            dataLines.forEach(function(dataStr) {
+                try {
+                    data = JSON.parse(dataStr);
+                    if (Object.keys(data).length < 1) {
+                        this2.log += JSON.stringify(data);
+                        return;
+                    }
+                    switch (Object.keys(data)[0]) { // API
+                        case "psmplayers":
+                            this2.players = data["psmplayers"];
+                            break;
+                        case "psmlevels":
+                            this2.levels = data["levels"];
+                            break;
+                        case "psmplugins":
+                            this2.plugins = data["psmplugins"];
+                            break;
+                        case "psmActions":
+                            this2.actions = data["psmActions"];
+                            break;
+                        case "psmnotification":
+                            break;
+                        case "psmwindow":
+                            var options = data["psmwindow"];
+                            var winOptions = {};
+                            winOptions.width = options.width ? option.width : 800;
+                            winOptions.height = options.height ? options.height : 600;
+                            winOptions.title = options.title ? options.title : "PocketMine Server Manager";
+                            if (php.app && php.app.mainWindow) winOptions.parent = php.app.mainWindow;
+                            this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
+                            var winId = this.windows.length - 1;
+                            this.windows[winId].id = winId;
+                            this.windows[winId].server = this;
+                            this.windows[winId].on('closed', function() {
+                                delete this.server.windows[this.windId];
+                            });
+                            break;
+                        default:
+                            this2.log += JSON.stringify(data);
+                            break;
+                    }
+                } catch (e) {
+                    // If couldn't succed, that means that this was not JSON so not meant to be used by PSM.
+                    if (dataStr.length !== 0) this2.log += dataStr + os.EOL;
                 }
-                switch (Object.keys(data)[0]) { // API
-                    case "psmplayers":
-                        this.players = data["psmplayers"];
-                        break;
-                    case "psmlevels":
-                        this.levels = data["levels"];
-                        break;
-                    case "psmplugins":
-                        this.plugins = data["psmplugins"];
-                        break;
-                    case "psmActions":
-                        this.actions = data["psmActions"];
-                        break;
-                    case "psmnotification":
-                        break;
-                    case "psmwindow":
-                        var options = data["psmwindow"];
-                        var winOptions = {};
-                        winOptions.width = options.width ? option.width : 800;
-                        winOptions.height = options.height ? options.height : 600;
-                        winOptions.title = options.title ? options.title : "PocketMine Server Manager";
-                        if (php.app && php.app.mainWindow) winOptions.parent = php.app.mainWindow;
-                        this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
-                        var winId = this.windows.length - 1;
-                        this.windows[winId].id = winId;
-                        this.windows[winId].server = this;
-                        this.windows[winId].on('closed', function() {
-                            delete this.server.windows[this.windId];
-                        });
-                        break;
-                    default:
-                        this.log += JSON.stringify(data);
-                        break;
-                }
-            } catch (e) {
-                // If couldn't succed, that means that this was not JSON so not meant to be used by PSM.
-                this.log += data;
-            }
+            });
         });
 
-        this.proc.stderr.on('data', (data) => {
-            this.log += data;
-        });
+        // this.proc.stderr.on('data', (data) => {
+        //     this.log += data;
+        // });
 
         this.proc.on('exit', (code) => {
-            this.log += "[PMS] Server stopped.";
-            this.isStarted = false;
-            fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
+            try {
+                this.log += "[PMS] Server stopped.";
+                this.isStarted = false;
+                fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
+            } catch (e) {}
         });
     }
 
@@ -121,7 +127,7 @@ exports.Server = function(name, php) {
      * Stops the server
      */
     this.stop = function() {
-        this.inputCommand("stop")
+        this.inputCommand("stop");
     }
 
     /**
@@ -139,11 +145,15 @@ exports.Server = function(name, php) {
 
 
     this.refresh = function() {
-        if (this.isStarted) {
-            this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound\n"); // If they find this command without going into the code Idk how they did.
-            this.proc.stdin.write("getloadedlevelsforpsmthatsasuperlongcommandthatibetyoucannotenterwithoutcopypaste\n"); // Haha !
-            this.proc.stdin.write("getplugins4psmthatwillbejavascriptobjectencodedjsonbutnomanagement\n"); // Always JSON
-            this.proc.stdin.write("getactions4psmplzdontusethiscommandiknowitshardtoresistbutdontwhatdidijustsaidokwateveryoulostafewsecondsofyourlife\n"); // If they use this command, they're stupid !
+        try {
+            if (this.isStarted) {
+                this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound\n"); // If they find this command without going into the code Idk how they did.
+                this.proc.stdin.write("getloadedlevelsforpsmthatsasuperlongcommandthatibetyoucannotenterwithoutcopypaste\n"); // Haha !
+                this.proc.stdin.write("getplugins4psmthatwillbejavascriptobjectencodedjsonbutnomanagement\n"); // Always JSON
+                this.proc.stdin.write("getactions4psmplzdontusethiscommandiknowitshardtoresistbutdontwhatdidijustsaidokwateveryoulostafewsecondsofyourlife\n"); // If they use this command, they're stupid !
+            }
+        } catch (e) {
+            // Socket closed.
         }
     }
 }
