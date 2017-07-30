@@ -26,7 +26,7 @@ ipcRenderer.on("sendServer", function(event, server) {
     servers[server.name].log = server.log;
     servers[server.name].settings = server.settings;
     servers[server.name].windows = server.windows;
-    servers[server.name].players = server.players;
+    servers[server.name].actions = server.actions;
     servers[server.name].levels = server.levels;
     servers[server.name].plugins = server.plugins;
     cbs[server.name](servers[server.name]);

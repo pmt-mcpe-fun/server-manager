@@ -57,9 +57,9 @@
             "synopsis": "Manage your servers with ease !",
             "icon": "build/linux_icons",
             "desktop": {
-                "Name": "PocketMine Tools - PMT",
-                "Exec": "pocketmine-tools",
-                "Icon": "pocketmine-tools",
+                "Name": "PocketMine Server Manager",
+                "Exec": "pocketmine-server-manager",
+                "Icon": "pocketmine-server-manager",
                 "Type": "Application",
                 "Terminal": "false",
                 "Categories": "Development;Utility;"

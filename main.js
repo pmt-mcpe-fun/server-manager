@@ -250,6 +250,7 @@ ipcMain.on("setServer", function(event, serverR) {
  * @return {Boolean}
  */
 ipcMain.on("save", function(event) {
+    event.returnValue = true;
     Object.keys(exports.servers).forEach(function(name) {
         var serv = exports.servers[name];
         if (!serv.save()) event.returnValue = false;
@@ -278,7 +279,7 @@ function define() {
     // Checking for servers;
     var servers = fs.readdirSync(exports.serverFolder);
     servers.forEach(function(folder) {
-        exports.servers[folder] = new server.Server(folder, php);
+        exports.servers[folder] = new server.Server(folder, php, exports);
     }, this);
 
     // Setting app clock (1 second based)

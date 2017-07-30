@@ -57,10 +57,6 @@
             <button class="mdc-button mdc-button--raised inline" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">build</i>&nbsp;Edit server properties
             </button>
-            <br>
-            <button class="mdc-button mdc-button--raised" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
-                Edit whitelist
-            </button>
         </div>
         <div class="half">
             <!-- Right tab -->
@@ -263,9 +259,9 @@
                 <li class="mdc-list-item" role="menuitem" tabindex="0" id="startServerLC">Start server</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" id="stopServerLC">Stop server</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" id="editServerLC">Edit server proverties</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
+                <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
+                <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
+                <li class="mdc-list-item goToPlugins" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
             </ul>
         </div>
@@ -301,14 +297,63 @@
         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
             <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
                 <li class="mdc-list-item" role="menuitem" tabindex="0" id="editWhitelistLC">Edit whitelist</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="goToPlayers"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
+                <li class="mdc-list-item goToManage" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
+                <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
+                <li class="mdc-list-item goToPlugins" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
             </ul>
         </div>
         <!-- Add button -->
-        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="footerAddServer" data-mdc-auto-init="MDCRipple">
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
+        	<span class="mdc-fab__icon">people_outline</span>
+        </button>
+    </data-tab>
+
+
+
+
+
+
+    <!-- Worlds -->
+    <data-tab data-tab-id="levels">
+        <ul class="mdc-list mdc-list--two-line" id="manageWorldsList"></ul>
+        <p id="noWorlds" style="padding-left: 10px;">Something went wrong. No level are either loaded or exists...</p>
+
+        <!-- Left click element -->
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
+            <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="editWhitelistLC">Add world</li>
+                <li class="mdc-list-item goToManage" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
+                <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
+                <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
+        <!-- Add button -->
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="footerEditWL" data-mdc-auto-init="MDCRipple">
+        	<span class="mdc-fab__icon">add</span>
+        </button>
+    </data-tab>
+
+
+
+
+    <!-- Plugins -->
+    <data-tab data-tab-id="plugins">
+        <ul class="mdc-list mdc-list--two-line" id="manageWorldsList"></ul>
+        <p id="noWorlds" style="padding-left: 10px;">No plugins loaded or installed.</p>
+        <!-- Left click element -->
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
+            <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="editWhitelistLC">Add plugin</li>
+                <li class="mdc-list-item goToManage" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
+                <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
+                <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
+        <!-- Add button -->
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" data-mdc-auto-init="MDCRipple">
         	<span class="mdc-fab__icon">add</span>
         </button>
     </data-tab>

@@ -29,22 +29,21 @@ document.getElementById("EditServerPropertiesBtn").addEventListener("click", fun
     document.getElementById("editServerDialog").MDCDialog.show();
     //Setting elements back to default.
     document.getElementById("serverMOTD").value = window.server.settings["motd"];
-    document.getElementById("serverPort").value = window.server.settings["server-port"];
-    document.getElementById("maxPlayers").value = window.server.settings["max-players"];
-    document.getElementById("editServerWhitelist?").checked = window.server.settings["white-list"] == "on" ? true : false;
+    document.getElementById("serverPort").value = parseInt(window.server.settings["server-port"]);
+    document.getElementById("maxPlayers").value = parseInt(window.server.settings["max-players"]);
+    document.getElementById("editServerWhitelist?").checked = window.server.settings["white-list"] == "on";
     inputs["editServerSpawnProtection"].value = window.server.settings["spawn-protection"];
-    // console.log(inputs["editServerSpawnProtection"]);
     inputs["editServerSpawnProtection"].root_.childNodes[3].childNodes[1].childNodes[1].innerHTML = window.server.settings["spawn-protection"];
     inputs["editServerViewDistance"].value = window.server.settings["view-distance"];
     inputs["editServerViewDistance"].root_.childNodes[3].childNodes[1].childNodes[1].innerHTML = window.server.settings["view-distance"];
-    inputs["editServerGamemode"].selectedIndex = "gamemode" + window.server.settings["gamemode"];
-    document.getElementById("editServerForceDefaultGamemode").checked = window.server.settings["force-gamemode"] == "on" ? true : false;
-    inputs["editServerDifficulty"].selectedIndex = window.server.settings["difficulty"];
-    document.getElementById("editServerPVP").checked = window.server.settings["pvp"] == "on" ? true : false;
-    document.getElementById("editServerHardcore").checked = window.server.settings["hardcore"] == "on" ? true : false;
-    document.getElementById("editServerAnimals?").checked = window.server.settings["spawn-animals"] == "on" ? true : false;
-    document.getElementById("editServerMonters?").checked = window.server.settings["spawn-mobs"] == "on" ? true : false;
-    autoSave = document.getElementById("editServerAutoSave").checked = window.server.settings["auto-save"] == "on" ? true : false;
+    inputs["editServerGamemode"].selectedIndex = parseInt(window.server.settings["gamemode"]);
+    document.getElementById("editServerForceDefaultGamemode").checked = window.server.settings["force-gamemode"] == "on";
+    inputs["editServerDifficulty"].selectedIndex = parseInt(window.server.settings["difficulty"]);
+    document.getElementById("editServerPVP").checked = window.server.settings["pvp"] == "on";
+    document.getElementById("editServerHardcore").checked = (window.server.settings["hardcore"] == "on");
+    document.getElementById("editServerAnimals?").checked = (window.server.settings["spawn-animals"] == "on");
+    document.getElementById("editServerMonters?").checked = window.server.settings["spawn-mobs"] == "on";
+    autoSave = document.getElementById("editServerAutoSave").checked = window.server.settings["auto-save"] == "on";
 });
 
 

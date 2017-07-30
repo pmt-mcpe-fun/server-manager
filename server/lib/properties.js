@@ -1,5 +1,5 @@
 /**
- * properties.js - Parses .properties file
+ * properties.js - Parses .properties & ini file
  * 
  * @author Ad5001
  * @version 1.0.0
@@ -19,7 +19,7 @@ const os = require("os");
 exports.parseProperties = function(properties) {
     returning = {};
     properties.split(os.EOL).forEach(function(elem) {
-        if (elem.indexOf("=") > 0) returning[elem.split("=")[0]] = elem.split("=")[1];
+        if (elem.indexOf("=") > 0) returning[elem.split("=")[0]] = elem.split("=")[1].replace(/\n|\r/g, "");
     }, this);
     return returning;
 }

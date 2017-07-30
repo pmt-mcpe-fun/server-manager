@@ -9,7 +9,7 @@
  */
 
 const { spawn } = require('child_process');
-const { app, BrowserWindow } = require('electron');
+const { BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require("os");
@@ -20,11 +20,12 @@ const properties = require('./lib/properties');
  * 
  * @param {String} name
  * @param {{}} php
+ * @param {{}} app
  */
-exports.Server = function(name, php) {
+exports.Server = function(name, php, app) {
 
     this.name = name;
-    this.folder = path.join(php.app.serverFolder, name);
+    this.folder = path.join(app.serverFolder, name);
     this.isStarted = false;
     this.players = {};
     this.log = "";
@@ -32,9 +33,22 @@ exports.Server = function(name, php) {
     this.changed = false;
     this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
     this.windows = [];
-    this.players = {};
+    this.players = {
+        "test": {
+            "name": "test",
+            "op": false,
+            "whitelisted": true,
+            "gamemode": 1
+        }
+    };
     this.levels = {};
     this.plugins = {};
+    this.actions = {
+        "playerActions": {},
+        "levelActions": {},
+        "pluginsActions": {},
+        "pluginsSpecificActions": {},
+    };
 
     /**
      * Starts the server
@@ -53,6 +67,7 @@ exports.Server = function(name, php) {
                     data = JSON.parse(dataStr);
                     if (Object.keys(data).length < 1) {
                         this2.log += JSON.stringify(data);
+                        console.log("Printing JSON", data);
                         return;
                     }
                     switch (Object.keys(data)[0]) { // API
@@ -76,7 +91,7 @@ exports.Server = function(name, php) {
                             winOptions.width = options.width ? option.width : 800;
                             winOptions.height = options.height ? options.height : 600;
                             winOptions.title = options.title ? options.title : "PocketMine Server Manager";
-                            if (php.app && php.app.mainWindow) winOptions.parent = php.app.mainWindow;
+                            if (app && app.mainWindow) winOptions.parent = app.mainWindow;
                             this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
                             var winId = this.windows.length - 1;
                             this.windows[winId].id = winId;
@@ -87,6 +102,7 @@ exports.Server = function(name, php) {
                             break;
                         default:
                             this2.log += JSON.stringify(data);
+                            console.log("Printing JSON2", data);
                             break;
                     }
                 } catch (e) {
@@ -182,4 +198,71 @@ exports.ServerExportable = function() {
         this.actions = Server.actions;
         this.settings = Server.settings
     }
+}
+
+/**
+ * Finds JSON in a text and outputs it.
+ * 
+ * @param {String} text 
+ */
+
+function findJSON(text) {
+    var JSONs = [];
+    var currentJSON = "";
+    var parsingJSON = false;
+    var openedBrackets = 0;
+    var openedCurles = 0;
+    var startedBy = "";
+    text.split(os.EOL).forEach(function(line) {
+        if (!parsingJSON) {
+            if (line.substr(line.length - 1, 1) == "{") { // Starting JSON Object
+                openedCurles += 1;
+                parsingJSON = true;
+                currentJSON += "{";
+                startedBy = "{";
+            } else if (line.substr(line.length - 1, 1) == "[") { // Starting JSON Array
+                openedBrackets += 1;
+                parsingJSON = true;
+                currentJSON += "[";
+                startedBy = "[";
+            }
+        }
+        if (parsingJSON) {
+            line.split().forEach(function(char) {
+                switch (char) {
+                    case "{":
+                        openedCurles++;
+                        if (!parsingJSON) {
+                            openedCurles += 1;
+                            parsingJSON = true;
+                            currentJSON += "{";
+                            startedBy = "{";
+                        }
+                        break;
+                    case "}":
+                        if (parsingJSON) openedCurles--;
+                        break;
+                    case "[":
+                        openedBrackets++;
+                        if (!parsingJSON) {
+                            openedBrackets += 1;
+                            parsingJSON = true;
+                            currentJSON += "[";
+                            startedBy = "[";
+                        }
+                        break;
+                    case "]":
+                        if (parsingJSON) openedBrackets--;
+                        break;
+                }
+                currentJSON += char;
+                if (openedCurles == 0 && openedBrackets == 0) {
+                    if (parsingJSON) {
+                        parsingJSON = false;
+                        JSONs.push(JSON.parse(currentJSON));
+                    }
+                }
+            })
+        }
+    })
 }

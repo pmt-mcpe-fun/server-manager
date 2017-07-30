@@ -22,7 +22,7 @@ window.serverCallbacks.push(function(server) {
         Object.keys(server.players).forEach(function(key) {
             if (!document.getElementById(`managePlayer${key}`)) {
                 document.getElementById("managePlayersList").innerHTML += `
-            <li onclass="mdc-list-item" id="managePlayer${key}">
+            <li class="mdc-list-item" id="managePlayer${key}">
                 <span id="managePlayer${key}Props" class=" mdc-list-item__start-detail">
     		    </span>
                 <span class="mdc-list-item__text">
@@ -30,14 +30,14 @@ window.serverCallbacks.push(function(server) {
                 </span>
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsPlayer${key}">more_vert</i>
-                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" id="menuActionsPlayer${key}" tabindex="-1">
+                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsPlayer${key}" tabindex="-1">
                         <ul class="mdc-simple-menu__items mdc-list" role="menuActionsPlayer${key}List" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
             </li>`;
                 new mdc.ripple.MDCRipple(document.getElementById("managePlayer" + key));
-                document.getElementById(`menuActionsPlayer${key}`).MDCMenu = new mdc.menu.MDCMenu(document.getElementById(`menuActionsPlayer${key}`)); // Defining real menu
+                document.getElementById(`menuActionsPlayer${key}`).MDCMenu = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsPlayer${key}`)); // Defining real menu;
                 // Adding actions of player
                 document.getElementById("actionsPlayer" + key).addEventListener("click", function() {
                     if (openMenu) {
@@ -66,8 +66,8 @@ window.serverCallbacks.push(function(server) {
                     document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
                 });
                 // Adding player's attribute
-                if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>build</i>";
-                if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material_icons'>verified user</i>";
+                if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons'>build</i>";
+                if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons'>verified_user</i>";
             }
         });
     }

@@ -10,12 +10,8 @@
 
 document.querySelectorAll(".mdc-tab").forEach(function(elem) {
     elem.addEventListener("click", function() {
-        var goTab = document.querySelector('data-tab[data-tab-id="' + this.getAttribute("data-go-tab") + '"]');
-        console.log("Going to " + this.getAttribute("data-go-tab"), goTab);
-        if (goTab && !goTab.classList.contains("active")) {
-            document.querySelector('data-tab.active').classList.remove("active"); // Removes the old one
-            goTab.classList.add("active"); // Shows the new one
-        }
+
+        switchTab(this.getAttribute("data-go-tab"));
     });
 });
 var leaving = false;
@@ -34,3 +30,39 @@ window.addEventListener('beforeunload', function(event) {
         event.returnValue = "";
     }
 });
+// Buttons in menu
+document.querySelectorAll(".goToPlayers").forEach(function(elem) {
+    elem.addEventListener("click", function() {
+        window.tabBar.activeTabIndex = 1;
+        switchTab("players");
+    });
+});
+document.querySelectorAll(".goToManage").forEach(function(elem) {
+    elem.addEventListener("click", function() {
+        window.tabBar.activeTabIndex = 0;
+        switchTab("main");
+    });
+});
+document.querySelectorAll(".goToWorlds").forEach(function(elem) {
+    elem.addEventListener("click", function() {
+        window.tabBar.activeTabIndex = 2;
+        switchTab("levels");
+    });
+});
+document.querySelectorAll(".goToPlugins").forEach(function(elem) {
+    elem.addEventListener("click", function() {
+        window.tabBar.activeTabIndex = 3;
+        switchTab("plugins");
+    });
+});
+
+function switchTab(tabName) {
+    var goTab = document.querySelector('data-tab[data-tab-id="' + tabName + '"]');
+    console.log("Going to " + goTab.getAttribute("data-tab-id"), goTab);
+    document.querySelector(".mdc-tab.mdc-tab--active").classList.remove("mdc-tab--active");
+    document.querySelector(".mdc-tab[data-go-tab=\"" + tabName + "\"]").classList.add("mdc-tab--active");
+    if (goTab && !goTab.classList.contains("active")) {
+        document.querySelector('data-tab.active').classList.remove("active"); // Removes the old one
+        goTab.classList.add("active"); // Shows the new one
+    }
+}

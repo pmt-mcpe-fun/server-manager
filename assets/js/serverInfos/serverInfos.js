@@ -22,6 +22,16 @@ var queuing = false; // TODO: Find a better var name.
 var first = 1;
 window.serverCallbacks = [];
 
+// Defining custom left click element
+document.body.addEventListener("contextmenu", function(event) {
+    var menu = new mdc.menu.MDCSimpleMenu(document.querySelector("data-tab.active .leftClick"));
+    document.querySelector("data-tab.active .leftClick").style.left = event.clientX + 'px';
+    document.querySelector("data-tab.active .leftClick").style.top = event.clientY + 'px';
+    // Showing element
+    menu.open = !menu.open;
+});
+
+
 function define(serverR) {
     window.server = serverR;
     document.getElementById("serverName").innerHTML = window.server.name;
@@ -67,6 +77,6 @@ setInterval(function() {
 document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
     new mdc.textfield.MDCTextfield(elem);
 });
-mdc.tabs.MDCTabBar.attachTo(document.querySelector('.mdc-tab-bar'));
+window.tabBar = new mdc.tabs.MDCTabBar(document.querySelector('.mdc-tab-bar'));
 // Removing shadow from top so tool bar intergates correctly
 top.document.querySelector("header.mdc-toolbar").style.boxShadow = "0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12)";
