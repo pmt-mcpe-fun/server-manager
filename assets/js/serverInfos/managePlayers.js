@@ -10,7 +10,6 @@
 var openMenu = undefined;
 window.serverCallbacks.push(function(server) {
     var playersList = document.getElementById("managePlayersList").children;
-    console.log(server.players);
     for (var i = 0; i < playersList.length; i++) {
         if (!server.players[playersList[i].id.substring(12)]) {
             playersList[i].remove();
@@ -65,6 +64,7 @@ window.serverCallbacks.push(function(server) {
                             });
                     });
                     document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
+                    openMenu = document.getElementById("menuActionsPlayer" + key).MDCMenu;
                 });
                 // Adding player's attribute
                 if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons'>build</i>";

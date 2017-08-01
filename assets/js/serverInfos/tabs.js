@@ -58,7 +58,6 @@ document.querySelectorAll(".goToPlugins").forEach(function(elem) {
 
 function switchTab(tabName) {
     var goTab = document.querySelector('data-tab[data-tab-id="' + tabName + '"]');
-    console.log("Going to " + goTab.getAttribute("data-tab-id"), goTab);
     document.querySelector(".mdc-tab.mdc-tab--active").classList.remove("mdc-tab--active");
     document.querySelector(".mdc-tab[data-go-tab=\"" + tabName + "\"]").classList.add("mdc-tab--active");
     if (goTab && !goTab.classList.contains("active")) {

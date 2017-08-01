@@ -316,8 +316,8 @@
 
     <!-- Worlds -->
     <data-tab data-tab-id="levels">
-        <ul class="mdc-list mdc-list--two-line" id="manageWorldsList"></ul>
-        <p id="noWorlds" style="padding-left: 10px;">Something went wrong. No level are either loaded or exists...</p>
+        <ul class="mdc-list mdc-list--two-line" id="manageLevelsList"></ul>
+        <p id="noLevels" style="padding-left: 10px;">Something went wrong. No level are either loaded or exists...</p>
 
         <!-- Left click element -->
         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
@@ -340,8 +340,8 @@
 
     <!-- Plugins -->
     <data-tab data-tab-id="plugins">
-        <ul class="mdc-list mdc-list--two-line" id="manageWorldsList"></ul>
-        <p id="noWorlds" style="padding-left: 10px;">No plugins loaded or installed.</p>
+        <ul class="mdc-list mdc-list--two-line" id="managePluginsList"></ul>
+        <p id="noPlugins" style="padding-left: 10px;">No plugins loaded or installed.</p>
         <!-- Left click element -->
         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
             <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
@@ -353,7 +353,7 @@
             </ul>
         </div>
         <!-- Add button -->
-        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" data-mdc-auto-init="MDCRipple">
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="addPlugin" data-mdc-auto-init="MDCRipple">
         	<span class="mdc-fab__icon">add</span>
         </button>
     </data-tab>
@@ -367,6 +367,7 @@
 <script src="js/serverInfos/editServerProperties.js"></script>
 <script src="js/serverInfos/whitelist.js"></script>
 <script src="js/serverInfos/managePlayers.js"></script>
+<script src="js/serverInfos/manageLevels.js"></script>
 <script src="js/serverInfos/tabs.js"></script>
 
 </html>
