@@ -20,6 +20,7 @@ window.serverCallbacks.push(function(server) {
     } else {
         document.getElementById("noPlayer").style.display = "none";
         Object.keys(server.players).forEach(function(key) {
+            key = server.players[key].name;
             if (!document.getElementById(`managePlayer${key}`)) {
                 document.getElementById("managePlayersList").innerHTML += `
             <li class="mdc-list-item" id="managePlayer${key}">

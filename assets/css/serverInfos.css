@@ -135,3 +135,10 @@ section#editServerBody::-webkit-scrollbar-thumb {
     line-height: 1.25rem;
     transform: rotate(45deg);
 }
+
+@media screen and (max-device-width:406px) {
+     :root,
+    body {
+        overflow-y: scroll;
+    }
+}
