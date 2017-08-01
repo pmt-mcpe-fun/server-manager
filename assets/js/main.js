@@ -57,19 +57,9 @@ exports.download = function(url, dest, cb) {
  */
 exports.exit = function() {
     if (ipcRenderer.sendSync("save")) {
-        console.log("Getting processes...");
-        ps.get(function(err, processes) {
-            console.log('Got processes !');
-            processes.forEach(function(elem, key) {
-                if (elem.name.indexOf("pocketmine-serv") > 0 || elem.name == "electron") {
-                    console.log("Killing ", elem.pid, process.pid);
-                    if (elem.pid !== process.pid) {
-                        process.kill(elem.pid, "SIGKILL");
-                    }
-                }
-            });
-            app.app.exit(0);
-        });
+        console.log("Exiting PSM...");
+        app.app.exit(0);
+        process.exit(0);
     } else {
         snackbar("Please stop all your servers before exiting the app !");
     }

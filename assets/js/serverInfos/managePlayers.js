@@ -7,9 +7,10 @@
  * @copyright (C) Ad5001 2017
  * @package PocketMine Server Manager
  */
-openMenu = undefined;
+var openMenu = undefined;
 window.serverCallbacks.push(function(server) {
     var playersList = document.getElementById("managePlayersList").children;
+    console.log(server.players);
     for (var i = 0; i < playersList.length; i++) {
         if (!server.players[playersList[i].id.substring(12)]) {
             playersList[i].remove();

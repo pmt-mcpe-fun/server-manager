@@ -61,53 +61,44 @@ exports.Server = function(name, php, app) {
         var this2 = this;
 
         this.proc.stdout.on('data', (dataFull) => {
-            var dataLines = dataFull.toString().split(os.EOL);
-            dataLines.forEach(function(dataStr) {
-                try {
-                    data = JSON.parse(dataStr);
-                    if (Object.keys(data).length < 1) {
+            var dataM = findJSON(dataFull.toString());
+            var JSONs = dataM[1];
+            if (dataM[0].length > 0) this2.log += dataM[0] + os.EOL;
+            JSONs.forEach(function(data) {
+                switch (Object.keys(data)[0]) { // API
+                    case "psmplayers":
+                        this2.players = data["psmplayers"];
+                        break;
+                    case "psmlevels":
+                        this2.levels = data["psmlevels"];
+                        break;
+                    case "psmplugins":
+                        this2.plugins = data["psmplugins"];
+                        break;
+                    case "psmActions":
+                        this2.actions = data["psmActions"];
+                        break;
+                    case "psmnotification":
+                        break;
+                    case "psmwindow":
+                        var options = data["psmwindow"];
+                        var winOptions = {};
+                        winOptions.width = options.width ? option.width : 800;
+                        winOptions.height = options.height ? options.height : 600;
+                        winOptions.title = options.title ? options.title : "PocketMine Server Manager";
+                        if (app && app.mainWindow) winOptions.parent = app.mainWindow;
+                        this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
+                        var winId = this.windows.length - 1;
+                        this.windows[winId].id = winId;
+                        this.windows[winId].server = this;
+                        this.windows[winId].on('closed', function() {
+                            delete this.server.windows[this.windId];
+                        });
+                        break;
+                    default:
                         this2.log += JSON.stringify(data);
-                        console.log("Printing JSON", data);
-                        return;
-                    }
-                    switch (Object.keys(data)[0]) { // API
-                        case "psmplayers":
-                            this2.players = data["psmplayers"];
-                            break;
-                        case "psmlevels":
-                            this2.levels = data["levels"];
-                            break;
-                        case "psmplugins":
-                            this2.plugins = data["psmplugins"];
-                            break;
-                        case "psmActions":
-                            this2.actions = data["psmActions"];
-                            break;
-                        case "psmnotification":
-                            break;
-                        case "psmwindow":
-                            var options = data["psmwindow"];
-                            var winOptions = {};
-                            winOptions.width = options.width ? option.width : 800;
-                            winOptions.height = options.height ? options.height : 600;
-                            winOptions.title = options.title ? options.title : "PocketMine Server Manager";
-                            if (app && app.mainWindow) winOptions.parent = app.mainWindow;
-                            this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
-                            var winId = this.windows.length - 1;
-                            this.windows[winId].id = winId;
-                            this.windows[winId].server = this;
-                            this.windows[winId].on('closed', function() {
-                                delete this.server.windows[this.windId];
-                            });
-                            break;
-                        default:
-                            this2.log += JSON.stringify(data);
-                            console.log("Printing JSON2", data);
-                            break;
-                    }
-                } catch (e) {
-                    // If couldn't succed, that means that this was not JSON so not meant to be used by PSM.
-                    if (dataStr.length !== 0) this2.log += dataStr + os.EOL;
+                        console.log("Printing JSON2", data);
+                        break;
                 }
             });
         });
@@ -208,12 +199,8 @@ exports.ServerExportable = function() {
 
 function findJSON(text) {
     var JSONs = [];
-    var currentJSON = "";
-    var parsingJSON = false;
-    var openedBrackets = 0;
-    var openedCurles = 0;
-    var startedBy = "";
-    text.split(os.EOL).forEach(function(line) {
+    var noJSON = "";
+    /*text.split(os.EOL).forEach(function(line) {
         if (!parsingJSON) {
             if (line.substr(line.length - 1, 1) == "{") { // Starting JSON Object
                 openedCurles += 1;
@@ -225,6 +212,8 @@ function findJSON(text) {
                 parsingJSON = true;
                 currentJSON += "[";
                 startedBy = "[";
+            } else {
+                noJSON += line + os.EOL;
             }
         }
         if (parsingJSON) {
@@ -264,5 +253,28 @@ function findJSON(text) {
                 }
             })
         }
-    })
+    })*/
+    try {
+        var texts = text.split("}{");
+        if (texts.length > 1) { // Multiple JSONs
+            texts.forEach(function(maybeJSON, index) {
+                if (index !== 0) maybeJSON = "{" + maybeJSON;
+                if (index !== texts.length - 1) maybeJSON += "}";
+                try {
+                    JSONs.push(JSON.parse(maybeJSON.replace(/\r|\n/g, "")));
+                } catch (e) {
+                    if (maybeJSON.length > 0 && !maybeJSON.match(/(\r|\n)+/gm)) {
+                        noJSON += maybeJSON.replace(/(\r|\n)+/gm, "$1");
+                        console.log(JSON.stringify(maybeJSON));
+                    }
+                }
+            });
+        } else {
+            JSONs.push(JSON.parse(text.replace(/\r|\n/, "")));
+        }
+    } catch (e) {
+        noJSON = text.replace(/(\r|\n)+/gm, "$1");
+        console.log(JSON.stringify(noJSON));
+    }
+    return [noJSON, JSONs];
 }
