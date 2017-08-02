@@ -12,7 +12,7 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-// require('daemon-plus')(); // creates new child process, exists the parent
+require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
@@ -111,8 +111,9 @@ function checkForUpdates(cb) {
                 cb();
             });
         }
-    ).on('error', function(e) { // An error occured. Do nothing
+    ).on('error', function(e) { // An error occured. Do nothing exepct cb
         console.log(`Got error: ${e.message}`);
+        cb();
     });
 }
 

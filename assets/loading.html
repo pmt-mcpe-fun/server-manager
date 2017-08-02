@@ -30,7 +30,16 @@
     <p id="currentThing"></p>
 </body>
 
-<!-- <script src="../node_modules/material-components-web/dist/material-components-web.js"></script> -->
-<!-- <script>
-    mdc.autoInit()
-</script> -->
+<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
+<script>
+    mdc.autoInit();
+    window.addEventListener("beforeunload", function(ev) {
+        if (!document.body.classList.contains("fadeout")) {
+            document.body.classList.add("fadeout");
+            ev.returnValue = "";
+            setTimeout(function() {
+                location = "index.html";
+            }, 2000);
+        }
+    });
+</script>
