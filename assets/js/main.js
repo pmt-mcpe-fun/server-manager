@@ -58,8 +58,7 @@ exports.download = function(url, dest, cb) {
 exports.exit = function() {
     if (ipcRenderer.sendSync("save")) {
         console.log("Exiting PSM...");
-        app.app.exit(0);
-        process.exit(0);
+        ipcRenderer.sendSync("close");
     } else {
         snackbar("Please stop all your servers before exiting the app !");
     }

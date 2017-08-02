@@ -12,7 +12,7 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-require('daemon-plus')(); // creates new child process, exists the parent
+// require('daemon-plus')(); // creates new child process, exists the parent
 
 const path = require('path');
 const fs = require('fs');
@@ -57,9 +57,11 @@ var startApp = function() {
                 c++; // Snif
             }
         });
+        console.log(c);
         if (c > 5) {
             fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
             app.exit(0);
+            console.log("fully quitting");
             process.exit(0);
         } else {
             createWindow();
@@ -128,7 +130,7 @@ function createWindow() {
 
     // and load the index.html of the app.
     exports.mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'assets', 'loading.html'),
+        pathname: path.join(__dirname, 'assets', !defined ? 'loading.html' : 'index.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -153,7 +155,7 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', startApp);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -255,6 +257,18 @@ ipcMain.on("save", function(event) {
         var serv = exports.servers[name];
         if (!serv.save()) event.returnValue = false;
     })
+});
+/**
+ * CLoses the app (sync)
+ * 
+ * @param {*} event
+ * @return {Boolean}
+ */
+ipcMain.on("close", function(event) {
+    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
+    app.exit();
+    process.exit();
+    event.returnValue = "";
 });
 
 // Defines everything when window loads
