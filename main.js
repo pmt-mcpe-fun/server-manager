@@ -58,7 +58,7 @@ var startApp = function() {
             }
         });
         console.log(c);
-        if (c > 5) {
+        if (c > (process.env.__daemon ? 5 /*Daemon production mode*/ : 2 /*Sync debug mode*/ )) {
             fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
             app.exit(0);
             console.log("fully quitting");

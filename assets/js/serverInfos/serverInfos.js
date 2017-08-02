@@ -37,7 +37,16 @@ function define(serverR) {
     document.getElementById("serverName").innerHTML = window.server.name;
     document.getElementById("started?").innerHTML = window.server.isStarted ? "play_arrow" : "stop";
     document.getElementById("started?").style.color = window.server.isStarted ? "var(--mdc-theme-primary, green)" : "red";
-    document.getElementById("consoleContent").innerHTML = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\r|\n/g, "<br>").replace(/(<br>)+/g, "<br>"); // F*ck this shit of vars.
+    var logsNew = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\r|\n/g, "<br>").replace(/(<br>)+/g, "<br>").split("<br>");
+    var logsHTML = document.getElementById("consoleContent");
+    for (var i = logsHTML.children.length - 1; i < logsNew.length - 1; i++) {
+        if (i !== -1 && !document.getElementById("console" + i)) {
+            var newLine = document.createElement("p");
+            newLine.innerHTML = logsNew[i];
+            newLine.id = "console" + i;
+            logsHTML.appendChild(newLine);
+        }
+    }
     if (first > 0) {
         document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
         document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
