@@ -86,7 +86,7 @@ function addServer(server) {
     		<i class="material-icons mdc-list-item__start-detail removeServerBtn hidden" style="color: red;" onclick="require('./js/main.js').removeServer('${server.name}');event.stopPropagation();">
       			remove_circle
     		</i>
-    		<i id="server` + server.name + `Running" class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "var(--mdc-theme-accent, green)" : "red") + `;">
+    		<i id="server` + server.name + `Running" class="material-icons mdc-list-item__start-detail" style="color: ` + (running ? "var(--mdc-theme-primary, green)" : "red") + `;">
       			` + (running ? "play_arrow" : "stop") + `
     		</i>
             <span class="mdc-list-item__text">
@@ -98,7 +98,7 @@ function addServer(server) {
 			<i class="material-icons mdc-list-item__end-detail">navigate_next</i>
           </li>`;
         } else {
-            document.getElementById("server" + server.name + "Running").style.color = (running ? "var(--mdc-theme-accent, green)" : "red")
+            document.getElementById("server" + server.name + "Running").style.color = (running ? "var(--mdc-theme-primary, green)" : "red")
             document.getElementById("server" + server.name + "Running").innerHTML = (running ? "play_arrow" : "stop")
             var Secondary = serverInfos["motd"] + " - (" + Object.keys(server.players).length + "/" + server.settings["max-players"] + " players)";
             if (document.getElementById("server" + server.name + "Secondary").innerHTML.indexOf(Secondary) == 0) { // MOTD, Max players, or players number has changed

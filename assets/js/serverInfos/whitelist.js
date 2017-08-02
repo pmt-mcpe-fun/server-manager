@@ -17,20 +17,20 @@ window.serverCallbacks.push(function(server) {
         if (fs.existsSync(wlPath)) {
             fs.readFile(wlPath, function(err, data) {
                 if (!err) {
-                    players = data.toString().split(os.EOL);
-                    players.forEach(function(playerName, index) {
-                        if (!playerName.match(/^[a-zA-Z0-9_.-]+$/)) delete players[index];
+                    var playersCurrent = data.toString().split(os.EOL);
+                    playersCurrent.forEach(function(playerName, index) {
+                        if (playerName.match(/^[a-zA-Z0-9_.-]+$/)) players[index] = playerName;
                     });
                 }
             })
         }
-    })
+    }, 300)
 });
 document.getElementById("EditWhitelistBtn").addEventListener("click", function() {
     document.getElementById("whiteListPlayers").innerHTML = "";
     players.forEach(function(player) {
         document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="whiteList${player}">
-    		<i class="material-icons mdc-list-item__start-detail" style="color: red;" onclick="removePlayerFromWL('${player}');event.stopPropagation();">
+    		<i class="material-icons mdc-list-item__start-detail" style="color: red;" onclick="removePlayerFromWL('${player}');this.parentElement.remove();">
       			remove_circle
     		</i>
             <span class="mdc-list-item__text">
@@ -38,19 +38,84 @@ document.getElementById("EditWhitelistBtn").addEventListener("click", function()
             </span>
           </li>`;
         new mdc.ripple.MDCRipple(document.getElementById(`whiteList${player}`));
-        document.getElementById("editWhitelist").MDCDialog.show();
     });
-    if (players.length < 1 && !document.getElementById("noPlayer")) {
-        document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="noPlayer">
+    if (players.length < 1) {
+        document.getElementById("whiteListPlayers").innerHTML = `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="noPlayer">
             <span class="mdc-list-item__text">
     		    No player is currently whitelisted on your server.
             </span>
           </li>`;
     }
+    document.getElementById("editWhitelist").MDCDialog.show();
 })
 
+
+
 document.getElementById("addPlayerToWLBtn").addEventListener("click", function(ev) {
-    addPlayerToWL(prompt("Enter the player name you want to add to the whitelist"));
+    if (!document.getElementById("addPlayerWLInput")) {
+        if (players.length < 1) {
+            document.getElementById("whiteListPlayers").innerHTML = `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="addPlayerWLInputList">
+    		<i class="material-icons mdc-list-item__start-detail" style="color: red;" id="removeAddPlayerWLInput">
+      			remove_circle
+    		</i>
+            <span class="mdc-list-item__text">
+                <input id="addPlayerWLInput" class="mdc-textfield__input" type="text" pattern="^[a-zA-Z0-9_.-]+$" />
+            </span>
+            <i class="material-icons mdc-list-item__end-detail" style="color: var(--mdc-theme-primary, green);" id="validAddPlayerWLInput">
+      			done
+    		</i>
+          </li>`;
+        } else {
+            document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="addPlayerWLInputList">
+    		<i class="material-icons mdc-list-item__start-detail" style="color: red;" id="removeAddPlayerWLInput">
+      			remove_circle
+    		</i>
+            <span class="mdc-list-item__text">
+                <input id="addPlayerWLInput" class="mdc-textfield__input" type="text" pattern="^[a-zA-Z0-9_.-]+$" />
+            </span>
+            <i class="material-icons mdc-list-item__end-detail" style="color: var(--mdc-theme-primary, green);" id="validAddPlayerWLInput">
+      			done
+    		</i>
+          </li>`;
+        }
+        document.getElementById("removeAddPlayerWLInput").addEventListener("click", function() {
+            document.getElementById("addPlayerWLInputList").remove();
+            if (players.length < 1) {
+                document.getElementById("whiteListPlayers").innerHTML = `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="noPlayer">
+            <span class="mdc-list-item__text">
+    		    No player is currently whitelisted on your server.
+            </span>
+          </li>`;
+            }
+        });
+        new mdc.ripple.MDCRipple(document.getElementById(`addPlayerWLInputList`));
+        var addPlayer = function() {
+            var player = document.getElementById("addPlayerWLInput").value;
+            if (players.indexOf(player) == -1) {
+                addPlayerToWL(player);
+                document.getElementById("addPlayerWLInputList").remove();
+                document.getElementById("whiteListPlayers").innerHTML += `<li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="whiteList${player}">
+    		<i class="material-icons mdc-list-item__start-detail" style="color: red;" onclick="removePlayerFromWL('${player}');this.parentElement.remove();">
+      			remove_circle
+    		</i>
+            <span class="mdc-list-item__text">
+    		    ${player}
+            </span>
+          </li>`
+            }
+        }
+        document.getElementById("addPlayerWLInput").addEventListener("keydown", function(event) {
+            if (event.which == 13 || event.keyCode == 13) {
+                addPlayer();
+                return false;
+            }
+            if (players.indexOf(this.value + event.char) > -1) {
+                document.getElementById("validAddPlayerWLInput").setAttribute("disabled", "true");
+            }
+            return true;
+        });
+        document.getElementById("validAddPlayerWLInput").addEventListener("click", addPlayer);
+    }
 });
 
 
@@ -60,8 +125,8 @@ document.getElementById("addPlayerToWLBtn").addEventListener("click", function(e
  * @param {string} playerName 
  */
 function addPlayerToWL(playerName) {
-    if (!players.indexOf(playerName)) {
-        playes.push(playerName);
+    if (players.indexOf(playerName) < 0) {
+        players.push(playerName);
         fs.writeFile(wlPath, players.join(os.EOL), function(e) {
             if (e) {
                 min.snackbar(`Could not add ${playerName} to the whitelist.`);
@@ -81,11 +146,11 @@ function addPlayerToWL(playerName) {
  * @param {string} playerName 
  */
 function removePlayerFromWL(playerName) {
-    if (players.indexOf(playerName)) {
+    if (players.indexOf(playerName) > -1) {
         delete players[players.indexOf(playerName)];
         fs.writeFile(wlPath, players.join(os.EOL), function(e) {
             if (e) {
-                min.snackbar(`Could not remove ${playerName} from whitelist.`);
+                main.snackbar(`Could not remove ${playerName} from whitelist.`);
             } else {
                 if (window.server) {
                     window.server.commands.push(`whitelist remove ${playerName}`);
