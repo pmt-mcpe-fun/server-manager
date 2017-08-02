@@ -95,11 +95,10 @@ section#editServerBody::-webkit-scrollbar-thumb {
 
 #commandEnter {
     height: 26px;
-    /*margin-left: 31px;*/
+    margin-top: -20px;
     align-self: flex-end;
     width: calc(100% - 32px);
     border-bottom-right-radius: 10px;
-    margin: 0px;
 }
 
 #commandEnter:hover {

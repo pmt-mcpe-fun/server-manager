@@ -40,7 +40,8 @@ data-tab:not(.active) {
 data-tab {
     width: 100%;
     height: calc(100% - 72px);
-    margin-top: 72px;
+    top: 72px;
+    position: absolute;
 }
 
 @keyframes enterTab {
