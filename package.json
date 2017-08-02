@@ -34,13 +34,13 @@
         "daemon-plus": "^1.1.1"
     },
     "build": {
-        "appId": "fun.mcpe.pmt.servermanager",
+        "appId": "fun.mcpe.psm.servermanager",
         "win": {
             "target": "nsis"
         },
         "nsis": {
             "allowToChangeInstallationDirectory": true,
-            "guid": "fun.mcpe.pmt.servermanager",
+            "guid": "fun.mcpe.psm.servermanager",
             "deleteAppDataOnUninstall": true
         },
         "mac": {
@@ -51,8 +51,7 @@
             "target": [
                 "deb",
                 "tar.gz",
-                "snap",
-                "apk"
+                "snap"
             ],
             "synopsis": "Manage your servers with ease !",
             "icon": "build/linux_icons",
