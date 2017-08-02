@@ -1,0 +1,39 @@
+/**
+ *
+ * PocketMine Server Manager design - loading page
+ * 
+ * @author Ad5001
+ * @version 1.0.0
+ * @license CC-BY-NC-SA-4.0
+ * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
+ *
+ */
+
+div {
+    margin-top: 30px;
+    width: 80% !important;
+    margin-left: 10%;
+}
+
+div * {
+    margin-top: 0px !important;
+    width: 100% !important;
+}
+
+img {
+    width: 128px;
+    height: 128px;
+    margin-left: calc(50% - 64px);
+    margin-top: 200px;
+}
+
+body * {
+    vertical-align: middle;
+}
+
+p {
+    margin-top: 5px;
+    width: 100%;
+    text-align: center;
+}

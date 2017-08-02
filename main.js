@@ -72,50 +72,49 @@ var this2 = this;
 // Checking for updates
 var updateAvailable = false;
 var newData;
-http.get("http://psm.mcpe.fun/versions.json",
-    function(response) {
-        var completeResponse = '';
-        response.on('data', function(chunk) {
-            completeResponse += chunk;
-            console.log("Current res: " + completeResponse);
-        });
-        response.on('end', function() { // Here we have the final result
-            console.log("Finished !" + completeResponse);
-            try {
-                var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
-            } catch (e) {
-                var data = {};
-            }
-            try {
-                newData = JSON.parse(completeResponse);
-            } catch (e) {
-                newData = {};
-            }
-            if (!fs.existsSync(path.join(exports.appFolder, "versions.json")) || (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0)) { // New version out for PMMP soft & no timeout
-                fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
-            }
-            if (newData.version !== data.version) { // New app version is out
-                if (exports.mainWindow instanceof BrowserWindow) {
-                    exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
-                    snackbar.show({
-    				    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-                        actionText: "Download",
-                        actionHandler: function() {
-							require('electron').shell.openExternal('https://psm.mcpe.fun/download');
-						},
-                        multiline: true,
-                        actionOnBottom: true,
-                        timeout: 1000000000
-                    });`);
-                } else {
-                    updateAvailable = true;
+
+/**
+ * Checks for updates
+ * 
+ * @param {Function} cb
+ */
+
+function checkForUpdates(cb) {
+    php.snackbar("Searching for updates...");
+    http.get("http://psm.mcpe.fun/versions.json",
+        function(response) {
+            var completeResponse = '';
+            response.on('data', function(chunk) {
+                completeResponse += chunk;
+                console.log("Current res: " + completeResponse);
+            });
+            response.on('end', function() { // Here we have the final result
+                console.log("Finished !" + completeResponse);
+                try {
+                    var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
+                } catch (e) {
+                    var data = {};
                 }
-            }
-        });
-    }
-).on('error', function(e) { // An error occured. Do nothing
-    console.log(`Got error: ${e.message}`);
-});
+                try {
+                    newData = JSON.parse(completeResponse);
+                } catch (e) {
+                    newData = {};
+                }
+                if (!fs.existsSync(path.join(exports.appFolder, "versions.json")) || (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0)) { // New version out for PMMP soft & no timeout
+                    fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
+                }
+                if (newData.version !== data.version) { // New app version is out
+                    updateAvailable = true;
+                } else {
+                    php.snackbar("No updates found...");
+                }
+                cb();
+            });
+        }
+    ).on('error', function(e) { // An error occured. Do nothing
+        console.log(`Got error: ${e.message}`);
+    });
+}
 
 // Creates the window
 function createWindow() {
@@ -128,7 +127,7 @@ function createWindow() {
 
     // and load the index.html of the app.
     exports.mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'assets', 'index.html'),
+        pathname: path.join(__dirname, 'assets', 'loading.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -145,7 +144,7 @@ function createWindow() {
 
 
     // When the app is launched, just download the app.
-    exports.mainWindow.webContents.on("dom-ready", define)
+    exports.mainWindow.webContents.on("did-finish-load", define)
     require('./assets/menus');
 }
 
@@ -153,7 +152,7 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', startApp);
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -258,9 +257,14 @@ ipcMain.on("save", function(event) {
 });
 
 // Defines everything when window loads
+var defined = false;
+
 function define() {
-    if (updateAvailable) {
-        exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+    if (!defined) {
+        php.setApp(this.app);
+        checkForUpdates(function() {
+            if (updateAvailable) {
+                exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
         snackbar.show({
     	    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
             actionText: "Download",
@@ -271,47 +275,57 @@ function define() {
             actionOnBottom: true,
             timeout: 1000000000
         });`);
+            }
+            console.log('Loaded !');
+            // Defining php
+            php.snackbar("Searching for php...");
+            php.define(function() {
+                // Checking for servers;
+                php.snackbar("Searching for servers...");
+                var servers = fs.readdirSync(exports.serverFolder);
+                servers.forEach(function(folder) {
+                    exports.servers[folder] = new server.Server(folder, php, exports);
+                }, this);
+                // Setting app clock (1 second based)
+                setInterval(function() {
+                    // Listening to relaunch
+                    if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
+                        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
+                        if (exports.mainWindow === null) {
+                            createWindow();
+                        } else if (exports.mainWindow !== null) {
+                            if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+                            exports.mainWindow.focus();
+                        }
+                    }
+                    // IPC Refreshing
+                    ipcMain.main = this;
+                    // Servers refreshing
+                    var name;
+                    Object.keys(exports.servers).forEach(function(name) {
+                        var server = exports.servers[name];
+                        if (server.changed) {
+                            server.changed = false;
+                            var serv = new server.ServerExportable();
+                            serv.import(server);
+                            event.sender.send("sendServer", serv);
+                        }
+                    })
+                    Object.keys(exports.servers).forEach(function(key) {
+                        var serv = exports.servers[key];
+                        serv.refresh();
+                    });
+                }, 2000);
+                php.snackbar("Done !");
+                exports.mainWindow.webContents.loadURL(url.format({
+                    pathname: path.join(__dirname, 'assets', 'index.html'),
+                    protocol: 'file:',
+                    slashes: true
+                }))
+                exports.mainWindow.show();
+            });
+        });
+        defined = true;
     }
-    console.log('Loaded !');
-    // Defining php
-    php.setApp(this.app);
-    php.define();
-    // Checking for servers;
-    var servers = fs.readdirSync(exports.serverFolder);
-    servers.forEach(function(folder) {
-        exports.servers[folder] = new server.Server(folder, php, exports);
-    }, this);
 
-    // Setting app clock (1 second based)
-    setInterval(function() {
-        // Listening to relaunch
-        // if (stopped) process.kill(process.pid, "SIGKILL");
-        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
-            if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
-            if (exports.mainWindow === null) {
-                createWindow();
-            } else if (exports.mainWindow !== null) {
-                if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-                exports.mainWindow.focus();
-            }
-        }
-        // IPC Refreshing
-        ipcMain.main = this;
-        // Servers refreshing
-        var name;
-        Object.keys(exports.servers).forEach(function(name) {
-            var server = exports.servers[name];
-            if (server.changed) {
-                server.changed = false;
-                var serv = new server.ServerExportable();
-                serv.import(server);
-                event.sender.send("sendServer", serv);
-            }
-        })
-        Object.keys(exports.servers).forEach(function(key) {
-            var serv = exports.servers[key];
-            serv.refresh();
-        })
-    }, 2000);
-    exports.mainWindow.show();
 }

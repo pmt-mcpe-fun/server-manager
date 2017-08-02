@@ -28,27 +28,36 @@ exports.setApp = setApp;
 
 /**
  * Defines php.
+ * 
+ * @param {Function} cb
  */
-function define() {
+function define(cb) {
     // PHP
     try {
         fs.accessSync(exports.app.phpFolder);
         try { // Windows
             fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
+            cb.apply(exports.app);
+            console.log("Applied defining1");
         } catch (e) { // Linux & MacOS
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+            cb.apply(exports.app);
+            console.log("Applied defining2");
         }
+        snackbar("Found php at " + exports.phpExecutable + "...");
     } catch (e) { // No PHP
-        downloadPHP();
+        downloadPHP(cb);
     }
 }
 exports.define = define;
 
 /**
  * Downloads php.
+ * 
+ * @param {Function} cb
  */
-function downloadPHP() {
+function downloadPHP(cb) {
     var arch;
     switch (os.arch()) {
         case "x64":
@@ -84,6 +93,7 @@ function downloadPHP() {
                 fs.unlink(exports.app.phpFolder);
                 console.error(err);
             }
+            snackbar("Extracting PHP...");
             tarGz.decompress({
                 source: path.join(exports.app.appFolder, "php.tar.gz"),
                 destination: exports.app.phpFolder
@@ -106,6 +116,8 @@ function downloadPHP() {
                 }
                 fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
                 snackbar("Successfully downloaded PHP 7.0.3.");
+                cb.apply(exports.app);
+                console.log("Applied defining3");
             });
         });
 }
@@ -136,12 +148,12 @@ exports.download = function(url, dest, cb) {
 };
 
 /**
- * Submits an error
+ * Submits an message (during loading)
  * 
  * @param {String} error 
  */
 function snackbar(error) {
-    exports.app.mainWindow.webContents.executeJavaScript("window.main.snackbar('" + error + "');");
+    exports.app.mainWindow.webContents.executeJavaScript(`document.getElementById('currentThing').innerHTML = "${error}"`);
 }
 exports.snackbar = snackbar;
 
