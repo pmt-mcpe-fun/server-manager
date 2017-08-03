@@ -17,6 +17,7 @@ const os = require('os');
 const properties = require("./js/lib/properties.js");
 const main = require('./js/main.js');
 const serverF = require('./js/lib/server.js');
+const formatingCodes = require('./js/lib/formatingCodes.js');
 
 var queuing = false; // TODO: Find a better var name.
 var first = 1;
@@ -40,9 +41,9 @@ function define(serverR) {
     var logsNew = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\r|\n/g, "<br>").replace(/(<br>)+/g, "<br>").split("<br>");
     var logsHTML = document.getElementById("consoleContent");
     for (var i = logsHTML.children.length - 1; i < logsNew.length - 1; i++) {
-        if (i !== -1 && !document.getElementById("console" + i)) {
+        if (i !== -1 && !document.getElementById("console" + i) && logsNew[i].indexOf("\u001b]0;") == -1) {
             var newLine = document.createElement("p");
-            newLine.innerHTML = logsNew[i];
+            newLine.innerHTML = formatingCodes.terminal2HTML(logsNew[i]);
             newLine.id = "console" + i;
             logsHTML.appendChild(newLine);
         }

@@ -56,7 +56,7 @@ exports.Server = function(name, php, app) {
     this.start = function() {
         if (this.isStarted) return; // DO NOT CREATE IT TWO TIMES !
         this.log += "[PMS] Starting server " + this.name + "..." + os.EOL;
-        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "enable-ansi"], { cwd: this.folder });
+        this.proc = spawn(php.phpExecutable, [path.join(this.folder, "PocketMine-MP.phar"), "--enable-ansi"], { cwd: this.folder });
         this.isStarted = true;
         var this2 = this;
 

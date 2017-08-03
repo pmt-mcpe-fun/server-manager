@@ -38,7 +38,7 @@ div.console::selection {
     background-color: white;
 }
 
-.console * {
+.console :not(span) {
     margin: 10px;
     font-family: "monospace" !important;
     /* Don"'t forget ANSII ART ! */

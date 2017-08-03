@@ -1,0 +1,86 @@
+.consoleFormatBOLD {
+    font-weight: 400px;
+}
+
+.consoleFormatITALIC {
+    font-style: italic;
+}
+
+.consoleFormatSTRIKEOUT {
+    text-decoration: line-through;
+}
+
+.consoleFormatOBFUSCATED {}
+
+.consoleFormatUNDERLINE {
+    text-decoration: underline;
+}
+
+.consoleColorAQUA {
+    color: aqua;
+}
+
+.consoleColorBLACK {
+    color: black;
+}
+
+.consoleColorBLUE {
+    color: blue;
+}
+
+.consoleColorDARKAQUA {
+    color: cyan;
+}
+
+.consoleColorDARKBLUE {
+    color: darkblue;
+}
+
+.consoleColorDARKGRAY {
+    color: darkgray;
+}
+
+.consoleColorDARKGREEN {
+    color: darkgreen;
+}
+
+.consoleColorDARKRED {
+    color: red;
+}
+
+.consoleColorORANGE {
+    color: orange;
+}
+
+.consoleColorGRAY {
+    color: lightgray;
+}
+
+.consoleColorGREEN {
+    color: lime;
+}
+
+.consoleColorLIGHTPURPLE {
+    color: magenta;
+}
+
+.consoleColorPURPLE {
+    color: purple;
+}
+
+.consoleColorRED {
+    color: darksalmon;
+}
+
+.consoleColorWHITE {
+    color: white
+}
+
+.consoleColorYELLOW {
+    color: yellow
+}
+
+p span {
+    padding: 0px;
+    margin: 0px;
+}
