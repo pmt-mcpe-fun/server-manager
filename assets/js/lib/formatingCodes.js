@@ -31,7 +31,6 @@ Array.prototype.clone = function() {
     return ret;
 }
 
-myConsole.log(os.platform());
 switch (os.platform()) {
     case "darwin":
     case "freebsd":
@@ -99,7 +98,6 @@ exports.CODE2HTML[exports.COLOR_RED] = "<span class='consoleColorRED'>";
 exports.CODE2HTML[exports.COLOR_WHITE] = "<span class='consoleColorWHITE'>";
 exports.CODE2HTML[exports.COLOR_YELLOW] = "<span class='consoleColorYELLOW'>";
 myConsole.log(exports.CODE2HTML);
-myConsole.log(tokenize("  +  " + exports.COLOR_AQUA + "   -   " + exports.FORMAT_BOLD + "   _   "));
 
 function getUnixEscapeCodes() {
     exports.FORMAT_BOLD = execSync("tput bold").toString();
@@ -176,19 +174,27 @@ exports.terminal2HTML = function(lineTerminal) {
     console.log("T2H: Receiving " + lineTerminal);
     var tokens = tokenize(lineTerminal);
     var codes = tokens[0];
-    var texts = tokens[1];
+    var texts = tokens[1].clone();
+    console.log("T2H", codes, tokens[1], texts);
     var currentOpenedColors = 0;
-    var newString = "";
+    var doneCodes = 0;
     codes.forEach(function(code, i) {
         if (code == exports.FORMAT_RESET) {
-            newString += "</span>".repeat(currentOpenedColors);
-            currentOpenedColors = 0;
-        } else {
-            newString += exports.CODE2HTML[code];
+            if (currentOpenedColors > 0) {
+                texts[i - code.length] = "</span>".repeat(currentOpenedColors);
+                currentOpenedColors = 0;
+            } else {
+                // Ignore
+            }
+        } else if (exports.CODE2HTML[code]) {
+            texts[i - code.length] = exports.CODE2HTML[code];
             currentOpenedColors += 1;
+        } else {
+            console.log("Unknown code: " + code);
         }
-        if (texts[i]) newString += texts[i];
     });
+    texts.push("</span>".repeat(currentOpenedColors));
+    var newString = texts.join("");
     console.log("T2H: Sending " + newString);
     return newString;
 }
@@ -207,7 +213,15 @@ function tokenize(line) {
                 var splitted = text.splitWithIndex(code);
                 splitted.forEach(function(textSplited, index) {
                     index += previousIndex;
-                    if ((!newText[index] || newText[index].length > textSplited.length) && textSplited) newText[index] = textSplited;
+                    if (textSplited) {
+                        if (!newText[index] || newText[index].length > textSplited.length) {
+                            if (!exports.CODE2HTML[textSplited]) {
+                                newText[index] = textSplited;
+                            } else {
+                                codes[index + textSplited.length] = textSplited;
+                            }
+                        }
+                    }
                 });
                 Object.keys(splitted).forEach(function(key) {
                     if (key !== 0) codes[key] = code;
@@ -216,12 +230,31 @@ function tokenize(line) {
         });
         texts = newText;
     });
-    texts.forEach(function(text, index) {
+    texts.forEach(function(text, index) { // Refiltering a second time to remove the unecessary, fix what needs to be fixed, ect...
         if (!text) {
             delete texts[index];
+        } else {
+            var currentDeleted = 0;
+            COLORS.concat(FORMATS).forEach(function(code) {
+                if (text.startsWith(code)) {
+                    text = text.replace(code, "");
+                    delete texts[index];
+                    codes[index + currentDeleted + code.length] = code;
+                    currentDeleted += code.length;
+                }
+            })
+            if (exports.CODE2HTML[texts[index]]) { // Format Code chaining
+                codes[index + texts[index].length] = texts[index];
+                delete texts[index];
+            }
         }
     });
-    if (texts[10] && codes[10] && texts[0] == codes[10] + texts[10]) texts[0] = ""; // TODO: Fix hack.
-    console.log(codes, texts);
-    return [codes, texts]
+    codes.forEach(function(code, index) { // Refiltering codes a second time to prevent the ones that aren't really there.
+        if (line.substr(index - code.length, code.length) !== code && code !== exports.FORMAT_RESET) {
+            delete codes[index];
+        } else {
+            console.log(JSON.stringify(line.substr(index - code.length, code.length)) + " !== " + JSON.stringify(code));
+        }
+    })
+    return [codes, texts];
 }
