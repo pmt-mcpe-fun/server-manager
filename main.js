@@ -161,9 +161,8 @@ function checkForUpdates(cb) {
 // Creates the window
 function createWindow(forceLaunch = false) {
     if (process.argv.indexOf("--no-gui") == -1 || forceLaunch) {
-        console.log("Creating window");
         // Create the browser window.
-        exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false });
+        exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false, icon: path.join(__dirname, "assets", "icons", "icon.png") });
         exports.mainWindow.webContents.app = this2;
 
         // and load the index.html of the app.
@@ -173,21 +172,17 @@ function createWindow(forceLaunch = false) {
             slashes: true
         }))
 
-        // Open the DevTools.
-        // exports.mainWindow.webContents.openDevTools()
-        // Emitted when the window is closed.
-        // exports.mainWindow.on('closed', function() {
-        //     // Dereference the window object, usually you would store windows
-        //     // in an array if your app supports multi windows, this is the time
-        //     // when you should delete the corresponding element.
-        //     exports.mainWindow = null
-        // });
+        exports.mainWindow.on('closed', function() {
+            // Dereference the window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
+            exports.mainWindow = null
+        });
 
 
         // When the app is launched, just download the app.
         exports.mainWindow.webContents.on("did-finish-load", define)
         require('./main/menus');
-        console.log("Creating window end");
     } else {
         delete process.argv[process.argv.indexOf("--no-gui")]; // Remove the arg, we don't need it anymore.
         setTimeout(function() { define() }, 1000); // Defining the rest of variables b4 calling this.
@@ -195,12 +190,8 @@ function createWindow(forceLaunch = false) {
 }
 
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', function() { createWindow() });
 
-// Quit when all windows are closed.
 app.on('window-all-closed', function() {
     // Not killing process unitl used by force killing. Let servers running.
 });
@@ -214,8 +205,6 @@ app.on('activate', function() {
     if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
     exports.mainWindow.focus();
 });
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
 
 // Listeners for app
 /**
@@ -323,7 +312,6 @@ ipcMain.on("addServer", function(event, name) {
 var defined = false;
 
 function define() {
-    console.log(exports.mainWindow, defined);
     if (defined) {
         if (viewPage) {
             exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = '${viewPage}'`, function() {
@@ -414,5 +402,4 @@ function define() {
         });
         defined = true;
     }
-    console.log(exports.mainWindow, defined);
 }
