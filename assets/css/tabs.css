@@ -19,36 +19,23 @@ data-tab:not(.active) {
 }
 
 .mdc-tab-bar {
-    background-color: var(--mdc-theme-primary);
+    background-color: white;
     color: var(--mdc-theme-text-primary-on-primary);
     position: fixed !important;
     z-index: 2000;
     animation-name: enterTab;
     animation-duration: 0.35s;
     animation-timing-function: ease-out;
-    top: -3px;
+    bottom: 0px;
     transition: top 0.35s ease-in;
     left: -10px;
     width: calc(100% + 10px);
     box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
-.mdc-tab-bar.leave {
-    top: -70px;
-}
-
 data-tab {
     width: 100%;
     height: calc(100% - 72px);
-    top: 72px;
+    top: 0px;
     position: absolute;
-}
-
-@keyframes enterTab {
-    0% {
-        top: -70px;
-    }
-    100% {
-        top: -3px;
-    }
 }
