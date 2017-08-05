@@ -67,6 +67,15 @@ input[pattern]:invalid {
     border-bottom-color: red !important;
 }
 
+header * {
+    -webkit-app-region: drag;
+}
+
+header .material-icons,
+header li {
+    -webkit-app-region: no-drag;
+}
+
 
 /*=============================================
 =            Material redisgn                 =

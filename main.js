@@ -125,7 +125,7 @@ function createWindow() {
 
     if (stopped) return;
     // Create the browser window.
-    exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager" });
+    exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false });
     exports.mainWindow.webContents.app = this2;
 
     // and load the index.html of the app.
