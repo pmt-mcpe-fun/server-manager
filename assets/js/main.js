@@ -208,6 +208,7 @@ exports.removeServer = function(serverName) {
         if (srv.isStarted) {
             snackbar("Cannot delete a started server !");
         } else {
+            ipcRenderer.send("deleteServer", serverName);
             fs_utils.rmdir(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), serverName))
         }
     })

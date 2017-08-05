@@ -131,6 +131,31 @@ button.footerFab {
     margin: 2.5%;
 }
 
+.windowButton {
+    margin: 12px 8px 8px 0px !important;
+    padding: 3px !important;
+    border-radius: 20px;
+}
+
+.windowButton:hover {
+    color: black !important;
+}
+
+#fullscreenBtn {
+    background-color: #B0FF59;
+    color: #B0FF59;
+}
+
+#minimizeBtn {
+    background-color: yellow;
+    color: yellow;
+}
+
+#closeBtn {
+    background-color: red;
+    color: red;
+}
+
 @media screen and (max-device-width:406px) {
     .inline {
         flex-direction: column;

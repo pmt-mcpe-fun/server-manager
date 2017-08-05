@@ -1,5 +1,5 @@
 /**
- * Formating codes of terminal in JS. Convertale to HTML
+ * Formating codes of terminal in JS. Convertable to HTML
  * 
  * @author Ad5001
  * @version 1.0.0
@@ -40,7 +40,7 @@ switch (os.platform()) {
         getUnixEscapeCodes();
         break;
     case "android":
-    case "win":
+    case "win32":
         getWinEscapeCodes();
         break;
 }

@@ -10,8 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const ipcRenderer = require('electron').ipcRenderer;
-const { remote } = require("electron");
+const { remote, ipcRenderer } = require("electron");
 
 
 window.addEventListener("load", function() {
@@ -32,6 +31,19 @@ window.addEventListener("load", function() {
         }
     });
 
+
+    /**
+     * Buttons managing window (fullscreen, minimize, close window)
+     */
+    document.getElementById("fullscreenBtn").addEventListener("click", function() {
+        remote.getCurrentWindow().maximize();
+    });
+    document.getElementById("minimizeBtn").addEventListener("click", function() {
+        remote.getCurrentWindow().minimize();
+    });
+    document.getElementById("closeBtn").addEventListener("click", function() {
+        remote.getCurrentWindow().close();
+    });
 
 
 

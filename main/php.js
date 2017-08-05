@@ -15,7 +15,6 @@ const http = require('https');
 const tarGz = require('node-targz');
 const properties = require("./lib/properties.js");
 const PHP_VERSION = "7.0.3";
-
 /**
  * Sets main.js app exports
  * 
@@ -47,6 +46,7 @@ function define(cb) {
         }
         snackbar("Found php at " + exports.phpExecutable + "...");
     } catch (e) { // No PHP
+        console.log(e);
         downloadPHP(cb);
     }
 }

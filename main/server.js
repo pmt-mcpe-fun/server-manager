@@ -108,8 +108,9 @@ exports.Server = function(name, php, app) {
 
         this.proc.on('exit', (code) => {
             try {
-                this.log += "[PMS] Server stopped.";
+                this.log += "[PMS] Server stopped." + os.EOL;
                 this.isStarted = false;
+                php.app.tray.removeStartServer(this.name);
                 fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
             } catch (e) {}
         });

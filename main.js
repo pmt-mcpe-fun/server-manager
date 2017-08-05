@@ -14,6 +14,8 @@ const BrowserWindow = electron.BrowserWindow;
 
 // require('daemon-plus')(); // creates new child process, exists the parent
 
+if (process.env.XDG_CURRENT_DESKTOP == "Unity:Unity7") process.env.XDG_CURRENT_DESKTOP = "Unity"; // Fixing tray with Ubuntu 17.04
+
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
@@ -21,8 +23,11 @@ const os = require('os');
 const http = require('http');
 const ps = require('current-processes');
 const ipcMain = electron.ipcMain;
-const php = require("./server/php");
-const server = require("./server/server");
+const Menu = electron.Menu;
+const MenuItem = electron.MenuItem;
+const php = require("./main/php");
+const server = require("./main/server");
+const tray = require("./main/tray");
 exports.php = php;
 exports.servers = {};
 
@@ -82,7 +87,7 @@ var newData;
  */
 
 function checkForUpdates(cb) {
-    php.snackbar("Searching for updates...");
+    php.snackbar("Looking for updates...");
     http.get("http://psm.mcpe.fun/versions.json",
         function(response) {
             var completeResponse = '';
@@ -148,7 +153,7 @@ function createWindow() {
 
     // When the app is launched, just download the app.
     exports.mainWindow.webContents.on("did-finish-load", define)
-    require('./assets/menus');
+    require('./main/menus');
 }
 
 
@@ -233,6 +238,7 @@ ipcMain.on("setServer", function(event, serverR) {
         if (obj.isStarted &&
             !Server.isStarted) {
             Server.start();
+            tray.removeStopServer(Server.name);
         }
         if (Server.settings !== obj.settings) {
             Server.settings = obj.settings;
@@ -266,6 +272,7 @@ ipcMain.on("save", function(event) {
  */
 ipcMain.on("close", function(event) {
     exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
+    tray.tray.destroy();
     app.exit();
     process.exit();
     event.returnValue = "";
@@ -280,27 +287,38 @@ function define() {
         checkForUpdates(function() {
             if (updateAvailable) {
                 exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
-        snackbar.show({
-    	    message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-            actionText: "Download",
-            actionHandler: function() {
-				require('electron').shell.openExternal('https://psm.mcpe.fun/download');
-			},
-            multiline: true,
-            actionOnBottom: true,
-            timeout: 1000000000
-        });`);
+                snackbar.show({
+    	            message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
+                    actionText: "Download",
+                    actionHandler: function() {
+		        		require('electron').shell.openExternal('https://psm.mcpe.fun/download');
+		        	},
+                    multiline: true,
+                    actionOnBottom: true,
+                    timeout: 1000000000
+                });`);
             }
             console.log('Loaded !');
             // Defining php
-            php.snackbar("Searching for php...");
+            php.snackbar("Looking for php...");
             php.define(function() {
                 // Checking for servers;
-                php.snackbar("Searching for servers...");
+                php.snackbar("Looking for servers...");
                 var servers = fs.readdirSync(exports.serverFolder);
+                tray.addTray(php);
                 servers.forEach(function(folder) {
                     exports.servers[folder] = new server.Server(folder, php, exports);
+                    tray.trayMenu.items[0].submenu.append(new MenuItem({
+                        label: folder,
+                        type: "normal",
+                        id: `stopped${folder}`,
+                        click: function() {
+                            exports.servers[folder].start();
+                            tray.removeStopedServer(folder);
+                        }
+                    }));
                 }, this);
+                tray.tray.setContextMenu(tray.trayMenu);
                 // Setting app clock (1 second based)
                 setInterval(function() {
                     // Listening to relaunch
@@ -332,12 +350,12 @@ function define() {
                     });
                 }, 2000);
                 php.snackbar("Done !");
+                // Redirects user to the main page
                 exports.mainWindow.webContents.loadURL(url.format({
                     pathname: path.join(__dirname, 'assets', 'index.html'),
                     protocol: 'file:',
                     slashes: true
-                }))
-                exports.mainWindow.show();
+                }));
             });
         });
         defined = true;
