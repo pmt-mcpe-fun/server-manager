@@ -36,7 +36,13 @@ window.addEventListener("load", function() {
      * Buttons managing window (fullscreen, minimize, close window)
      */
     document.getElementById("fullscreenBtn").addEventListener("click", function() {
-        remote.getCurrentWindow().maximize();
+        if (remote.getCurrentWindow().isMaximized()) {
+            remote.getCurrentWindow().unmaximize();
+            this.innerHTML = "fullscreen";
+        } else {
+            remote.getCurrentWindow().maximize();
+            this.innerHTML = "fullscreen_exit";
+        }
     });
     document.getElementById("minimizeBtn").addEventListener("click", function() {
         remote.getCurrentWindow().minimize();
