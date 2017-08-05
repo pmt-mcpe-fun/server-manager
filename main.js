@@ -35,6 +35,7 @@ const MenuItem = electron.MenuItem;
 const php = require("./main/php");
 const server = require("./main/server");
 const tray = require("./main/tray");
+exports.tray = tray;
 exports.php = php;
 exports.servers = {};
 
@@ -301,11 +302,21 @@ ipcMain.on("close", function(event) {
  * @return {Boolean}
  */
 ipcMain.on("addServer", function(event, name) {
-    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
-    tray.tray.destroy();
-    app.exit();
-    process.exit();
-    event.returnValue = "";
+    if (exports.mainWindow) {
+        tray.trayMenu.items[2].submenu.append(new MenuItem({
+            label: folder,
+            type: "normal",
+            id: `view${folder}`,
+            click: function() {
+                if (!exports.mainWindow) createWindow();
+                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${folder}'`, function() {
+                    if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+                    exports.mainWindow.focus();
+                });
+            }
+        }));
+    }
+    if (exports.mainWindow) tray.tray.setContextMenu(tray.trayMenu);
 });
 
 // Defines everything when window loads
@@ -362,7 +373,7 @@ function define() {
                             id: `view${folder}`,
                             click: function() {
                                 if (!exports.mainWindow) createWindow();
-                                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos#${folder}'`, function() {
+                                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${folder}'`, function() {
                                     if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
                                     exports.mainWindow.focus();
                                 });

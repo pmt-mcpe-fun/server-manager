@@ -112,7 +112,9 @@ exports.Server = function(name, php, app) {
                 this.isStarted = false;
                 php.app.tray.removeStartServer(this.name);
                 fs.writeFileSync(path.join(this.folder, "server.properties"), properties.emitProperties(this.settings));
-            } catch (e) {}
+            } catch (e) {
+                console.log(e);
+            }
         });
     }
 
