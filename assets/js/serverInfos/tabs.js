@@ -14,22 +14,6 @@ document.querySelectorAll(".mdc-tab").forEach(function(elem) {
         switchTab(this.getAttribute("data-go-tab"));
     });
 });
-var leaving = false;
-var start;
-window.addEventListener('beforeunload', function(event) {
-    document.querySelector(".mdc-tab-bar").classList.add("leave");
-    if (!leaving) {
-        start = new Date().getTime();
-        setTimeout(function() {
-            location.replace("serverPicker.html");
-        }, 351)
-    }
-    leaving = true;
-    if ((new Date().getTime() - start) <= 350) {
-        console.log("Leaving... " + leaving + "  " + (new Date().getTime() - start));
-        event.returnValue = "";
-    }
-});
 // Buttons in menu
 document.querySelectorAll(".goToPlayers").forEach(function(elem) {
     elem.addEventListener("click", function() {

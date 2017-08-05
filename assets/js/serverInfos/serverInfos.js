@@ -95,5 +95,3 @@ document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
     new mdc.textfield.MDCTextfield(elem);
 });
 window.tabBar = new mdc.tabs.MDCTabBar(document.querySelector('.mdc-tab-bar'));
-// Removing shadow from top so tool bar intergates correctly
-// top.document.querySelector("header.mdc-toolbar").style.boxShadow = "0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12)";
