@@ -11,7 +11,7 @@
 
 if (top) require = top.require;
 const path = require('path');
-const ipcRenderer = require('electron').ipcRenderer;
+const { ipcRenderer, shell } = require('electron');
 const fs = require('fs');
 const os = require('os');
 const properties = require("./js/lib/properties.js");
@@ -66,6 +66,13 @@ document.getElementById("stopServer").addEventListener("click", function(event) 
     window.server.stop();
     queuing = true;
     first = 3;
+});
+document.getElementById("openPocketMineYML").addEventListener("click", function() {
+    shell.openItem(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, 'pocketmine.yml'));
+});
+document.getElementById("openServerFolder").addEventListener("click", function() {
+    shell.showItemInFolder(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, "PocketMine-MP.phar"));
+    shell.beep();
 });
 document.getElementById("commandEnter").addEventListener("keypress", function(event) {
     if (event.keyCode == 13) {

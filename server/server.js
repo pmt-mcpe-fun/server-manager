@@ -97,7 +97,6 @@ exports.Server = function(name, php, app) {
                         break;
                     default:
                         this2.log += JSON.stringify(data);
-                        console.log("Printing JSON2", data);
                         break;
                 }
             });
@@ -265,7 +264,6 @@ function findJSON(text) {
                 } catch (e) {
                     if (maybeJSON.length > 0 && !maybeJSON.match(/(\r|\n)+/gm)) {
                         noJSON += maybeJSON.replace(/(\r|\n)+/gm, "$1");
-                        console.log(JSON.stringify(maybeJSON));
                     }
                 }
             });
@@ -274,7 +272,6 @@ function findJSON(text) {
         }
     } catch (e) {
         noJSON = text.replace(/(\r|\n)+/gm, "$1");
-        console.log(JSON.stringify(noJSON));
     }
     return [noJSON, JSONs];
 }

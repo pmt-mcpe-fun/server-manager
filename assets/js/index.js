@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const ipcRenderer = require('electron').ipcRenderer;
+const { remote } = require("electron");
 
 
 window.addEventListener("load", function() {
@@ -135,4 +136,7 @@ window.addEventListener("load", function() {
             sel.selectedIndex = 0;
         })
     }
+
+    // Adding buttons of window
+    getCurrentWindow();
 });

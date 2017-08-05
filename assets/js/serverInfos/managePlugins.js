@@ -9,7 +9,6 @@
  */
 var openMenu = undefined;
 window.serverCallbacks.push(function(server) {
-    console.log(server.plugins);
     var pluginsList = document.getElementById("managePluginsList").children;
     for (var i = 0; i < pluginsList.length; i++) {
         if (!server.plugins[pluginsList[i].id.substring(12)]) {
@@ -20,12 +19,12 @@ window.serverCallbacks.push(function(server) {
         document.getElementById("noPlugins").style.display = "block";
     } else {
         document.getElementById("noPlugins").style.display = "none";
-        console.log("Launching plugins...");
         Object.keys(server.plugins).forEach(function(key) {
             if (!document.getElementById(`managePlugin${key}`)) {
                 document.getElementById("managePluginsList").innerHTML += `
             <li class="mdc-list-item" id="managePlugin${key}">
                 <span id="managePlugin${key}Props" class=" mdc-list-item__start-detail">
+                    <i class='material-icons'>settings</i>
     		    </span>
                 <span class="mdc-list-item__text">
     		        ${key}

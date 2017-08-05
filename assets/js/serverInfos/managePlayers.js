@@ -25,6 +25,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("managePlayersList").innerHTML += `
             <li class="mdc-list-item" id="managePlayer${key}">
                 <span id="managePlayer${key}Props" class=" mdc-list-item__start-detail">
+                    <i class='material-icons'>person</i>
     		    </span>
                 <span class="mdc-list-item__text">
     		        ${key}

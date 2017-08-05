@@ -97,7 +97,6 @@ exports.CODE2HTML[exports.COLOR_PURPLE] = "<span class='consoleColorPURPLE'>";
 exports.CODE2HTML[exports.COLOR_RED] = "<span class='consoleColorRED'>";
 exports.CODE2HTML[exports.COLOR_WHITE] = "<span class='consoleColorWHITE'>";
 exports.CODE2HTML[exports.COLOR_YELLOW] = "<span class='consoleColorYELLOW'>";
-myConsole.log(exports.CODE2HTML);
 
 function getUnixEscapeCodes() {
     exports.FORMAT_BOLD = execSync("tput bold").toString();
@@ -171,11 +170,11 @@ function getWinEscapeCodes() {
  * @return {String}
  */
 exports.terminal2HTML = function(lineTerminal) {
-    console.log("T2H: Receiving " + lineTerminal);
+    // console.log("T2H: Receiving " + lineTerminal);
     var tokens = tokenize(lineTerminal);
     var codes = tokens[0];
     var texts = tokens[1].clone();
-    console.log("T2H", codes, tokens[1], texts);
+    // console.log("T2H", codes, tokens[1], texts);
     var currentOpenedColors = 0;
     var doneCodes = 0;
     codes.forEach(function(code, i) {
@@ -190,12 +189,12 @@ exports.terminal2HTML = function(lineTerminal) {
             texts[i - code.length] = exports.CODE2HTML[code];
             currentOpenedColors += 1;
         } else {
-            console.log("Unknown code: " + code);
+            // console.log("Unknown code: " + code);
         }
     });
     texts.push("</span>".repeat(currentOpenedColors));
     var newString = texts.join("");
-    console.log("T2H: Sending " + newString);
+    // console.log("T2H: Sending " + newString);
     return newString;
 }
 
@@ -252,8 +251,6 @@ function tokenize(line) {
     codes.forEach(function(code, index) { // Refiltering codes a second time to prevent the ones that aren't really there.
         if (line.substr(index - code.length, code.length) !== code && code !== exports.FORMAT_RESET) {
             delete codes[index];
-        } else {
-            console.log(JSON.stringify(line.substr(index - code.length, code.length)) + " !== " + JSON.stringify(code));
         }
     })
     return [codes, texts];

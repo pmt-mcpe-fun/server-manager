@@ -140,6 +140,10 @@ section#editServerBody::-webkit-scrollbar-thumb {
     transform: rotate(45deg);
 }
 
+.mdc-list-item__start-detail {
+    width: auto !important;
+}
+
 @media screen and (max-device-width:406px) {
      :root,
     body {

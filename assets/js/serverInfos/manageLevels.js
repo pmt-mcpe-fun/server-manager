@@ -11,8 +11,9 @@ var openMenu = undefined;
 window.serverCallbacks.push(function(server) {
     var levelsList = document.getElementById("manageLevelsList").children;
     for (var i = 0; i < levelsList.length; i++) {
-        if (!server.levels[levelsList[i].id.substring(12)]) {
+        if (!server.levels[levelsList[i].id.substring(11)]) {
             levelsList[i].remove();
+            console.log("Removing level " + JSON.stringify(levelsList[i].id.substring(12)));
         }
     }
     if (Object.keys(server.levels).length < 1) {
@@ -24,6 +25,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("manageLevelsList").innerHTML += `
             <li class="mdc-list-item" id="manageLevel${key}">
                 <span id="manageLevel${key}Props" class=" mdc-list-item__start-detail">
+                    <i class='material-icons'>public</i>
     		    </span>
                 <span class="mdc-list-item__text">
     		        ${key}
@@ -67,8 +69,7 @@ window.serverCallbacks.push(function(server) {
                     openMenu = document.getElementById("menuActionsLevel" + key).MDCMenu;
                 });
                 // Adding level's attribute
-                if (server.levels[key].loaded) document.getElementById(`manageLevel${key}Props`).innerHTML += "<i class='material-icons'>build</i>";
-                if (server.levels[key].whitelisted) document.getElementById(`manageLevel${key}Props`).innerHTML += "<i class='material-icons'>verified_user</i>";
+                if (server.levels[key].loaded) document.getElementById(`manageLevel${key}Props`).innerHTML += "<i class='material-icons'>done</i>";
             }
         });
     }
