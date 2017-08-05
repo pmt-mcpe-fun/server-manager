@@ -15,6 +15,7 @@ const Menu = electron.Menu;
 const MenuItem = electron.MenuItem;
 const Tray = electron.Tray;
 const ipcMain = electron.ipcMain;
+const app = electron.app;
 
 /**
  * Adds the app tray
@@ -23,6 +24,7 @@ function addTray(php) {
     // Adding tray icon
     php.snackbar("Adding tray...");
     exports.tray = new Tray(path.join(__dirname, "..", "assets", "icons", os.platform == "win32" ? "icon.png" : "icon.png")); // TODO: Create black and white icon
+    if (os.platform() == "darwin") app.dock.setIcon(path.join(__dirname, "..", "assets", "icons", os.platform == "win32" ? "icon.png" : "icon.png"));
     exports.trayMenu = Menu.buildFromTemplate([
         { label: 'Start server', type: 'submenu', submenu: [] },
         { label: 'Stop server', type: 'submenu', submenu: [] },
@@ -43,7 +45,7 @@ function addTray(php) {
             label: 'Exit PSM',
             type: 'normal',
             click: function() {
-                php.app.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
+                if (php.app.mainWindow) php.app.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
                 php.app.app.exit();
                 // process.exit();
             }
@@ -51,6 +53,7 @@ function addTray(php) {
     ]);
     exports.tray.setToolTip('PocketMine Server Manager');
     exports.tray.setContextMenu(exports.trayMenu);
+    if (os.platform() == "darwin") app.dock.setMenu(exports.trayMenu); // MacOSX Dock
 }
 exports.addTray = addTray;
 

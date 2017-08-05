@@ -12,6 +12,14 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
+// Outputing message of usage if no gui is specified
+if (process.argv.indexOf("--no-gui") !== -1) console.log(`You are running PocketMine Server Manager in "no gui mode".
+This means no window will be showed and everything will be done using commands.
+Launch a server: ${process.argv[0]} --start <server name>
+Stop a server: ${process.argv[0]} --stop <server name>
+Launch a GUI with server infos: ${process.argv[0]} --view <server name>
+Launch the GUI with server infos: ${process.argv[0]} --launch-gui`);
+
 // require('daemon-plus')(); // creates new child process, exists the parent
 
 if (process.env.XDG_CURRENT_DESKTOP == "Unity:Unity7") process.env.XDG_CURRENT_DESKTOP = "Unity"; // Fixing tray with Ubuntu 17.04
@@ -21,7 +29,6 @@ const fs = require('fs');
 const url = require('url');
 const os = require('os');
 const http = require('http');
-const ps = require('current-processes');
 const ipcMain = electron.ipcMain;
 const Menu = electron.Menu;
 const MenuItem = electron.MenuItem;
@@ -30,6 +37,56 @@ const server = require("./main/server");
 const tray = require("./main/tray");
 exports.php = php;
 exports.servers = {};
+
+var viewPage;
+// Single instance, Windows Jump list & command line relaunching.
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+    var start = false;
+    var stop = false;
+    var view = false;
+    commandLine.forEach(function(cmd) {
+        switch (cmd) {
+            case "--start":
+                start = true;
+                break;
+            case "--stop":
+                stop = true;
+                break;
+            case "--view":
+                view = true;
+                break;
+            default:
+                if (start) {
+                    exports.servers[cmd].start();
+                    tray.removeStopServer(cmd);
+                    start = false;
+                }
+                if (stop) {
+                    exports.servers[cmd].stop();
+                    tray.removeStartServer(cmd);
+                    stop = false;
+                }
+                if (view) {
+                    if (exports.mainWindow === null) {
+                        createWindow(true);
+                    }
+                    viewPage = "serverInfos#" + cmd
+                }
+                break;
+        }
+    });
+    if (process.argv.length < 3) {
+        if (exports.mainWindow === null) {
+            createWindow(true);
+        }
+        if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+        exports.mainWindow.focus();
+    }
+});
+if (shouldQuit) {
+    app.quit();
+}
+
 
 // Making folders
 exports.appFolder = path.join(os.homedir(), ".pocketmine");
@@ -52,27 +109,6 @@ try {
 } catch (e) {
     fs.mkdirSync(exports.pharsFolder);
 }
-// Checking for already running processes and kill 'em
-var stopped;
-var startApp = function() {
-    ps.get(function(err, processes) {
-        var c = 0;
-        processes.forEach(function(elem, key) {
-            if (elem.name == "pocketmine-serv" || elem.name == "electron") {
-                c++; // Snif
-            }
-        });
-        console.log(c);
-        if (c > (process.env.__daemon ? 5 /*Daemon production mode*/ : 2 /*Sync debug mode*/ )) {
-            fs.writeFileSync(path.join(os.homedir(), ".pocketmine", "rerun"), process.pid);
-            app.exit(0);
-            console.log("fully quitting");
-            process.exit(0);
-        } else {
-            createWindow();
-        }
-    });
-}
 
 var this2 = this;
 
@@ -93,10 +129,8 @@ function checkForUpdates(cb) {
             var completeResponse = '';
             response.on('data', function(chunk) {
                 completeResponse += chunk;
-                console.log("Current res: " + completeResponse);
             });
             response.on('end', function() { // Here we have the final result
-                console.log("Finished !" + completeResponse);
                 try {
                     var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
                 } catch (e) {
@@ -125,67 +159,60 @@ function checkForUpdates(cb) {
 }
 
 // Creates the window
-function createWindow() {
-    console.log("Creating window");
+function createWindow(forceLaunch = false) {
+    if (process.argv.indexOf("--no-gui") == -1 || forceLaunch) {
+        console.log("Creating window");
+        // Create the browser window.
+        exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false });
+        exports.mainWindow.webContents.app = this2;
 
-    if (stopped) return;
-    // Create the browser window.
-    exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false });
-    exports.mainWindow.webContents.app = this2;
+        // and load the index.html of the app.
+        exports.mainWindow.loadURL(url.format({
+            pathname: path.join(__dirname, 'assets', !defined ? 'loading.html' : 'index.html'),
+            protocol: 'file:',
+            slashes: true
+        }))
 
-    // and load the index.html of the app.
-    exports.mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'assets', !defined ? 'loading.html' : 'index.html'),
-        protocol: 'file:',
-        slashes: true
-    }))
-
-    // Open the DevTools.
-    // exports.mainWindow.webContents.openDevTools()
-    // Emitted when the window is closed.
-    exports.mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        exports.mainWindow = null
-    });
+        // Open the DevTools.
+        // exports.mainWindow.webContents.openDevTools()
+        // Emitted when the window is closed.
+        // exports.mainWindow.on('closed', function() {
+        //     // Dereference the window object, usually you would store windows
+        //     // in an array if your app supports multi windows, this is the time
+        //     // when you should delete the corresponding element.
+        //     exports.mainWindow = null
+        // });
 
 
-    // When the app is launched, just download the app.
-    exports.mainWindow.webContents.on("did-finish-load", define)
-    require('./main/menus');
+        // When the app is launched, just download the app.
+        exports.mainWindow.webContents.on("did-finish-load", define)
+        require('./main/menus');
+        console.log("Creating window end");
+    } else {
+        delete process.argv[process.argv.indexOf("--no-gui")]; // Remove the arg, we don't need it anymore.
+        setTimeout(function() { define() }, 1000); // Defining the rest of variables b4 calling this.
+    }
 }
 
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', startApp);
+app.on('ready', function() { createWindow() });
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-    console.log(exports.servers);
     // Not killing process unitl used by force killing. Let servers running.
 });
 
-
 app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
         createWindow();
     }
-})
-
-app.on('activate', function() {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (exports.mainWindow === null) {
-        createWindow();
-    } else if (exports.mainWindow !== null) {
-        if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-        exports.mainWindow.focus();
-    }
+    if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+    exports.mainWindow.focus();
 });
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
@@ -244,7 +271,6 @@ ipcMain.on("setServer", function(event, serverR) {
             Server.settings = obj.settings;
             Server.save();
         }
-        console.log(obj.commands);
         obj.commands.forEach(function(cmd) {
             Server.inputCommand(cmd);
         }, obj);
@@ -264,8 +290,9 @@ ipcMain.on("save", function(event) {
         if (!serv.save()) event.returnValue = false;
     })
 });
+
 /**
- * CLoses the app (sync)
+ * Closes the app (sync)
  * 
  * @param {*} event
  * @return {Boolean}
@@ -278,15 +305,39 @@ ipcMain.on("close", function(event) {
     event.returnValue = "";
 });
 
+/**
+ * Adds a server
+ * 
+ * @param {*} event
+ * @return {Boolean}
+ */
+ipcMain.on("addServer", function(event, name) {
+    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
+    tray.tray.destroy();
+    app.exit();
+    process.exit();
+    event.returnValue = "";
+});
+
 // Defines everything when window loads
 var defined = false;
 
 function define() {
+    console.log(exports.mainWindow, defined);
+    if (defined) {
+        if (viewPage) {
+            exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = '${viewPage}'`, function() {
+                if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+                exports.mainWindow.focus();
+            });
+            viewPage = undefined;
+        }
+    }
     if (!defined) {
-        php.setApp(this.app);
+        php.setApp(this2);
         checkForUpdates(function() {
             if (updateAvailable) {
-                exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
+                if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
                 snackbar.show({
     	            message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
                     actionText: "Download",
@@ -298,39 +349,42 @@ function define() {
                     timeout: 1000000000
                 });`);
             }
-            console.log('Loaded !');
             // Defining php
             php.snackbar("Looking for php...");
             php.define(function() {
                 // Checking for servers;
                 php.snackbar("Looking for servers...");
                 var servers = fs.readdirSync(exports.serverFolder);
-                tray.addTray(php);
+                if (exports.mainWindow) tray.addTray(php);
                 servers.forEach(function(folder) {
                     exports.servers[folder] = new server.Server(folder, php, exports);
-                    tray.trayMenu.items[0].submenu.append(new MenuItem({
-                        label: folder,
-                        type: "normal",
-                        id: `stopped${folder}`,
-                        click: function() {
-                            exports.servers[folder].start();
-                            tray.removeStopedServer(folder);
-                        }
-                    }));
+                    if (exports.mainWindow) {
+                        tray.trayMenu.items[0].submenu.append(new MenuItem({
+                            label: folder,
+                            type: "normal",
+                            id: `stopped${folder}`,
+                            click: function() {
+                                exports.servers[folder].start();
+                                tray.removeStopServer(folder);
+                            }
+                        }));
+                        tray.trayMenu.items[2].submenu.append(new MenuItem({
+                            label: folder,
+                            type: "normal",
+                            id: `view${folder}`,
+                            click: function() {
+                                if (!exports.mainWindow) createWindow();
+                                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos#${folder}'`, function() {
+                                    if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
+                                    exports.mainWindow.focus();
+                                });
+                            }
+                        }));
+                    }
                 }, this);
-                tray.tray.setContextMenu(tray.trayMenu);
+                if (exports.mainWindow) tray.tray.setContextMenu(tray.trayMenu);
                 // Setting app clock (1 second based)
                 setInterval(function() {
-                    // Listening to relaunch
-                    if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun")) && fs.readFileSync(path.join(os.homedir(), ".pocketmine", "rerun")) !== process.pid) {
-                        if (fs.existsSync(path.join(os.homedir(), ".pocketmine", "rerun"))) fs.unlink(path.join(os.homedir(), ".pocketmine", "rerun"));
-                        if (exports.mainWindow === null) {
-                            createWindow();
-                        } else if (exports.mainWindow !== null) {
-                            if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-                            exports.mainWindow.focus();
-                        }
-                    }
                     // IPC Refreshing
                     ipcMain.main = this;
                     // Servers refreshing
@@ -351,7 +405,7 @@ function define() {
                 }, 2000);
                 php.snackbar("Done !");
                 // Redirects user to the main page
-                exports.mainWindow.webContents.loadURL(url.format({
+                if (exports.mainWindow) exports.mainWindow.webContents.loadURL(url.format({
                     pathname: path.join(__dirname, 'assets', 'index.html'),
                     protocol: 'file:',
                     slashes: true
@@ -360,5 +414,5 @@ function define() {
         });
         defined = true;
     }
-
+    console.log(exports.mainWindow, defined);
 }

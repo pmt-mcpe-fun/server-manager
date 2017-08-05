@@ -17,7 +17,6 @@ const tarGz = require('node-targz');
 const properties = require("./lib/properties.js");
 const fs_utils = require("./lib/fs-utils.js");
 const server = require("./lib/server.js");
-const ps = require('current-processes');
 const ipcRenderer = require('electron').ipcRenderer;
 
 
@@ -180,6 +179,7 @@ exports.createPMServer = function(name, port, version) {
                                     snackbar("Sucessfully created server " + name + "!");
                                     console.log("Finished !")
                                     fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString());
+                                    ipcRenderer.send("addServer", name);
                                 } else {
                                     snackbar("An error occured while creating the server.");
                                     console.error(err);
