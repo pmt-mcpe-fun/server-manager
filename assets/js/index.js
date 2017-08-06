@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { remote, ipcRenderer } = require("electron");
+const mdc = require("material-components-web");
 
 
 window.addEventListener("load", function() {
@@ -157,4 +158,5 @@ window.addEventListener("load", function() {
 
     // Adding buttons of window
     getCurrentWindow();
+    mdc.autoInit();
 });

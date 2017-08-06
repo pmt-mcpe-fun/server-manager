@@ -30,8 +30,8 @@
     <p id="currentThing"></p>
 </body>
 
-<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
+    const mdc = require("material-components-web");
     mdc.autoInit();
     window.addEventListener("beforeunload", function(ev) {
         if (!document.body.classList.contains("fadeout")) {

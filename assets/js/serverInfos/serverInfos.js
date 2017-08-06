@@ -18,6 +18,7 @@ const properties = require("./js/lib/properties.js");
 const main = require('./js/main.js');
 const serverF = require('./js/lib/server.js');
 const formatingCodes = require('./js/lib/formatingCodes.js');
+const mdc = require("material-components-web");
 
 var queuing = false; // TODO: Find a better var name.
 var first = 1;
@@ -95,3 +96,5 @@ document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
     new mdc.textfield.MDCTextfield(elem);
 });
 window.tabBar = new mdc.tabs.MDCTabBar(document.querySelector('.mdc-tab-bar'));
+
+mdc.autoInit();

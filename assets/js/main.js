@@ -18,11 +18,11 @@ const properties = require("./lib/properties.js");
 const fs_utils = require("./lib/fs-utils.js");
 const server = require("./lib/server.js");
 const ipcRenderer = require('electron').ipcRenderer;
+const mdc = require("material-components-web");
 
 
 exports.inputs = {};
 exports.selects = [];
-
 
 /**
  * Downloads a file

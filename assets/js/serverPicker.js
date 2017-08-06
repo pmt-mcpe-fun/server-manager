@@ -16,6 +16,9 @@ const os = require('os');
 const properties = require("./js/lib/properties.js");
 const main = require('./js/main.js');
 const server = require('./js/lib/server.js');
+const mdc = require("material-components-web");
+
+mdc.autoInit();
 
 // Defining custom left click element
 document.body.addEventListener("contextmenu", function(event) {
