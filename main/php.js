@@ -138,7 +138,7 @@ exports.download = function(url, dest, cb) {
         }
         var file = fs.createWriteStream(dest);
         response.pipe(file);
-        file.on('finish', function() {
+        response.on('end', function() {
             file.close(cb); // close() is async, call cb after close completes.
         });
     }).on('error', function(err) { // Handle errors
