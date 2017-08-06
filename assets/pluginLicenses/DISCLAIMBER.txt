@@ -1,0 +1,4 @@
+Disclaimber
+============================
+Licenses in this directory are licenses made for plugins that do not specify a license in their directory & that specified one.
+PSM is in no case subject to these licenses.
