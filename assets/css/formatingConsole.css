@@ -16,6 +16,13 @@
     text-decoration: underline;
 }
 
+.consoleFormatRESET {
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 200px;
+    color: white;
+}
+
 .consoleColorAQUA {
     color: aqua;
 }

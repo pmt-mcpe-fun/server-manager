@@ -81,6 +81,7 @@ exports.CODE2HTML[exports.FORMAT_ITALIC] = "<span class='consoleFormatITALIC'>";
 exports.CODE2HTML[exports.FORMAT_OBFUSCATED] = "<span class='consoleFormatOBFUSCATED'>";
 exports.CODE2HTML[exports.FORMAT_STRIKETHROUGH] = "<span class='consoleFormatSTRIKEOUT'>";
 exports.CODE2HTML[exports.FORMAT_UNDERLINE] = "<span class='consoleFormatUNDERLINE'>";
+exports.CODE2HTML[exports.FORMAT_RESET] = "<span class='consoleFormatRESET'>";
 exports.CODE2HTML[exports.COLOR_AQUA] = "<span class='consoleColorAQUA'>";
 exports.CODE2HTML[exports.COLOR_BLACK] = "<span class='consoleColorBLACK'>";
 exports.CODE2HTML[exports.COLOR_BLUE] = "<span class='consoleColorBLUE'>";
@@ -178,14 +179,7 @@ exports.terminal2HTML = function(lineTerminal) {
     var currentOpenedColors = 0;
     var doneCodes = 0;
     codes.forEach(function(code, i) {
-        if (code == exports.FORMAT_RESET) {
-            if (currentOpenedColors > 0) {
-                texts[i - code.length] = "</span>".repeat(currentOpenedColors);
-                currentOpenedColors = 0;
-            } else {
-                // Ignore
-            }
-        } else if (exports.CODE2HTML[code]) {
+        if (exports.CODE2HTML[code]) {
             texts[i - code.length] = exports.CODE2HTML[code];
             currentOpenedColors += 1;
         } else {
@@ -194,7 +188,7 @@ exports.terminal2HTML = function(lineTerminal) {
     });
     texts.push("</span>".repeat(currentOpenedColors));
     var newString = texts.join("");
-    // console.log("T2H: Sending " + newString);
+    console.log("T2H: Sending " + newString);
     return newString;
 }
 
