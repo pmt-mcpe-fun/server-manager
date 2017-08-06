@@ -14,11 +14,13 @@ const fs = require('fs');
 const os = require('os');
 const http = require('https');
 const tarGz = require('node-targz');
-const properties = require("./lib/properties.js");
-const fs_utils = require("./lib/fs-utils.js");
-const server = require("./lib/server.js");
-const ipcRenderer = require('electron').ipcRenderer;
-const mdc = require("material-components-web");
+const mdc = require("material-components-web/dist/material-components-web");
+const rq = require('electron-require');
+
+const properties = rq.lib("properties.js");
+const fs_utils = rq.lib("fs-utils.js");
+const server = rq.lib("server.js");
+const ipcRenderer = rq.electron("ipcRenderer");
 
 
 exports.inputs = {};
@@ -34,13 +36,13 @@ exports.selects = [];
 exports.download = function(url, dest, cb) {
     var request = http.get(url, function(response) {
         // check if response is success
-        if (response.statusCode == 302) {
+        if (response.statusCode == 302 || response.statusCode == 301) {
             exports.download(response.headers["location"], dest, cb);
             return;
         }
         var file = fs.createWriteStream(dest);
         response.pipe(file);
-        file.on('finish', function() {
+        response.on('end', function() {
             file.close(cb); // close() is async, call cb after close completes.
         });
     }).on('error', function(err) { // Handle errors

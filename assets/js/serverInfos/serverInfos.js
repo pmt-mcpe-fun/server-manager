@@ -14,11 +14,14 @@ const path = require('path');
 const { ipcRenderer, shell } = require('electron');
 const fs = require('fs');
 const os = require('os');
-const properties = require("./js/lib/properties.js");
-const main = require('./js/main.js');
-const serverF = require('./js/lib/server.js');
-const formatingCodes = require('./js/lib/formatingCodes.js');
-const mdc = require("material-components-web");
+const rq = require('electron-require');
+
+const properties = rq.lib("properties.js");
+const main = rq('./js/main.js');
+const serverF = rq.lib('server.js');
+const formatingCodes = rq.lib('formatingCodes.js');
+const mdc = require("material-components-web/dist/material-components-web");
+
 
 var queuing = false; // TODO: Find a better var name.
 var first = 1;

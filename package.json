@@ -23,13 +23,19 @@
         "electron": "~1.6.2",
         "js-yaml": "^3.9.0",
         "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0"
+        "node-targz": "^0.2.0",
+        "electron-require": "^0.3.0"
     },
     "dependencies": {
         "js-yaml": "^3.9.0",
         "material-components-web": "^0.14.0",
         "node-targz": "^0.2.0",
-        "daemon-plus": "^1.1.1"
+        "daemon-plus": "^1.1.1",
+        "electron-require": "^0.3.0"
+    },
+    "electron-require": {
+        "lib": "%{app}/assets/js/lib",
+        "pluginReceiver": "%{app}/assets/js/pluginsProvider"
     },
     "build": {
         "appId": "fun.mcpe.psm.servermanager",

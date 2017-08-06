@@ -13,10 +13,12 @@ const path = require('path');
 const ipcRenderer = require('electron').ipcRenderer;
 const fs = require('fs');
 const os = require('os');
-const properties = require("./js/lib/properties.js");
-const main = require('./js/main.js');
-const server = require('./js/lib/server.js');
-const mdc = require("material-components-web");
+const mdc = require("material-components-web/dist/material-components-web");
+const rq = require('electron-require');
+
+const properties = rq.lib("properties.js");
+const main = rq('./js/main.js');
+const server = rq.lib('server.js');
 
 mdc.autoInit();
 

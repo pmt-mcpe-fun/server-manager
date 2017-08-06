@@ -11,11 +11,13 @@
 const fs = require('fs');
 const path = require('path');
 const { remote, ipcRenderer } = require("electron");
-const mdc = require("material-components-web");
+const mdc = require("material-components-web/dist/material-components-web");
+const rq = require('electron-require');
+const main = rq('./js/main.js');
 
 
 window.addEventListener("load", function() {
-    const main = require(__dirname + '/main.js');
+    mdc.autoInit();
     window.main = main;
     /**
      * Adding frame changing API
@@ -155,8 +157,4 @@ window.addEventListener("load", function() {
             sel.selectedIndex = 0;
         })
     }
-
-    // Adding buttons of window
-    getCurrentWindow();
-    mdc.autoInit();
 });
