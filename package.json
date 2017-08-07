@@ -20,19 +20,13 @@
     "license": "CC-BY-NC-SA-4.0",
     "devDependencies": {
         "daemon-plus": "^1.1.1",
-        "js-yaml": "^3.9.0",
-        "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0",
+        "electron": "~1.6.2",
         "electron-require": "^0.3.0",
-        "electron": "~1.6.2"
-    },
-    "dependencies": {
-        "daemon-plus": "^1.1.1",
-        "js-yaml": "^3.9.0",
+        "js-yaml": "^3.9.1",
         "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0",
-        "electron-require": "^0.3.0"
+        "node-targz": "^0.2.0"
     },
+    "dependencies": {},
     "electron-require": {
         "lib": "%{app}/assets/js/lib",
         "pluginReceiver": "%{app}/assets/js/pluginsProvider"
