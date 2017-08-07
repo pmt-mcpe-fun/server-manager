@@ -316,7 +316,7 @@ ipcMain.on("addServer", function (event, name) {
                 });
             }
         }));
-        tray.trayMenu.items[0].push(new MenuItem({
+        tray.trayMenu.items[0].submenu.push(new MenuItem({
             label: name,
             type: "normal",
             id: `stopped${name}`,
