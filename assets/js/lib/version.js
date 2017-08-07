@@ -27,11 +27,11 @@ exports.VERSIONS_EQUAL = 0;
  * @param {String} version1Str
  * @param {String} version2Str
  */
-function versionCompare(version1Str, version2Str) {
+function compare(version1Str, version2Str) {
     // Parsing first version
-    var version1 = parseVersion(version1Str);
+    var version1 = parse(version1Str);
     // Parsing second version
-    var version2 = parseVersion(version2Str);
+    var version2 = parse(version2Str);
     if (version1.major > version2.major) return VERSION_FIRST_SUPERIOR;
     if (version1.major < version2.major) return VERSION_FIRST_INFERIOR;
     if (version1.minor > version2.minor) return VERSION_FIRST_SUPERIOR;
@@ -61,23 +61,23 @@ function versionCompare(version1Str, version2Str) {
     if (version1.changeRev < version2.changeRev) return VERSION_FIRST_INFERIOR;
     return VERSIONS_EQUAL;
 }
-exports.versionCompare = versionCompare;
+exports.compare = compare;
 
 /**
  * Parses a version string and returns an object
  * 
  * @param {String} version 
  */
-function parseVersion(version) {
+function parse(version) {
     var change = 0;
     var changeRev = 0;
-    if (/(#|-)(\w+)/.exec(version).length > 0) {
+    if (/(#|-)(\w+)/.exec(version) !== null) {
         var abdp = version.split(/#|-/)[1]; // Patch, Alpha, Beta, Delta
         version = version.replace(abdp, "");
         if (abdp.indexOf(".") !== -1) {
             changeRev = abdp.split(".")[1];
             abdp = abdp.split(".")[0];
-        } else if (/[0-9]+/.exec(version).length > 0) {
+        } else if (/[0-9]+/.exec(version) !== null) {
             changeRev = /[0-9]+/.exec(version)[0];
             abdp = abdp.replace(changeRev, "");
         }

@@ -8,9 +8,10 @@
  * @package PocketMine Server Manager
  */
 
-const path = require("path");
-const mdc = require("material-components-web");
-
+var __dirname = location.pathname.split("/");
+__dirname[__dirname.length - 1] = "js";
+__dirname.push("pluginsProvider");
+__dirname = __dirname.join("/");
 var pluginProviders = {
     github: {
         img: "https://github.com/fluidicon.png",
@@ -24,13 +25,15 @@ var pluginProviders = {
     },
 }
 
+console.log(location.pathname, __dirname);
 
-document.getElementById("pluginAddDialogBody").innerHTML = `
-<p>Choose an plugin provider</p>
-<ul id="pluginProvidersList" class="mdc-list"></ul>`;
+function refresh() {
+    document.getElementById("pluginAddDialogBody").innerHTML = `
+    <p>Choose an plugin provider</p>
+    <ul id="pluginProvidersList" class="mdc-list"></ul>`;
 
-Object.keys(pluginProviders).forEach(function(keyName) {
-    document.getElementById("pluginProvidersList").innerHTML += ` 
+    Object.keys(pluginProviders).forEach(function(keyName) {
+        document.getElementById("pluginProvidersList").innerHTML += ` 
         <li class="mdc-list-item" id="pluginProvider${keyName}" data-keyname="${keyName}">
             <span class="mdc-list-item__start-detail">
                <img style="width: 24px; height: 24px" src="${pluginProviders[keyName].img}">
@@ -39,14 +42,17 @@ Object.keys(pluginProviders).forEach(function(keyName) {
     		   ${pluginProviders[keyName].name}
             </span>
         </li>`;
-    new mdc.ripple.MDCRipple(document.getElementById(`pluginProvider${keyName}`));
-    document.getElementById(`pluginProvider${keyName}`).addEventListener("click", function(event) {
-        var plugProvider = require(pluginProviders[this.getAttribute("data-keyname")].provider);
-        plugProvider.listPlugins();
+        new mdc.ripple.MDCRipple(document.getElementById(`pluginProvider${keyName}`));
+        document.getElementById(`pluginProvider${keyName}`).addEventListener("click", function(event) {
+            document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProviders[this.getAttribute("data-keyname")].name;
+            console.log(pluginProviders[this.getAttribute("data-keyname")].provider);
+            var plugProvider = require(pluginProviders[this.getAttribute("data-keyname")].provider);
+            plugProvider.listPlugins();
+        });
     });
-});
-
+}
 document.getElementById("pluginAddDialog").MDCDialog = new mdc.dialog.MDCDialog(document.getElementById("pluginAddDialog"));
-document.getElementById("pluginAddBtn").addEventListener("click", function(event) {
+document.getElementById("addPluginBtn").addEventListener("click", function(event) {
     document.getElementById("pluginAddDialog").MDCDialog.show();
+    refresh();
 })

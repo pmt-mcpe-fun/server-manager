@@ -45,7 +45,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
     var start = false;
     var stop = false;
     var view = false;
-    commandLine.forEach(function(cmd) {
+    commandLine.forEach(function (cmd) {
         switch (cmd) {
             case "--start":
                 start = true;
@@ -126,12 +126,12 @@ var newData;
 function checkForUpdates(cb) {
     php.snackbar("Looking for updates...");
     http.get("http://psm.mcpe.fun/versions.json",
-        function(response) {
+        function (response) {
             var completeResponse = '';
-            response.on('data', function(chunk) {
+            response.on('data', function (chunk) {
                 completeResponse += chunk;
             });
-            response.on('end', function() { // Here we have the final result
+            response.on('end', function () { // Here we have the final result
                 try {
                     var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
                 } catch (e) {
@@ -153,7 +153,7 @@ function checkForUpdates(cb) {
                 cb();
             });
         }
-    ).on('error', function(e) { // An error occured. Do nothing exepct cb
+    ).on('error', function (e) { // An error occured. Do nothing exepct cb
         console.log(`Got error: ${e.message}`);
         cb();
     });
@@ -174,7 +174,7 @@ function createWindow(forceLaunch = false) {
             slashes: true
         }))
 
-        exports.mainWindow.on('closed', function() {
+        exports.mainWindow.on('closed', function () {
             // Dereference the window object, usually you would store windows
             // in an array if your app supports multi windows, this is the time
             // when you should delete the corresponding element.
@@ -187,18 +187,18 @@ function createWindow(forceLaunch = false) {
         require('./main/menus');
     } else {
         delete process.argv[process.argv.indexOf("--no-gui")]; // Remove the arg, we don't need it anymore.
-        setTimeout(function() { define() }, 1000); // Defining the rest of variables b4 calling this.
+        setTimeout(function () { define() }, 1000); // Defining the rest of variables b4 calling this.
     }
 }
 
 
-app.on('ready', function() { createWindow() });
+app.on('ready', function () { createWindow() });
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
     // Not killing process unitl used by force killing. Let servers running.
 });
 
-app.on('activate', function() {
+app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (exports.mainWindow === null) {
@@ -215,7 +215,7 @@ app.on('activate', function() {
  * @param {*} event
  * @param {String} varN
  */
-ipcMain.on('getVar', function(event, varN) {
+ipcMain.on('getVar', function (event, varN) {
     if (exports[varN]) {
         event.returnValue = exports[varN];
     } else {
@@ -228,10 +228,10 @@ ipcMain.on('getVar', function(event, varN) {
  * @param {*} event
  * @param {String} serverName
  */
-ipcMain.on('getServer', function(event, serverName) {
+ipcMain.on('getServer', function (event, serverName) {
     if (!exports.servers[serverName]) {
         if (fs.existsSync(path.join(exports.serverFolder, serverName))) {
-            exports.servers[serverName] = new server.Server(serverName, php);
+            exports.servers[serverName] = new server.Server(serverName, php, this2);
         }
     } else {
         if (!fs.existsSync(path.join(exports.serverFolder, serverName))) { // Server has been deleted
@@ -251,8 +251,8 @@ ipcMain.on('getServer', function(event, serverName) {
  * @param {*} event
  * @param {{}} serverR
  */
-ipcMain.on("setServer", function(event, serverR) {
-    var export2 = function(obj, Server) {
+ipcMain.on("setServer", function (event, serverR) {
+    var export2 = function (obj, Server) {
         if (obj.isStarted &&
             !Server.isStarted) {
             Server.start();
@@ -262,7 +262,7 @@ ipcMain.on("setServer", function(event, serverR) {
             Server.settings = obj.settings;
             Server.save();
         }
-        obj.commands.forEach(function(cmd) {
+        obj.commands.forEach(function (cmd) {
             Server.inputCommand(cmd);
         }, obj);
     }
@@ -274,9 +274,9 @@ ipcMain.on("setServer", function(event, serverR) {
  * @param {*} event
  * @return {Boolean}
  */
-ipcMain.on("save", function(event) {
+ipcMain.on("save", function (event) {
     event.returnValue = true;
-    Object.keys(exports.servers).forEach(function(name) {
+    Object.keys(exports.servers).forEach(function (name) {
         var serv = exports.servers[name];
         if (!serv.save()) event.returnValue = false;
     })
@@ -288,8 +288,8 @@ ipcMain.on("save", function(event) {
  * @param {*} event
  * @return {Boolean}
  */
-ipcMain.on("close", function(event) {
-    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
+ipcMain.on("close", function (event) {
+    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function () { });
     tray.tray.destroy();
     app.exit();
     process.exit();
@@ -302,18 +302,27 @@ ipcMain.on("close", function(event) {
  * @param {*} event
  * @return {Boolean}
  */
-ipcMain.on("addServer", function(event, name) {
+ipcMain.on("addServer", function (event, name) {
     if (exports.mainWindow) {
         tray.trayMenu.items[2].submenu.append(new MenuItem({
-            label: folder,
+            label: name,
             type: "normal",
-            id: `view${folder}`,
-            click: function() {
+            id: `view${name}`,
+            click: function () {
                 if (!exports.mainWindow) createWindow();
-                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${folder}'`, function() {
+                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${name}'`, function () {
                     if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
                     exports.mainWindow.focus();
                 });
+            }
+        }));
+        tray.trayMenu.items[0].push(new MenuItem({
+            label: name,
+            type: "normal",
+            id: `stopped${name}`,
+            click: function () {
+                php.app.servers[name].start();
+                removeStopServer(name);
             }
         }));
     }
@@ -326,7 +335,7 @@ var defined = false;
 function define() {
     if (defined) {
         if (viewPage) {
-            exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = '${viewPage}'`, function() {
+            exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = '${viewPage}'`, function () {
                 if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
                 exports.mainWindow.focus();
             });
@@ -340,7 +349,7 @@ function define() {
     }
     if (!defined) {
         php.setApp(this2);
-        checkForUpdates(function() {
+        checkForUpdates(function () {
             if (updateAvailable) {
                 if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
                 snackbar.show({
@@ -356,19 +365,19 @@ function define() {
             }
             // Defining php
             php.snackbar("Looking for php...");
-            php.define(function() {
+            php.define(function () {
                 // Checking for servers;
                 php.snackbar("Looking for servers...");
                 var servers = fs.readdirSync(exports.serverFolder);
                 if (exports.mainWindow) tray.addTray(php);
-                servers.forEach(function(folder) {
+                servers.forEach(function (folder) {
                     exports.servers[folder] = new server.Server(folder, php, exports);
                     if (exports.mainWindow) {
                         tray.trayMenu.items[0].submenu.append(new MenuItem({
                             label: folder,
                             type: "normal",
                             id: `stopped${folder}`,
-                            click: function() {
+                            click: function () {
                                 exports.servers[folder].start();
                                 tray.removeStopServer(folder);
                             }
@@ -377,9 +386,9 @@ function define() {
                             label: folder,
                             type: "normal",
                             id: `view${folder}`,
-                            click: function() {
+                            click: function () {
                                 if (!exports.mainWindow) createWindow();
-                                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${folder}'`, function() {
+                                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${folder}'`, function () {
                                     if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
                                     exports.mainWindow.focus();
                                 });
@@ -389,12 +398,12 @@ function define() {
                 }, this);
                 if (exports.mainWindow) tray.tray.setContextMenu(tray.trayMenu);
                 // Setting app clock (1 second based)
-                setInterval(function() {
+                setInterval(function () {
                     // IPC Refreshing
                     ipcMain.main = this;
                     // Servers refreshing
                     var name;
-                    Object.keys(exports.servers).forEach(function(name) {
+                    Object.keys(exports.servers).forEach(function (name) {
                         var server = exports.servers[name];
                         if (server.changed) {
                             server.changed = false;
@@ -403,7 +412,7 @@ function define() {
                             event.sender.send("sendServer", serv);
                         }
                     })
-                    Object.keys(exports.servers).forEach(function(key) {
+                    Object.keys(exports.servers).forEach(function (key) {
                         var serv = exports.servers[key];
                         serv.refresh();
                     });

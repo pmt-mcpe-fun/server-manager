@@ -24,7 +24,7 @@ var php;
 function addTray(phpFromApp) {
     if (!php) php = phpFromApp;
     // Adding tray icon
-    exports.tray = new Tray(path.join(__dirname, "..", "assets", "icons", os.platform == "win32" ? "icon.png" : "icon.png")); // TODO: Create black and white icon
+    exports.tray = new Tray(path.join(__dirname, "..", "assets", "icons", os.platform == "darwin" ? "iconBWTemplate.png" : "icon.png")); // TODO: Create black and white icon
     if (os.platform() == "darwin") app.dock.setIcon(path.join(__dirname, "..", "assets", "icons", os.platform == "win32" ? "icon.png" : "icon.png"));
     exports.trayMenu = Menu.buildFromTemplate([
         { label: 'Start server', type: 'submenu', submenu: [] },
@@ -143,7 +143,7 @@ exports.removeStopServer = removeStopServer;
 /**
  * When a server gets deleted removing this from tray
  */
-ipcMain.on("deleteServer", function(event, serverName) {
+ipcMain.on("deleteServer", function(event, name) {
     var stoppedItems = exports.trayMenu.items[0].submenu.items.clone();
     var startedItems = exports.trayMenu.items[1].submenu.items.clone();
     var viewingItems = exports.trayMenu.items[2].submenu.items.clone(); // All the servers.
