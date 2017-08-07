@@ -9,6 +9,9 @@
  */
 
 var inputs = {};
+if (top) require = top.require;
+var mdc = require("material-components-web/dist/material-components-web");
+var dialogES = new mdc.dialog.MDCDialog(document.getElementById("editServerDialog"));
 window.addEventListener("load", function() {
     // Server editing dialog
     document.querySelectorAll('.mdc-slider').forEach(function(elem) {
@@ -26,7 +29,7 @@ window.addEventListener("load", function() {
 
 
 document.getElementById("EditServerPropertiesBtn").addEventListener("click", function(event) {
-    document.getElementById("editServerDialog").MDCDialog.show();
+    dialogES.show();
     //Setting elements back to default.
     document.getElementById("serverMOTD").value = window.server.settings["motd"];
     document.getElementById("serverPort").value = parseInt(window.server.settings["server-port"]);
@@ -49,7 +52,7 @@ document.getElementById("EditServerPropertiesBtn").addEventListener("click", fun
 
 
 // Let's make the window.server edit dialog !
-new mdc.dialog.MDCDialog(document.getElementById("editServerDialog")).listen('MDCDialog:accept', function() {
+dialogES.listen('MDCDialog:accept', function() {
     if (server) {
         var serverMOTD = document.getElementById("serverMOTD").value;
         var serverPort = document.getElementById("serverPort").value;

@@ -20,7 +20,6 @@ const properties = rq.lib("properties.js");
 const main = rq('./js/main.js');
 const serverF = rq.lib('server.js');
 const formatingCodes = rq.lib('formatingCodes.js');
-const mdc = require("material-components-web/dist/material-components-web");
 
 
 var queuing = false; // TODO: Find a better var name.
@@ -99,5 +98,3 @@ document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
     new mdc.textfield.MDCTextfield(elem);
 });
 window.tabBar = new mdc.tabs.MDCTabBar(document.querySelector('.mdc-tab-bar'));
-
-mdc.autoInit();
