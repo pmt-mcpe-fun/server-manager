@@ -153,7 +153,7 @@ exports.download = function(url, dest, cb) {
  * @param {String} error 
  */
 function snackbar(error) {
-    if (exports.app && exports.app.mainWindow) exports.app.mainWindow.webContents.executeJavaScript(`document.getElementById('currentThing').innerHTML = "${error}"`);
+    if (exports.app && exports.app.mainWindow) exports.app.mainWindow.webContents.executeJavaScript(`if(document.getElementById('currentThing')) document.getElementById('currentThing').innerHTML = "${error}"`);
 }
 exports.snackbar = snackbar;
 

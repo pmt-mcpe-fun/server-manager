@@ -163,7 +163,8 @@ function checkForUpdates(cb) {
 function createWindow(forceLaunch = false) {
     if (process.argv.indexOf("--no-gui") == -1 || forceLaunch) {
         // Create the browser window.
-        exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: false, icon: path.join(__dirname, "assets", "icons", "icon.png") });
+        var framed = process.argv.indexOf("--use-os-windows") !== -1;
+        exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: framed, icon: path.join(__dirname, "assets", "icons", "icon.png") });
         exports.mainWindow.webContents.app = this2;
 
         // and load the index.html of the app.
@@ -331,6 +332,11 @@ function define() {
             });
             viewPage = undefined;
         }
+        if (process.argv.indexOf("--use-os-windows") !== -1)
+            exports.mainWindow.webContents.executeJavaScript(`
+        document.querySelectorAll(".windowButton").forEach(function(elem){
+            elem.remove();
+        });`);
     }
     if (!defined) {
         php.setApp(this2);
