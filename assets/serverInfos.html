@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/icon.css">
     <link rel="stylesheet" href="css/roboto.css">
     <link rel="stylesheet" href="css/tabs.css">
+    <link rel="stylesheet" href="css/plugins.css">
     <link rel="stylesheet" href="css/formatingConsole.css">
     <!-- Material Design -->
     <link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
@@ -362,9 +363,26 @@
             </ul>
         </div>
         <!-- Add button -->
-        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="addPlugin" data-mdc-auto-init="MDCRipple">
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="addPluginBtn" data-mdc-auto-init="MDCRipple">
         	<span class="mdc-fab__icon">add</span>
         </button>
+        <!-- Add plugin dialog -->
+        <aside id="pluginAddDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="pluginAddDialogTitle" aria-describedby="pluginAddDialogBody">
+            <div class="mdc-dialog__surface">
+                <header class="mdc-dialog__header">
+                    <h2 id="pluginAddDialogTitle" class="mdc-dialog__header__title">
+                        Add plugin - Choose plugin provider
+                    </h2>
+                </header>
+                <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="pluginAddDialogBody">
+                    <!-- Dialog content -->
+                </section>
+                <footer class="mdc-dialog__footer">
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
+                </footer>
+            </div>
+            <div class="mdc-dialog__backdrop"></div>
+        </aside>
     </data-tab>
 </body>
 
@@ -374,6 +392,7 @@
 <script src="js/serverInfos/managePlayers.js"></script>
 <script src="js/serverInfos/manageLevels.js"></script>
 <script src="js/serverInfos/managePlugins.js"></script>
+<script src="js/pluginsProvider/pluginProvider.js"></script>
 <script src="js/serverInfos/tabs.js"></script>
 
 </html>
