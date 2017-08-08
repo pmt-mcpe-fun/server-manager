@@ -1,0 +1,67 @@
+/**
+ *
+ * PocketMine Server Manager design - Plugins providers design.
+ * 
+ * @author Ad5001
+ * @version 1.0.0
+ * @license NTOSL (Custom) - View LICENSE.md in the root of the project
+ * @copyright (C) Ad5001 2017
+ * @package PocketMine Server Manager
+ *
+ */
+
+.poggitPluginTag {
+    border-radius: 2.5px;
+    padding: 4px;
+}
+
+button.inline {
+    height: auto !important;
+    display: flex !important;
+}
+
+
+button .material-icons {
+    line-height: unset !important;
+}
+
+#pluginInfos {
+    z-index: 2000; /* On the front */
+    transform: translateY(45)
+}
+
+#pluginInfos.shown {
+    transform: translateY(1);
+    animation: pluginInfosCardShow;
+}
+
+#pluginInfos.hidden {
+    transform: translateY(1);
+    animation: pluginInfosCardHide;
+}
+
+@keyframes pluginInfosCardShow {
+    from {
+        transform: translateY(45);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pluginInfosCardHide {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(45);
+        opacity: 0;
+    }
+}
+
+.right {
+    float: right;
+}

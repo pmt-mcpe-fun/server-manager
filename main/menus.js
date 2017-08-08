@@ -3,7 +3,7 @@
  * 
  * @author Ad5001, NFGamerMC
  * @version 1.0.0
- * @license CC-BY-NC-SA-4.0
+ * @license NTOSL (Custom) - View LICENSE.md in the root of the project
  * @package PocketMine Server Manager
  */
 
