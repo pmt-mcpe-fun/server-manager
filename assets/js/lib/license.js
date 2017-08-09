@@ -3,7 +3,7 @@
  * 
  * @author Ad5001
  * @version 1.0.0
- * @license CC-BY-NC-SA-4.0
+ * @license NTOSL (Custom) - View LICENSE.md in the root of the project
  * @copyright (C) Ad5001 2017
  * @package PocketMine Server Manager
  */
@@ -17,7 +17,7 @@ const fs = require("fs");
  * @property {String} key
  * @property {String} spdx_id
  * @property {String} content
- * @property {String} [url]
+ * @property {String} url
  */
 
 /**
@@ -29,56 +29,73 @@ exports.LicenseList = {
         name: "Apache License 2.0",
         key: "apache-2.0",
         spdx_id: "Apache-2.0",
+        url: "https://choosealicense.com/licenses/apache-2.0/"
     },
     "mit": {
         name: "MIT License",
         key: "mit",
-        spdx_id: "MIT"
+        spdx_id: "MIT",
+        url: "https://choosealicense.com/licenses/mit/"
     },
     "gpl-3.0": {
         name: "GNU General Public License v3.0",
         key: "gpl-3.0",
-        spdx_id: "GPL-3.0"
+        spdx_id: "GPL-3.0",
+        url: "https://choosealicense.com/licenses/gpl-3.0/"
     },
     "lgpl-3.0": {
         name: "GNU Lesser General Public License v3.0",
         key: "lgpl-3.0",
-        spdx_id: "LGPL-3.0"
+        spdx_id: "LGPL-3.0",
+        url: "https://choosealicense.com/licenses/lgpl-3.0/"
     },
     "agpl-3.0": {
         name: "GNU Affero General Public License v3.0",
         key: "agpl-3.0",
-        spdx_id: "AGPL-3.0"
+        spdx_id: "AGPL-3.0",
+        url: "https://choosealicense.com/licenses/agpl-3.0/"
     },
     "lgpl-2.1": {
         name: "GNU Lesser General Public License v2.1",
         key: "lgpl-2.1",
-        spdx_id: "LGPL-2.1"
+        spdx_id: "LGPL-2.1",
+        url: "https://choosealicense.com/licenses/lgpl-2.1/"
     },
     "gpl-2.0": {
         name: "GNU General Public License v2.0",
         key: "gpl-2.0",
-        spdx_id: "GPL-2.0"
+        spdx_id: "GPL-2.0",
+        url: "https://choosealicense.com/licenses/gpl-2.0/"
     },
     "lgpl-2.0": {
         name: "GNU Library General Public License v2.0",
         key: "lgpl-2.0",
-        spdx_id: "LGPL-2.0"
+        spdx_id: "LGPL-2.0",
+        url: "https://choosealicense.com/licenses/lgpl-2.0/"
     },
     "bsd-3-clause": {
         name: "3-Clause BSD License",
         key: "bsd-3-clause",
-        spdx_id: "BSD-3-Clause"
+        spdx_id: "BSD-3-Clause",
+        url: "https://choosealicense.com/licenses/bsd-3-clause/"
     },
     "none": { // :(
         name: "No license",
         key: "none",
-        spdx_id: ""
+        spdx_id: "",
+        url: "https://choosealicense.com/no-license/"
     },
     "custom": {
         name: "Custom License",
         key: "custom",
-        spdx_id: ""
+        spdx_id: "",
+        url: "#"
+    },
+    "other": {
+        name: "Custom License",
+        key: "other",
+        spdx_id: "",
+        url: "#"
     }
 }
 Object.keys(exports.LicenseList).forEach(function(licenseId) {
@@ -89,11 +106,29 @@ Object.keys(exports.LicenseList).forEach(function(licenseId) {
     }
 })
 
+
 /**
- * Gets a custom license from github.
+ * @typedef {Function} LicenceFromGHCb
+ * @param {License|Object} returnValue The return value. Object License or Error object.
+ */
+
+
+/**
+ * Gets a custom license from github. Async.
+ * 
+ * @param {String} user Github username
+ * @param {String} repo Github repo name (without username and slash)
+ * @param {LicenceFromGHCb} cb Callback from request
  */
 exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on github and we know it's url
-    http.get(`https://api.github.com/repos/${user}/${repo}/LICENSE`, function(response) {
+    var JSONData = "";
+    var req = http.get({
+        hostname: "api.github.com",
+        path: `/repos/${user}/${repo}/LICENSE`,
+        headers: {
+            "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
+        }
+    }, function(response) {
         if (response.statusCode == 404) {
             cb(exports.LicenseList.none);
         }
@@ -101,9 +136,9 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
 
         var error;
         if (response.statusCode !== 200) {
-            error = new Error("Looks like you searched github too much and it dkeyn't liked that ! Check back in a few seconds/minutes.");
+            error = new Error("Looks like you searched github too much and it didn't't liked that ! Check back in a few seconds/minutes.");
         } else if (!/^application\/json/.test(contentType)) {
-            error = new Error("Looks like you searched github too much and it dkeyn't liked that ! Check back in a few seconds/minutes.");
+            error = new Error("Looks like you searched github too much and it didn't't liked that ! Check back in a few seconds/minutes.");
         }
         if (error) cb({ error: error });
 
@@ -112,13 +147,17 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
         });
         response.on('end', () => {
             try {
+                console.log(JSONData);
                 var parsedData = JSON.parse(JSONData);
-                var license = exports.LicenseList[parsedData["license"]];
+                var license = exports.LicenseList[parsedData["license"]["key"]];
                 license["content"] = Buffer.from(parsedData["content"], parsedData["encoding"]).toString();
                 cb(license);
             } catch (e) {
-                cb({});
+                cb({error: e});
             }
         });
+    });
+    req.on("error", function(err){
+        cb({error: err});
     });
 }

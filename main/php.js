@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('https');
 const tarGz = require('node-targz');
+const {URL} = require("url");
 const properties = require("./lib/properties.js");
 const PHP_VERSION = "7.0.3";
 /**
@@ -125,12 +126,20 @@ function downloadPHP(cb) {
 /**
  * Downloads a file
  * 
- * @param {String} url 
+ * @param {String} urlStr
  * @param {String} dest 
  * @param {Function} cb 
  */
-exports.download = function(url, dest, cb) {
-    var request = http.get(url, function(response) {
+exports.download = function(urlStr, dest, cb) {
+    var options = {
+        headers: {
+            "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
+        }
+    }
+    var url = new URL(urlStr);
+    options.hostname = url.hostname;
+    options.path = url.pathname;
+    var request = http.get(options, function(response) {
         // check if response is success
         if (response.statusCode == 302) {
             exports.download(response.headers["location"], dest, cb);
