@@ -13,7 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('https');
 const tarGz = require('node-targz');
-const {URL} = require("url");
+const { URL } = require("url");
 const properties = require("./lib/properties.js");
 const PHP_VERSION = "7.0.3";
 /**
@@ -33,8 +33,7 @@ exports.setApp = setApp;
  */
 function define(cb) {
     // PHP
-    try {
-        fs.accessSync(exports.app.phpFolder);
+    if (fs.existsSync(exports.app.phpFolder)) {
         try { // Windows
             fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
@@ -46,8 +45,7 @@ function define(cb) {
             console.log("Applied defining2");
         }
         snackbar("Found php at " + exports.phpExecutable + "...");
-    } catch (e) { // No PHP
-        console.log(e);
+    } else { // No PHP
         downloadPHP(cb);
     }
 }
@@ -98,27 +96,32 @@ function downloadPHP(cb) {
             tarGz.decompress({
                 source: path.join(exports.app.appFolder, "php.tar.gz"),
                 destination: exports.app.phpFolder
-            }, function() {
-                // Now we replace the "/PocketMine/" which is the default ~/.pocketmine/php AKA exports.app.phpFolder
-                const options = {
-                    files: [
-                        path.join(exports.app.phpFolder, "**", '*.*'),
-                    ],
-                    //Replacement to make (string or regex) 
-                    from: /\/PocketMine\//g,
-                    to: exports.app.phpFolder,
-                };
-                walk(exports.app.phpFolder);
-                try { // Windows
-                    fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
-                    exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
-                } catch (e) { // Linux & MacOS
-                    exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+            }, function(err) {
+                if (!err) {
+                    // Now we replace the "/PocketMine/" which is the default ~/.pocketmine/php AKA exports.app.phpFolder
+                    const options = {
+                        files: [
+                            path.join(exports.app.phpFolder, "**", '*.*'),
+                        ],
+                        //Replacement to make (string or regex) 
+                        from: /\/PocketMine\//g,
+                        to: exports.app.phpFolder,
+                    };
+                    walk(exports.app.phpFolder);
+                    try { // Windows
+                        fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
+                        exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
+                    } catch (e) { // Linux & MacOS
+                        exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+                    }
+                    fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
+                    snackbar("Successfully downloaded PHP " + PHP_VERSION + ".");
+                    cb.apply(exports.app);
+                    console.log("Applied defining3");
+                } else {
+                    console.log(err);
+                    snackbar("Could not extract PHP " + PHP_VERSION);
                 }
-                fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
-                snackbar("Successfully downloaded PHP 7.0.3.");
-                cb.apply(exports.app);
-                console.log("Applied defining3");
             });
         });
 }
@@ -131,15 +134,7 @@ function downloadPHP(cb) {
  * @param {Function} cb 
  */
 exports.download = function(urlStr, dest, cb) {
-    var options = {
-        headers: {
-            "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
-        }
-    }
-    var url = new URL(urlStr);
-    options.hostname = url.hostname;
-    options.path = url.pathname;
-    var request = http.get(options, function(response) {
+    var request = http.get(urlStr, function(response) {
         // check if response is success
         if (response.statusCode == 302) {
             exports.download(response.headers["location"], dest, cb);
