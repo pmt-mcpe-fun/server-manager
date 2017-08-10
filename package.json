@@ -48,8 +48,10 @@
             "category": "Development;Utility",
             "target": [
                 "deb",
+                "rpm",
                 "tar.gz",
-                "snap"
+                "snap",
+                "apk"
             ],
             "synopsis": "Manage your servers with ease !",
             "icon": "build/linux_icons",

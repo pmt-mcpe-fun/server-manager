@@ -131,33 +131,37 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
     }, function(response) {
         if (response.statusCode == 404) {
             cb(exports.LicenseList.none);
-        }
-        var contentType = response.headers['content-type'];
+        } else {
+            var contentType = response.headers['content-type'];
 
-        var error;
-        if (response.statusCode !== 200) {
-            error = new Error("Looks like you searched github too much and it didn't't liked that ! Check back in a few seconds/minutes.");
-        } else if (!/^application\/json/.test(contentType)) {
-            error = new Error("Looks like you searched github too much and it didn't't liked that ! Check back in a few seconds/minutes.");
-        }
-        if (error) cb({ error: error });
-
-        response.on('data', function(chunk) {
-            JSONData += chunk.toString();
-        });
-        response.on('end', () => {
-            try {
-                console.log(JSONData);
-                var parsedData = JSON.parse(JSONData);
-                var license = exports.LicenseList[parsedData["license"]["key"]];
-                license["content"] = Buffer.from(parsedData["content"], parsedData["encoding"]).toString();
-                cb(license);
-            } catch (e) {
-                cb({error: e});
+            var error;
+            console.log(response.statusCode);
+            if (response.statusCode !== 200) {
+                cb(exports.LicenseList.none);
             }
-        });
+
+            response.on('data', function(chunk) {
+                JSONData += chunk.toString();
+            });
+            response.on('end', () => {
+                try {
+                    console.log(JSONData);
+                    var parsedData = JSON.parse(JSONData);
+                    var license = exports.LicenseList["none"];
+                    if (parsedData.key) {
+                        license = exports.LicenseList[parsedData["license"]["key"]];
+                        license["content"] = Buffer.from(parsedData["content"], parsedData["encoding"]).toString();
+                    } else {
+                        license["content"] = "";
+                    }
+                    cb(license);
+                } catch (e) {
+                    cb({ error: e });
+                }
+            });
+        }
     });
-    req.on("error", function(err){
-        cb({error: err});
+    req.on("error", function(err) {
+        cb({ error: err });
     });
 }
