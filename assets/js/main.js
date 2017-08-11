@@ -55,6 +55,7 @@ exports.download = function(urlStr, dest, cb) {
         })
         response.on('end', function() {
             fs.writeFile(dest, data);
+            cb();
         });
     }).on('error', function(err) { // Handle errors
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
@@ -178,7 +179,7 @@ exports.createPMServer = function(name, port, version) {
                                             if (!err) {
                                                 snackbar("Sucessfully created server " + name + "!");
                                                 console.log("Finished !")
-                                                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString());
+                                                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
                                             } else {
                                                 snackbar("An error occured while creating the server.");
                                                 console.error(err);
@@ -191,7 +192,7 @@ exports.createPMServer = function(name, port, version) {
                                 if (!err) {
                                     snackbar("Sucessfully created server " + name + "!");
                                     console.log("Finished !")
-                                    fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString());
+                                    fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
                                     ipcRenderer.send("addServer", name);
                                 } else {
                                     snackbar("An error occured while creating the server.");

@@ -113,52 +113,6 @@ try {
 
 var this2 = this;
 
-// Checking for updates
-var updateAvailable = false;
-var newData;
-
-/**
- * Checks for updates
- * 
- * @param {Function} cb
- */
-
-function checkForUpdates(cb) {
-    php.snackbar("Looking for updates...");
-    http.get("http://psm.mcpe.fun/versions.json",
-        function(response) {
-            var completeResponse = '';
-            response.on('data', function(chunk) {
-                completeResponse += chunk;
-            });
-            response.on('end', function() { // Here we have the final result
-                try {
-                    var data = JSON.parse(fs.readFileSync(path.join(exports.appFolder, "versions.json")));
-                } catch (e) {
-                    var data = {};
-                }
-                try {
-                    newData = JSON.parse(completeResponse);
-                } catch (e) {
-                    newData = {};
-                }
-                if (!fs.existsSync(path.join(exports.appFolder, "versions.json")) || (Object.keys(newData) !== Object.keys(data) && Object.keys(newData).length > 0)) { // New version out for PMMP soft & no timeout
-                    fs.writeFileSync(path.join(exports.appFolder, "versions.json"), completeResponse);
-                }
-                if (newData.version !== data.version) { // New app version is out
-                    updateAvailable = true;
-                } else {
-                    php.snackbar("No updates found...");
-                }
-                cb();
-            });
-        }
-    ).on('error', function(e) { // An error occured. Do nothing exepct cb
-        console.log(`Got error: ${e.message}`);
-        cb();
-    });
-}
-
 // Creates the window
 function createWindow(forceLaunch = false) {
     if (process.argv.indexOf("--no-gui") == -1 || forceLaunch) {
@@ -349,20 +303,7 @@ function define() {
     }
     if (!defined) {
         php.setApp(this2);
-        checkForUpdates(function() {
-            if (updateAvailable) {
-                if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript(`var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('#formError'));
-                snackbar.show({
-    	            message: 'A new version is out (` + newData.version + `).Do you want to download it ? ',
-                    actionText: "Download",
-                    actionHandler: function() {
-		        		require('electron').shell.openExternal('https://psm.mcpe.fun/download');
-		        	},
-                    multiline: true,
-                    actionOnBottom: true,
-                    timeout: 1000000000
-                });`);
-            }
+        require("./main/updater.js").checkForUpdates(php, function() {
             // Defining php
             php.snackbar("Looking for php...");
             php.define(function() {
