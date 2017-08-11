@@ -77,7 +77,7 @@ const PLUGIN_STATE_NAMES = [
     "Featured"
 ];
 
-var require = top.require;
+// var require = top.require;
 var http = require("https");
 var mdc = require('material-components-web/dist/material-components-web');
 // var rq = require('electron-require');
@@ -237,9 +237,64 @@ window.pluginProviders.Poggit = {
     },
 
     /**
+     * Downloads a plugin from poggit (phar form)
+     * 
+     * @param {String} pluginUrl
+     */
+    downloadPlugin: function(pluginUrl) {
+        var data = '';
+        var options = {
+            headers: {
+                "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
+            }
+        }
+        var url = new URL(pluginUrl);
+        options.hostname = url.hostname;
+        options.path = url.pathname;
+        http.get(options, function(response) {
+            if (response.statusCode == 302 || response.statusCode == 301) {
+                return downloadPlugin(response.headers['location'], dest, cb);
+            }
+
+            var statusCode = response.statusCode;
+            var contentType = response.headers['content-type'];
+
+            var error;
+            if (statusCode !== 200) {
+                error = new Error("Poggit seems to have some issues for the moment. Please check back later. (Status code: " + statusCode + ")");
+            }
+            if (error) {
+                document.getElementById("pluginAddDialogBody").innerHTML = "<p>" + error.message + ". Click outside this dialog to dismiss this dialog.</p>";
+            }
+            response.on('data', function(chunk) {
+                data += chunk.toString("binary");
+            });
+            response.on('end', () => {
+                try {
+                    var plPath = require("path").join(
+                        require("electron").ipcRenderer.sendSync("getVar", "serverFolder"),
+                        window.server.name,
+                        "plugins",
+                        document.getElementById("pluginInfosName").innerHTML + ".phar"
+                    );
+                    require("fs").writeFile(plPath, data, { encoding: "binary" });
+                    top.window.main.snackbar("Successfully downloaded plugin " + document.getElementById("pluginInfosName").innerHTML + "!");
+                } catch (error) {
+                    document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not download plugin: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
+                    console.log(error);
+                }
+            });
+        }).on('error', function(error) {
+            document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Poggit: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
+            console.log(error);
+        });
+    },
+
+    /**
      * Lists the plugins
      */
     listPlugins: function() {
+        window.currentProvider = "Poggit";
         document.getElementById("pluginAddDialogBody").innerHTML = `
             <div role="progressbar" 
             class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--accent mdc-elevation--z10" 

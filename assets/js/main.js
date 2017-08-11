@@ -40,6 +40,7 @@ exports.download = function(urlStr, dest, cb) {
             "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
         }
     }
+    var data = "";
     var url = new URL(urlStr);
     options.hostname = url.hostname;
     options.path = url.pathname;
@@ -49,10 +50,11 @@ exports.download = function(urlStr, dest, cb) {
             exports.download(response.headers["location"], dest, cb);
             return;
         }
-        var file = fs.createWriteStream(dest);
-        response.pipe(file);
+        response.on("data", function(chunk) {
+            data += chunk.toString("binary");
+        })
         response.on('end', function() {
-            file.close(cb); // close() is async, call cb after close completes.
+            fs.writeFile(dest, data);
         });
     }).on('error', function(err) { // Handle errors
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
