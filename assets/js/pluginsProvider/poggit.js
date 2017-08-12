@@ -309,67 +309,91 @@ window.pluginProviders.Poggit = {
                 </div>
             </div>`;
         this.get('https://poggit.pmmp.io/releases.json', function(data) {
-            if (data.length > 0) {
-                document.getElementById("pluginAddDialogBody").innerHTML = `
-                    <p>Plugin list:</p>
-                    <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
-                this.orderPluginsByState(data).forEach(function(plugin, index) {
-                    if (plugin) {
-                        if (document.getElementById(`poggitPlugin${plugin.name}`)) { // Checking version to get latest. TODO: Multiple versions handling.
-                            if (version.compare(plugin.version, document.getElementById(`poggitPlugin${plugin.name}`).getAttribute("data-version"))) { // Newest version
-                                document.getElementById(`poggitPlugin${plugin.name}`).remove();
-                            }
-                        }
-                        if (!document.getElementById(`poggitPlugin${plugin.name}`)) {
-                            document.getElementById("poggitPluginList").innerHTML += ` 
-                                <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="poggitPlugin${plugin.name}" 
-                                data-index="${index}" 
-                                data-id="${plugin.id}"
-                                data-name="${plugin.name}"
-                                data-version="${plugin.version}"
-                                data-tagline="${plugin.tagline}">
-                                    <span class="mdc-list-item__start-detail">
-                                       <img style="width: 24px; height: 24px" src="${plugin.icon_url !== null ? plugin.icon_url : 'https://www.clker.com/cliparts/G/U/Y/N/H/e/unknown-file-icon-md.png'}">
-                                       </span>
-                                    <span class="mdc-list-item__text">
-                                        <span class="inline">
-                                            <span id="poggitPlugin${plugin.name}Tags">
-                                                <span class="poggitPluginTag", style="background-color: ${PLUGIN_STATE_COLORS[plugin.state]}">
-                                                    ${PLUGIN_STATE_NAMES[plugin.state]}
-                                                </span>
-                                            </span>
-                                            &nbsp;
-                                            &nbsp;
-                                            ${plugin.name}
-                                        </span>
-                                        <span class="mdc-list-item__text__secondary">
-                                            ${plugin.tagline} - Author: ${plugin.repo_name.split("/")[0]}
-                                        </span>
-                                    </span>
-                                    <button class="mdc-list-item__end-detail mdc-button mdc-button--raised inline poggitView" id="poggitPlugin${plugin.name}ViewBtn" 
-                                    onclick="window.pluginProviders.Poggit.displayPluginInfos(window.pluginProviders.Poggit.plugins['${plugin.name}']);">
-                                        View&nbsp;
-                                        <i class="material-icons">pageview</i>
-                                    </button>
-                                </li>`;
-                            if (plugin.is_official) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.official}">
-                                    Pre-release
-                                    </span>`;
-                            if (plugin.is_outdated) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.outdated}">
-                                    Pre-release
-                                    </span>`;
-                            if (plugin.is_pre_release) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.pre_release}">
-                                    Pre-release
-                                    </span>`;
-                            window.pluginProviders.Poggit.plugins[plugin.name] = plugin;
-                            console.log(`Adding listener to poggitPlugin${plugin.name}ViewBtn`, document.getElementById(`poggitPlugin${plugin.name}ViewBtn`));
+            displayPlugins(data);
+        });
+    },
+
+
+    /**
+     * Displays the plugins
+     * 
+     * @param {Plugin[]} data
+     */
+    displayPlugins: function(data) {
+        if (data.length > 0) {
+            document.getElementById("pluginAddDialogBody").innerHTML = `
+                <p>Plugin list:</p>
+                <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
+            this.orderPluginsByState(data).forEach(function(plugin, index) {
+                if (plugin) {
+                    if (document.getElementById(`poggitPlugin${plugin.name}`)) { // Checking version to get latest. TODO: Multiple versions handling.
+                        if (version.compare(plugin.version, document.getElementById(`poggitPlugin${plugin.name}`).getAttribute("data-version"))) { // Newest version
+                            document.getElementById(`poggitPlugin${plugin.name}`).remove();
                         }
                     }
-                });
-                document.getElementById("pluginAddSurface").style.marginTop = "-" + window.innerHeight * 0.1 + "px";
-                document.getElementById("pluginAddDialogBody").style.maxHeight = window.innerHeight * 0.4 + "px";
-            }
+                    if (!document.getElementById(`poggitPlugin${plugin.name}`)) {
+                        document.getElementById("poggitPluginList").innerHTML += ` 
+                            <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="poggitPlugin${plugin.name}" 
+                            data-index="${index}" 
+                            data-id="${plugin.id}"
+                            data-name="${plugin.name}"
+                            data-version="${plugin.version}"
+                            data-tagline="${plugin.tagline}">
+                                <span class="mdc-list-item__start-detail">
+                                   <img style="width: 24px; height: 24px" src="${plugin.icon_url !== null ? plugin.icon_url : 'https://www.clker.com/cliparts/G/U/Y/N/H/e/unknown-file-icon-md.png'}">
+                                   </span>
+                                <span class="mdc-list-item__text">
+                                    <span class="inline">
+                                        <span id="poggitPlugin${plugin.name}Tags">
+                                            <span class="poggitPluginTag", style="background-color: ${PLUGIN_STATE_COLORS[plugin.state]}">
+                                                ${PLUGIN_STATE_NAMES[plugin.state]}
+                                            </span>
+                                        </span>
+                                        &nbsp;
+                                        &nbsp;
+                                        ${plugin.name}
+                                    </span>
+                                    <span class="mdc-list-item__text__secondary">
+                                        ${plugin.tagline} - Author: ${plugin.repo_name.split("/")[0]}
+                                    </span>
+                                </span>
+                                <button class="mdc-list-item__end-detail mdc-button mdc-button--raised inline poggitView" id="poggitPlugin${plugin.name}ViewBtn" 
+                                onclick="window.pluginProviders.Poggit.displayPluginInfos(window.pluginProviders.Poggit.plugins['${plugin.name}']);">
+                                    View&nbsp;
+                                    <i class="material-icons">pageview</i>
+                                </button>
+                            </li>`;
+                        if (plugin.is_official) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.official}">
+                                Pre-release
+                                </span>`;
+                        if (plugin.is_outdated) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.outdated}">
+                                Pre-release
+                                </span>`;
+                        if (plugin.is_pre_release) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.pre_release}">
+                                Pre-release
+                                </span>`;
+                        window.pluginProviders.Poggit.plugins[plugin.name] = plugin;
+                        console.log(`Adding listener to poggitPlugin${plugin.name}ViewBtn`, document.getElementById(`poggitPlugin${plugin.name}ViewBtn`));
+                    }
+                }
+            });
+            document.getElementById("pluginAddSurface").style.marginTop = "-" + window.innerHeight * 0.1 + "px";
+            document.getElementById("pluginAddDialogBody").style.maxHeight = window.innerHeight * 0.4 + "px";
+        }
+    },
+
+
+    /**
+     * Searches for a plugin.
+     * 
+     * @param {String} searchString
+     */
+    searchPlugin: function(searchString) {
+        var searchedPlugins = [];
+        Object.keys(plugins).forEach(function(key) {
+            if (key.includes(searchString)) searchedPlugins.push(plugin);
         });
+        displayPlugins(searchedPlugins);
     }
 }
 

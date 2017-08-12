@@ -35,7 +35,7 @@ var phpLib = undefined;
  * @param {php.js}
  * @param {Function} cb
  */
-function checkForUpdates(php, ĉb) {
+function checkForUpdates(php, cb) {
     phpLib = php;
     php.snackbar("Looking for updates...");
     http.get("http://psm.mcpe.fun/versions.json",
