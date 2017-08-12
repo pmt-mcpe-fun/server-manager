@@ -28,6 +28,8 @@ exports.VERSIONS_EQUAL = 0;
  * @param {String} version2Str
  */
 function compare(version1Str, version2Str) {
+    if (!version1Str) return VERSION_FIRST_INFERIOR;
+    if (!version2Str) return VERSION_FIRST_SUPERIOR;
     // Parsing first version
     var version1 = parse(version1Str);
     // Parsing second version

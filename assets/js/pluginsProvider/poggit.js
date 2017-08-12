@@ -77,7 +77,6 @@ const PLUGIN_STATE_NAMES = [
     "Featured"
 ];
 
-// var require = top.require;
 var http = require("https");
 var mdc = require('material-components-web/dist/material-components-web');
 // var rq = require('electron-require');
@@ -309,7 +308,20 @@ window.pluginProviders.Poggit = {
                 </div>
             </div>`;
         this.get('https://poggit.pmmp.io/releases.json', function(data) {
-            displayPlugins(data);
+            document.getElementById("pluginAddDialogBody").innerHTML = `
+                <div class="inline"><p>Plugin list:</p>
+                <span class="search"><i class="material-icons">search</i>
+                    <div class="mdc-textfield mdc-textfield--upgraded" id="poggitSearchTF">
+                        <input type="text" id="poggitPluginSeach" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="poggitPluginSeach">Search a plugin...</label>
+                    </div></span>
+                </span>
+                <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
+            this.displayPlugins(data);
+            mdc.textfield.MDCTextfield.attachTo(document.getElementById("poggitSearchTF"));
+            document.getElementById("poggitPluginSearch").addEventListener("keypress", function(ev) {
+                this.searchPlugin(this.value + ev.char);
+            })
         });
     },
 
@@ -321,9 +333,6 @@ window.pluginProviders.Poggit = {
      */
     displayPlugins: function(data) {
         if (data.length > 0) {
-            document.getElementById("pluginAddDialogBody").innerHTML = `
-                <p>Plugin list:</p>
-                <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
             this.orderPluginsByState(data).forEach(function(plugin, index) {
                 if (plugin) {
                     if (document.getElementById(`poggitPlugin${plugin.name}`)) { // Checking version to get latest. TODO: Multiple versions handling.
@@ -393,7 +402,7 @@ window.pluginProviders.Poggit = {
         Object.keys(plugins).forEach(function(key) {
             if (key.includes(searchString)) searchedPlugins.push(plugin);
         });
-        displayPlugins(searchedPlugins);
+        this.displayPlugins(searchedPlugins);
     }
 }
 

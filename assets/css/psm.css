@@ -172,6 +172,10 @@ button.footerFab {
     animation-timing-function: ease-in-out;
 }
 
+.noLineHeight {
+    line-height: unset;
+}
+
 .hidden {
     opacity: 0;
     position: absolute;

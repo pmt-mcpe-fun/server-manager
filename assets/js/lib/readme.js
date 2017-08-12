@@ -72,7 +72,7 @@ exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on githu
                         minutesRemaining = Math.round(minutesRemaining)
                         cb("You searched too much plugins and now you'll need to wait " + minutesRemaining + " minutes before seeing a plugin's readme (Nb: This is due to Github API rate limit).");
                     }
-                })
+                });
             }
 
             response.on('data', function(chunk) {
