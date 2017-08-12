@@ -33,13 +33,26 @@ function refresh() {
     		   ${pluginProvidersList[keyName].name}
             </span>
         </li>`;
-        new mdc.ripple.MDCRipple(document.getElementById(`pluginProvider${keyName}`));
         document.getElementById(`pluginProvider${keyName}`).addEventListener("click", function(event) {
             document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
             console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
             var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
             plugProvider.listPlugins();
         });
+    });
+    new mdc.ripple.MDCRipple(document.getElementById(`pluginProviderpoggit`));
+    document.getElementById(`pluginProviderpoggit`).addEventListener("click", function(event) {
+        document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
+        console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
+        var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
+        plugProvider.listPlugins();
+    });
+    new mdc.ripple.MDCRipple(document.getElementById(`pluginProvidergithub`));
+    document.getElementById(`pluginProvidergithub`).addEventListener("click", function(event) {
+        document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
+        console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
+        var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
+        plugProvider.listPlugins();
     });
 }
 document.getElementById("pluginAddDialog").MDCDialog = new mdc.dialog.MDCDialog(document.getElementById("pluginAddDialog"));

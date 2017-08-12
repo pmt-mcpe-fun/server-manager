@@ -137,6 +137,7 @@ function getRateLimitReset(cb) {
         }
     });
 }
+exports.getRateLimitReset = getRateLimitReset;
 
 /**
  * Parses and "fixes" readme (changes links into outer links, ...)

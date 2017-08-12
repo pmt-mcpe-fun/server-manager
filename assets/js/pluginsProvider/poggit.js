@@ -62,7 +62,7 @@ const PLUGIN_STATE_COLORS = [
     "lightblue",
     "lime"
 ];
-const PLUGIN_TAGS_COLORS = {
+const POGGIT_PLUGIN_TAGS_COLORS = {
     official: "lightblue",
     pre_release: "gold",
     outdated: "red"
@@ -311,16 +311,17 @@ window.pluginProviders.Poggit = {
             document.getElementById("pluginAddDialogBody").innerHTML = `
                 <div class="inline"><p>Plugin list:</p>
                 <span class="search"><i class="material-icons">search</i>
-                    <div class="mdc-textfield mdc-textfield--upgraded" id="poggitSearchTF">
-                        <input type="text" id="poggitPluginSeach" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
-                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="poggitPluginSeach">Search a plugin...</label>
+                <span class="search inline"><i class="material-icons">search</i>
+                    <div class="mdc-textfield" id="poggitSearchTF">
+                        <input type="text" id="poggitPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" value="${searchPluginName}" />
                     </div></span>
                 </span>
+                </div>
                 <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
             this.displayPlugins(data);
             mdc.textfield.MDCTextfield.attachTo(document.getElementById("poggitSearchTF"));
             document.getElementById("poggitPluginSearch").addEventListener("keypress", function(ev) {
-                this.searchPlugin(this.value + ev.char);
+                window.pluginProviders.Poggit.searchPlugin(this.value + ev.char);
             })
         });
     },
@@ -372,13 +373,13 @@ window.pluginProviders.Poggit = {
                                     <i class="material-icons">pageview</i>
                                 </button>
                             </li>`;
-                        if (plugin.is_official) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.official}">
+                        if (plugin.is_official) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.official}">
                                 Pre-release
                                 </span>`;
-                        if (plugin.is_outdated) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.outdated}">
+                        if (plugin.is_outdated) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.outdated}">
                                 Pre-release
                                 </span>`;
-                        if (plugin.is_pre_release) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${PLUGIN_TAGS_COLORS.pre_release}">
+                        if (plugin.is_pre_release) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.pre_release}">
                                 Pre-release
                                 </span>`;
                         window.pluginProviders.Poggit.plugins[plugin.name] = plugin;

@@ -124,7 +124,7 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
     var JSONData = "";
     var req = http.get({
         hostname: "api.github.com",
-        path: `/repos/${user}/${repo}/LICENSE`,
+        path: `/repos/${user}/${repo}/license`,
         headers: {
             "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
         }
@@ -145,7 +145,6 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
             });
             response.on('end', () => {
                 try {
-                    console.log(JSONData);
                     var parsedData = JSON.parse(JSONData);
                     var license = exports.LicenseList["none"];
                     if (parsedData.key) {
