@@ -92,7 +92,7 @@ window.addEventListener("load", function() {
                 Supported MCPE Version
             </li>`;
             document.getElementById("basedText").innerHTML = "Supported MCPE version";
-            var versions = Object.keys(JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json"))));
+            var versions = Object.keys(JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json"))).pharsVersion);
             versions.forEach(function(version) {
                 document.getElementById("versionList").innerHTML += `
                 <li class="mdc-list-item" role="option" id="${version}" tabindex="0">
