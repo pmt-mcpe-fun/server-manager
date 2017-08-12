@@ -111,3 +111,17 @@ button .material-icons {
 article {
     border-radius: 7.5px;
 }
+
+
+/* Search bar */
+
+.search {
+    padding: 10px;
+    background-color: lightgray;
+    border: solid 0px black;
+    border-radius: 10px;
+}
+
+.search * {
+    line-height: unset;
+}
