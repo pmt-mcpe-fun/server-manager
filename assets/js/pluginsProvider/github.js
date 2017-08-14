@@ -52,6 +52,9 @@ var mdc = require('material-components-web/dist/material-components-web');
 var version = rq.lib("version.js");
 var license = rq.lib("license.js");
 var readmeLib = rq.lib("readme.js");
+// var fs = require("fs")
+// var path = require("path");
+// var os = require("os");
 const jsyaml = require("js-yaml");
 
 const GITHUB_PLUGIN_TAGS_COLORS = {
@@ -89,6 +92,7 @@ window.pluginProviders.Github = {
 
 
     searchPlugin: function(pluginName) {
+        this.plugins = [];
         document.getElementById("pluginAddDialogBody").innerHTML = `
             <div role="progressbar" 
             class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--accent mdc-elevation--z10" 
@@ -141,10 +145,10 @@ window.pluginProviders.Github = {
                         if (statusCode == 200) {
                             var pluginId = window.pluginProviders.Github.plugins.length
                             license.getLicenseFromGH(pluginRepo.full_name.split("/")[0], pluginRepo.full_name.split("/")[1], function(licenseObj) {
-                                window.pluginProviders.Github.plugins[pluginId] = licenseObj;
+                                window.pluginProviders.Github.plugins[pluginId].license = licenseObj;
                             });
                             window.pluginProviders.Github.plugins.push({
-                                infos: jsyaml.safeLoad(resData),
+                                infos: jsyaml.safeLoadAll(resData)[0],
                                 repo_data: pluginRepo,
                                 repo_author: pluginRepo.full_name.split("/")[0],
                                 repo_name: pluginRepo.full_name.split("/")[1],
@@ -164,11 +168,14 @@ window.pluginProviders.Github = {
                     <img src="https://github.com/fluidicon.png" style="width: 24px; height: 24px;" />
                     <span class="search inline"><i class="material-icons">search</i>
                         <div class="mdc-textfield" id="githubSearchTF">
-                            <input type="text" id="githubPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" value="${searchPluginName}" />
+                            <input type="text" id="githubPluginSearch" class="mdc-textfield__input" pattern="^[\\w\\-\\._]+$" value="${pluginName}" />
                         </div></span>
                     </span>
                 </div><br>
                 <h3>No plugin found.</h3>`;
+                document.getElementById("githubPluginSearch").addEventListener("keypress", function(ev) {
+                    if (ev.keyCode == 13) window.pluginProviders.Github.searchPlugin(this.value);
+                });
             }
         })
     },
@@ -245,16 +252,16 @@ window.pluginProviders.Github = {
                     <img src="https://github.com/fluidicon.png" style="width: 24px; height: 24px;" />
                     <span class="search inline"><i class="material-icons">search</i>
                         <div class="mdc-textfield" id="githubSearchTF">
-                            <input type="text" id="githubPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" value="${searchPluginName}" />
+                            <input type="text" id="githubPluginSearch" class="mdc-textfield__input" pattern="^[\\w\\-\\._]+$" value="${searchPluginName}" />
                         </div></span>
                     </span></center>
                 </div><br>
                 <ul id="githubPluginList" class="mdc-list mdc-list--two-line"></ul>`;
-                mdc.textfield.MDCTextfield.attachTo(document.getElementById("githubSearchTF"));
                 document.getElementById("githubPluginSearch").addEventListener("keypress", function(ev) {
                     if (ev.keyCode == 13) window.pluginProviders.Github.searchPlugin(this.value);
                 });
                 window.pluginProviders.Github.plugins.forEach(function(plugin, key) {
+                    console.log(plugin.repo_data.stargazers_count);
                     document.getElementById("githubPluginList").innerHTML += `
                     <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="githubPlugin${plugin.infos.name}" 
                     data-index="${key}"
@@ -270,25 +277,23 @@ window.pluginProviders.Github = {
                                 ${plugin.infos.name}
                             </span>
                             <span class="mdc-list-item__text__secondary">
-                                ${plugin.repo_data.description} - Author: ${plugin.infos.author}
+                                ${plugin.repo_data.description} - Author(s): ${plugin.infos.author} - Maintainer: ${plugin.repo_author}
                             </span>
                         </span>
                         <button class="mdc-list-item__end-detail mdc-button mdc-button--raised inline githubView" id="githubPlugin${plugin.infos.name}ViewBtn" 
-                        onclick="window.pluginProviders.Github.displayPluginInfos(window.pluginProviders.Github.plugins['${plugin.infos.name}']);">
+                        onclick="window.pluginProviders.Github.displayPluginInfos('${key}');">
                             View&nbsp;
                             <i class="material-icons">pageview</i>
                         </button>
                     </li>`;
+                    console.log(plugin.infos);
                     if (plugin.infos.api instanceof String) {
                         if (plugins.infos.api !== api) document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
                             Outdated
                         </span>`;
-                    } else if (plugin.infos.api instanceof Array) {
+                    }
+                    if (plugin.infos.api instanceof Array) {
                         if (plugins.infos.api.indexOf(api) == -1) document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
-                            Outdated
-                        </span>`;
-                    } else {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
                             Outdated
                         </span>`;
                     }
@@ -325,20 +330,28 @@ window.pluginProviders.Github = {
         xhttp.send();
     },
 
-
-    displayPluginInfos: function(plugin) {
+    /**
+     * Displays the plugin infos from it's key in plugins.
+     */
+    displayPluginInfos: function(key) {
+        var plugin = window.pluginProviders.Github.plugins[key];
+        console.log(plugin);
         document.getElementById("pluginInfosName").innerHTML = plugin.infos.name;
         document.getElementById("pluginInfosDesc").innerHTML = plugin.repo_data.description;
         document.getElementById("pluginInfosAuthor").innerHTML = `Author: <span style="cursor: pointer">${plugin.repo_author}</span>`;
         document.getElementById("pluginInfosAuthor").children[0].addEventListener("click", function() {
             shell.openExternal(`https://github.com/${plugin.repo_author}`);
         });
-        document.getElementById("pluginInfosLicense").innerHTML = `License: <span style="cursor: pointer">${plugin.license.name}</span>`;
-        document.getElementById("pluginInfosLicense").children[0].addEventListener("click", function() {
-            shell.openExternal(plugin.license.url);
-        });
+        if (plugin.license) {
+            document.getElementById("pluginInfosLicense").innerHTML = `License: <span style="cursor: pointer">${plugin.license.name}</span>`;
+            document.getElementById("pluginInfosLicense").children[0].addEventListener("click", function() {
+                shell.openExternal(plugin.license.url);
+            });
+        } else {
+            document.getElementById("pluginInfosLicense").innerHTML = `License: Checking...`;
+        }
         // getting readme
-        readmeLib.getReadmeFromGH(plugin.repo_name.split("/")[0], plugin.repo_name.split("/")[1], function(readme) {
+        readmeLib.getReadmeFromGH(plugin.repo_author, plugin.repo_name, function(readme) {
             document.getElementById("pluginInfosReadMe").innerHTML = readme;
             var readmeParsed = readmeLib.parseReadme(
                 document.getElementById("pluginInfosReadMe").cloneNode(true).children[0]
@@ -354,8 +367,68 @@ window.pluginProviders.Github = {
                 document.getElementById("pluginInfos").style.top = "calc(76px + 5%)";
             }
         });
-        document.getElementById("pluginInfosDownloadURL").value = plugin.artifact_url;
+        document.getElementById("pluginInfosDownloadURL").value = "/repos/" + plugin.repo_author + "/" + plugin.repo_name + "/zipball/master"; // TODO: 1.5 Choose branch.
         document.getElementById("pluginInfos").classList.add("shown");
         document.getElementById("pluginInfos").classList.remove("hidden");
     },
+
+
+
+    downloadPlugin: function(pluginUrlPath) {
+        var options = {
+            headers: {
+                "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
+            },
+            hostname: "api.github.com",
+            path: pluginUrlPath
+        }
+        var data = "";
+        http.get(options, function(response) {
+            if (response.statusCode == 302 || response.statusCode == 301) {
+                return get(response.headers['location'], dest, cb);
+            }
+
+            var statusCode = response.statusCode;
+            var contentType = response.headers['content-type'];
+
+            var error;
+            if (statusCode !== 200) {
+                readmeLib.getRateLimitReset(function(data) {
+                    if (data.resources.search.remaining == 0) { // No more remaining tokens
+                        var date = Date.now() / 1000;
+                        var date2 = data.resources.core.reset;
+                        var minutesRemaining = (date2 - date) / 60
+                        minutesRemaining = Math.round(minutesRemaining)
+                        cb("You searched too much plugins on github and now you'll need to wait " + minutesRemaining + " minutes before researching some plugins again.");
+                    }
+                });
+            }
+            response.on('data', function(chunk) {
+                data += chunk.toString();
+            });
+            response.on('end', () => {
+                var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[2] + "." + pluginUrlPath.split("/")[3] + ".phar.zip");
+                fs.writeFile(tmpfile, data, function(err) {
+                    if (err) {
+                        top.window.main.snackbar("Could not access Github: " + err.message + ".");
+                        console.log(err);
+                    } else {
+                        require("child_process").exec(require("electron").ipcRenderer.sendSync("getVar", "php").phpExecutable + "-dphar.readonly=Off build.php --input-zip=" + tmpfile + " --ouput-phar=" +
+                            path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[3] + ".phar"),
+                            function(err, stdout, stderr) {
+                                if (err) {
+                                    console.log(stderr);
+                                    top.window.main.snackbar("Could not export plugin " + pluginUrlPath.split("/")[3] + ".");
+                                } else {
+                                    top.window.main.snackbar("Successfully downloaded " + pluginUrlPath.split("/")[2] + "!");
+                                }
+                            });
+                    }
+                });
+            }).on('error', function(error) {
+                document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
+                console.log(error);
+            });
+        })
+    }
 }

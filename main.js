@@ -172,6 +172,8 @@ app.on('activate', function() {
 ipcMain.on('getVar', function(event, varN) {
     if (exports[varN]) {
         event.returnValue = exports[varN];
+    } else if (this2[varN]) {
+        event.returnValue = this2[varN];
     } else {
         event.returnValue = null;
     }
