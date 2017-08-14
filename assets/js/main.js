@@ -70,7 +70,6 @@ exports.download = function(urlStr, dest, cb) {
  */
 exports.exit = function() {
     if (ipcRenderer.sendSync("save")) {
-        console.log("Exiting PSM...");
         ipcRenderer.sendSync("close");
     } else {
         snackbar("Please stop all your servers before exiting the app !");
@@ -164,21 +163,17 @@ exports.createPMServer = function(name, port, version) {
                     } else {
                         if (!fs.existsSync(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"))) {
                             var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
-                            console.log("Sucessfully getted list. Heading torwards to: " + data[version]);
-                            console.log(serverPath);
                             exports.download(data[version], // Getting the phar for our version
                                 path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
                                 function(err) {
                                     if (err) {
                                         snackbar("Could not download latest Jenkins phar." + os.EOL + "Are you connected to the internet?");
-                                        console.log("Could not get " + data[version]);
                                         fs_utils.rmdir(serverPath);
                                         console.error(err);
                                     } else {
                                         fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
                                             if (!err) {
                                                 snackbar("Sucessfully created server " + name + "!");
-                                                console.log("Finished !")
                                                 fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
                                             } else {
                                                 snackbar("An error occured while creating the server.");
@@ -191,7 +186,6 @@ exports.createPMServer = function(name, port, version) {
                             fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
                                 if (!err) {
                                     snackbar("Sucessfully created server " + name + "!");
-                                    console.log("Finished !")
                                     fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
                                     ipcRenderer.send("addServer", name);
                                 } else {

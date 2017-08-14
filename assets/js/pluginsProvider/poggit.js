@@ -130,7 +130,6 @@ window.pluginProviders.Poggit = {
             response.on('end', () => {
                 try {
                     const parsedData = JSON.parse(JSONData);
-                    console.log(parsedData);
                     cb.apply(window.pluginProviders.Poggit, [parsedData]);
                 } catch (error) {
                     document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Poggit: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
@@ -180,7 +179,6 @@ window.pluginProviders.Poggit = {
         approved.forEach(function(elem) { ret.push(elem) })
         voted.forEach(function(elem) { ret.push(elem) })
         checked.forEach(function(elem) { ret.push(elem) })
-        console.log(checked, voted, approved, featured, ret);
         return ret;
     },
 
@@ -218,7 +216,6 @@ window.pluginProviders.Poggit = {
             var readmeParsed = readmeLib.parseReadme(
                 document.getElementById("pluginInfosReadMe").cloneNode(true).children[0]
             );
-            console.log(readmeParsed);
             if (readmeParsed) {
                 document.getElementById("pluginInfosReadMe").innerHTML = "";
                 document.getElementById("pluginInfosReadMe").appendChild(readmeParsed); // Changing links, allowing images, ect...
@@ -383,7 +380,6 @@ window.pluginProviders.Poggit = {
                                 Pre-release
                                 </span>`;
                         window.pluginProviders.Poggit.plugins[plugin.name] = plugin;
-                        console.log(`Adding listener to poggitPlugin${plugin.name}ViewBtn`, document.getElementById(`poggitPlugin${plugin.name}ViewBtn`));
                     }
                 }
             });

@@ -171,24 +171,19 @@ function getWinEscapeCodes() {
  * @return {String}
  */
 exports.terminal2HTML = function(lineTerminal) {
-    // console.log("T2H: Receiving " + lineTerminal);
     var tokens = tokenize(lineTerminal);
     var codes = tokens[0];
     var texts = tokens[1].clone();
-    // console.log("T2H", codes, tokens[1], texts);
     var currentOpenedColors = 0;
     var doneCodes = 0;
     codes.forEach(function(code, i) {
         if (exports.CODE2HTML[code]) {
             texts[i - code.length] = exports.CODE2HTML[code];
             currentOpenedColors += 1;
-        } else {
-            // console.log("Unknown code: " + code);
         }
     });
     texts.push("</span>".repeat(currentOpenedColors));
     var newString = texts.join("");
-    console.log("T2H: Sending " + newString);
     return newString;
 }
 

@@ -135,7 +135,6 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
             var contentType = response.headers['content-type'];
 
             var error;
-            console.log(response.statusCode);
             if (response.statusCode !== 200) {
                 cb(exports.LicenseList.none);
             }

@@ -13,7 +13,6 @@ window.serverCallbacks.push(function(server) {
     for (var i = 0; i < levelsList.length; i++) {
         if (!server.levels[levelsList[i].id.substring(11)]) {
             levelsList[i].remove();
-            console.log("Removing level " + JSON.stringify(levelsList[i].id.substring(12)));
         }
     }
     if (Object.keys(server.levels).length < 1) {

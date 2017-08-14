@@ -38,11 +38,9 @@ function define(cb) {
             fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
             cb.apply(exports.app);
-            console.log("Applied defining1");
         } catch (e) { // Linux & MacOS
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
             cb.apply(exports.app);
-            console.log("Applied defining2");
         }
         snackbar("Found php at " + exports.phpExecutable + "...");
     } else { // No PHP
@@ -81,12 +79,10 @@ function downloadPHP(cb) {
             osName = "Linux";
             break;
     }
-    console.log('Downloading PHP_' + PHP_VERSION + '_' + arch + '_' + osName + '.tar.gz...');
     snackbar("Downloading PHP v" + PHP_VERSION + "...");
     exports.download('https://bintray.com/pocketmine/PocketMine/download_file?file_path=PHP_' + PHP_VERSION + '_' + arch + '_' + osName + '.tar.gz',
         path.join(exports.app.appFolder, "php.tar.gz"),
         function(err) {
-            console.log("Finished downloading");
             if (err) {
                 snackbar("An internet connection is required to download PHP. You may not be able to use your servers until then.");
                 fs.unlink(exports.app.phpFolder);
@@ -117,7 +113,6 @@ function downloadPHP(cb) {
                     fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
                     snackbar("Successfully downloaded PHP " + PHP_VERSION + ".");
                     cb.apply(exports.app);
-                    console.log("Applied defining3");
                 } else {
                     console.log(err);
                     snackbar("Could not extract PHP " + PHP_VERSION);

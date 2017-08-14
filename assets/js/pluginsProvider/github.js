@@ -335,7 +335,6 @@ window.pluginProviders.Github = {
      */
     displayPluginInfos: function(key) {
         var plugin = window.pluginProviders.Github.plugins[key];
-        console.log(plugin);
         document.getElementById("pluginInfosName").innerHTML = plugin.infos.name;
         document.getElementById("pluginInfosDesc").innerHTML = plugin.repo_data.description;
         document.getElementById("pluginInfosAuthor").innerHTML = `Author: <span style="cursor: pointer">${plugin.repo_author}</span>`;
@@ -356,7 +355,6 @@ window.pluginProviders.Github = {
             var readmeParsed = readmeLib.parseReadme(
                 document.getElementById("pluginInfosReadMe").cloneNode(true).children[0]
             );
-            console.log(readmeParsed);
             if (readmeParsed) {
                 document.getElementById("pluginInfosReadMe").innerHTML = "";
                 document.getElementById("pluginInfosReadMe").appendChild(readmeParsed); // Changing links, allowing images, ect...

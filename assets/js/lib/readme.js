@@ -153,7 +153,6 @@ exports.parseReadme = function(readme) {
             elem.addEventListener("click", function() {
                 require("electron").shell.openExternal(this.getAttribute("pmt-href"));
             });
-            console.log(elem);
         });
         readme.querySelectorAll("script").forEach(function(elem) {
             elem.remove(); // Removes external scripts

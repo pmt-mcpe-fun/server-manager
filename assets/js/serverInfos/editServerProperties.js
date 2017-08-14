@@ -18,7 +18,6 @@ window.addEventListener("load", function() {
         inputs[elem.id] = new mdc.slider.MDCSlider(elem);
         elem.MDCSlider = inputs[elem.id];
         inputs[elem.id].listen("MDCSlider:input", function() {
-            console.log(this.MDCSlider);
             elem.childNodes[3].childNodes[1].childNodes[1].innerHTML = this.MDCSlider.value;
         })
     });

@@ -35,7 +35,6 @@ function refresh() {
         </li>`;
         document.getElementById(`pluginProvider${keyName}`).addEventListener("click", function(event) {
             document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
-            console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
             var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
             plugProvider.listPlugins();
         });
@@ -43,14 +42,12 @@ function refresh() {
     new mdc.ripple.MDCRipple(document.getElementById(`pluginProviderpoggit`));
     document.getElementById(`pluginProviderpoggit`).addEventListener("click", function(event) {
         document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
-        console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
         var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
         plugProvider.listPlugins();
     });
     new mdc.ripple.MDCRipple(document.getElementById(`pluginProvidergithub`));
     document.getElementById(`pluginProvidergithub`).addEventListener("click", function(event) {
         document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
-        console.log(pluginProvidersList[this.getAttribute("data-keyname")].name, window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name]);
         var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
         plugProvider.listPlugins();
     });
@@ -68,13 +65,11 @@ document.getElementById("pluginInfos").addEventListener("click", function() {
 
 document.addEventListener("click", function() {
     if (document.getElementById("pluginInfos").classList.contains("shown")) {
-        console.log("Hidding pluigin infos.");
         document.getElementById("pluginInfos").classList.remove("shown");
         document.getElementById("pluginInfos").classList.add("hidden");
     }
 });
 document.getElementById("pluginInfosClose").addEventListener("click", function() {
-    console.log("Hidding pluigin infos.");
     document.getElementById("pluginInfos").style.top = "";
     document.getElementById("pluginInfos").classList.remove("shown");
     document.getElementById("pluginInfos").classList.add("hidden");
@@ -87,7 +82,6 @@ document.getElementById("pluginInfosDownload").addEventListener("click", functio
     window.pluginProviders[window.currentProvider].downloadPlugin(document.getElementById("pluginInfosDownloadURL").value);
 });
 window.addEventListener('resize', function(e) {
-    console.log("Resizing window");
     resizeCb();
 });
 
