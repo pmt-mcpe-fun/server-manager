@@ -135,7 +135,10 @@ window.pluginProviders.Github = {
                             }
                         });
                     }
-                    if (statusCode == 404) delete data.items[index];
+                    if (statusCode == 404) {
+                        delete data.items[index];
+                        window.pluginProviders.Github.displayPlugins(pluginName); // Still displaying so if no result found, tell them.
+                    }
 
                     response.on('data', function(chunk) {
                         resData += chunk.toString();
@@ -143,7 +146,7 @@ window.pluginProviders.Github = {
 
                     response.on('end', () => {
                         if (statusCode == 200) {
-                            var pluginId = window.pluginProviders.Github.plugins.length
+                            var pluginId = window.pluginProviders.Github.plugins.length;
                             license.getLicenseFromGH(pluginRepo.full_name.split("/")[0], pluginRepo.full_name.split("/")[1], function(licenseObj) {
                                 window.pluginProviders.Github.plugins[pluginId].license = licenseObj;
                             });
@@ -155,6 +158,7 @@ window.pluginProviders.Github = {
                                 license: null
                             });
                             window.pluginProviders.Github.displayPlugins(pluginName);
+                            // console.log("Pushed plugins " + pluginRepo.full_name.split("/")[0]);
                         } else {}
                     });
                 }).on('error', function(error) {
@@ -260,7 +264,11 @@ window.pluginProviders.Github = {
                 document.getElementById("githubPluginSearch").addEventListener("keypress", function(ev) {
                     if (ev.keyCode == 13) window.pluginProviders.Github.searchPlugin(this.value);
                 });
+                if (window.pluginProviders.Github.plugins.length == 0) {
+                    document.getElementById("githubPluginList").innerHTML = `<li id='noPluginsFound'><h3>No plugins found for '${searchPluginName}'</h3></li>`;
+                }
                 window.pluginProviders.Github.plugins.forEach(function(plugin, key) {
+                    if (document.getElementById("noPluginsFound")) document.getElementById("noPluginsFound").remove();
                     console.log(plugin.repo_data.stargazers_count);
                     document.getElementById("githubPluginList").innerHTML += `
                     <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="githubPlugin${plugin.infos.name}" 
