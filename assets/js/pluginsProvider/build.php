@@ -17,8 +17,13 @@ $zipArch->open($pluginZipFile);
 $pluginYml = $zipArch->getFromName("plugin.yml");
 $zipArch->close();
 
+echo "Got plugin.yml : $pluginYml\n";
+
 $zipphar = new PharData($pluginZipFile);
 $phar = $zipphar->convertToExecutable(Phar::PHAR);
+echo "Converted ZIP, now getting into setting metadata and stub...\n";
 $phar->setStub("<?php echo 'Phar built from PSM, PocketMine Server Manager (https://psm.mcpe.fun)'; __HALT_COMPILER();");
 $phar->setMetadata(yaml_parse($pluginYml));
+echo "Success ! Now copying file...\n";
 copy($phar->getFileInfo()->getPathname(), $pluginOutputFile);
+echo "Done!\n";

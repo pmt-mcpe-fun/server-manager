@@ -301,14 +301,18 @@ window.pluginProviders.Github = {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}">
                             > 100 stars
                         </span>`;
-                    } else if (plugin.repo_data.open_issues_count > 50) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
+                    } else {
+                        if (plugin.repo_data.open_issues_count > 50) {
+                            document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
                             > 50 stars
                         </span>`;
-                    } else if (plugin.repo_data.open_issues_count > 10) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
+                        } else {
+                            if (plugin.repo_data.open_issues_count > 10) {
+                                document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
                             > 10 stars
                         </span>`;
+                            }
+                        }
                     }
                     if (plugin.repo_data.open_issues_count > 20) {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}">
@@ -383,7 +387,7 @@ window.pluginProviders.Github = {
         var data = "";
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
-                return get(response.headers['location'], dest, cb);
+                return window.pluginProviders.Github.downloadPlugin(response.headers['location']);
             }
 
             var statusCode = response.statusCode;
@@ -411,11 +415,17 @@ window.pluginProviders.Github = {
                         top.window.main.snackbar("Could not access Github: " + err.message + ".");
                         console.log(err);
                     } else {
-                        require("child_process").exec(require("electron").ipcRenderer.sendSync("getVar", "php").phpExecutable + "-dphar.readonly=Off build.php --input-zip=" + tmpfile + " --ouput-phar=" +
+                        try { // Windows
+                            fs.accessSync(path.join(os.homedir(), ".pocketmine", "php", "bin", "php")); // Windows
+                            phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php", "php.exe");
+                        } catch (e) { // Linux & MacOS
+                            phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php7", "bin", "php");
+                        }
+                        require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 build.php --input-zip=" + tmpfile + " --ouput-phar=" +
                             path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[3] + ".phar"),
                             function(err, stdout, stderr) {
                                 if (err) {
-                                    console.log(stderr);
+                                    console.log(err, stdout, stderr);
                                     top.window.main.snackbar("Could not export plugin " + pluginUrlPath.split("/")[3] + ".");
                                 } else {
                                     top.window.main.snackbar("Successfully downloaded " + pluginUrlPath.split("/")[2] + "!");

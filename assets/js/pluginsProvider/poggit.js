@@ -307,16 +307,14 @@ window.pluginProviders.Poggit = {
         this.get('https://poggit.pmmp.io/releases.json', function(data) {
             document.getElementById("pluginAddDialogBody").innerHTML = `
                 <div class="inline"><p>Plugin list:</p>
-                <span class="search"><i class="material-icons">search</i>
                 <span class="search inline"><i class="material-icons">search</i>
                     <div class="mdc-textfield" id="poggitSearchTF">
-                        <input type="text" id="poggitPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" value="${searchPluginName}" />
-                    </div></span>
+                        <input type="text" id="poggitPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                    </div>
                 </span>
                 </div>
                 <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
             this.displayPlugins(data);
-            mdc.textfield.MDCTextfield.attachTo(document.getElementById("poggitSearchTF"));
             document.getElementById("poggitPluginSearch").addEventListener("keypress", function(ev) {
                 window.pluginProviders.Poggit.searchPlugin(this.value + ev.char);
             })

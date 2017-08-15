@@ -95,24 +95,53 @@ function downloadPHP(cb) {
             }, function(err) {
                 if (!err) {
                     // Now we replace the "/PocketMine/" which is the default ~/.pocketmine/php AKA exports.app.phpFolder
-                    const options = {
-                        files: [
-                            path.join(exports.app.phpFolder, "**", '*.*'),
-                        ],
-                        //Replacement to make (string or regex) 
-                        from: /\/PocketMine\//g,
-                        to: exports.app.phpFolder,
-                    };
                     walk(exports.app.phpFolder);
                     try { // Windows
                         fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
                         exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
-                    } catch (e) { // Linux & MacOS
+                        exports.phpIni = path.join(exports.app.phpFolder, "bin", "php", "php.ini");
+                        exports.phpPath = path.join(exports.app.phpFolder, "bin", "php");
+                    } catch (e) { // Linux & MacOS & Android
                         exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
+                        exports.phpIni = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php.ini");
+                        exports.phpPath = path.join(exports.app.phpFolder, "bin", "php7");
                     }
-                    fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
-                    snackbar("Successfully downloaded PHP " + PHP_VERSION + ".");
-                    cb.apply(exports.app);
+                    fs.readFile(exports.phpIni, function(err, data) {
+                        if (err) {
+                            console.log(err);
+                            snackbar("Could not read php.ini. Are youu sure that you can read files in your home directory?");
+                        } else {
+                            var properties = data.toString().split(os.EOL);
+                            properties.push("extension_dir=" + path.join(exports.phpPath, "lib"));
+                            properties.forEach(function(line, index) {
+                                var lineData = line.split("=");
+                                if (lineData[0] == "zend_extension") {
+                                    switch (lineData[1]) {
+                                        case "opcache.so":
+                                            fs.renameSync(path.join(exports.phpPath, "lib", "php", "extensions",
+                                                    fs.readdirSync(path.join(exports.phpPath, "lib", "php", "extensions"))[0], "opcache.so"),
+                                                path.join(exports.phpPath, "lib", "opcache.so"));
+                                            break;
+                                        case "opcache.dll":
+                                            properties[index] = "zend_extension=" +
+                                                path.join(exports.phpPath, "lib", "php", "extensions",
+                                                    fs.readdirSync(path.join(exports.phpPath, "lib", "php", "extensions"))[0], "opcache.dll");
+                                            break;
+                                    }
+                                }
+                            });
+                            fs.writeFile(exports.phpIni, properties.join(os.EOL), function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    snackbar("Could not read php.ini. Are youu sure that you can read files in your home directory?");
+                                } else {
+                                    fs.unlink(path.join(exports.app.appFolder, "php.tar.gz"));
+                                    snackbar("Successfully downloaded PHP " + PHP_VERSION + ".");
+                                    cb.apply(exports.app);
+                                }
+                            })
+                        }
+                    })
                 } else {
                     console.log(err);
                     snackbar("Could not extract PHP " + PHP_VERSION);
@@ -170,7 +199,7 @@ var walk = function(dir) {
             walk(file);
         } else {
             var contents = fs.readFileSync(file).toString();
-            var newContents = contents.replace("/PocketMine", exports.app.phpFolder);
+            var newContents = contents.replace(/\/PocketMine/g, exports.app.phpFolder);
             if (contents !== newContents && oldfile !== "php" /*Preventing bin to be overwritten so broken*/ ) fs.writeFileSync(file, newContents);
         }
     })
