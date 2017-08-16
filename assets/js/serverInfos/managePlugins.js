@@ -8,6 +8,8 @@
  * @package PocketMine Server Manager
  */
 var openMenu = undefined;
+
+
 window.serverCallbacks.push(function(server) {
     var pluginsList = document.getElementById("managePluginsList").children;
     for (var i = 0; i < pluginsList.length; i++) {
@@ -64,6 +66,29 @@ window.serverCallbacks.push(function(server) {
                                 window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.plugin]));
                             });
                     });
+                    document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
+                    <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlugin${key}ActionRemove">
+                        Remove
+                    </li>`;
+                    new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}ActionRemove`));
+                    document.getElementById(`managePlugin${key}ActionRemove`)
+                        .addEventListener("click", function() {
+                            var alreadyRemoved = false;
+                            if (confirm("Are you sure that you want to delete plugin '" + key + "'?")) {
+                                if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"))) { // Removing phar
+                                    fs.unlink(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"), function(err) {
+                                        top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.")
+                                    });
+                                    alreadyRemoved = true;
+                                }
+                                if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key))) { // Removing data folder / DevTools plugins based folder
+                                    if (alreadyRemoved || confirm("Do you want to remove " + key + "'s configurations and data?")) { // Prompt to remove data if data.
+                                        require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"));
+                                        if (!alreadyRemoved) top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.");
+                                    }
+                                }
+                            }
+                        });
                     document.getElementById("menuActionsPlugin" + key).MDCMenu.open = true;
                     openMenu = document.getElementById("menuActionsPlugin" + key).MDCMenu;
                 });

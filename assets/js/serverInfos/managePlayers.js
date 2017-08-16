@@ -65,6 +65,17 @@ window.serverCallbacks.push(function(server) {
                                 window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
                             });
                     });
+                    document.getElementById("menuActionsPlayer" + key + "List").innerHTML += `
+                    <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlayer${key}ActionRemoveData">
+                        Remove Player data
+                    </li>`;
+                    new mdc.ripple.MDCRipple(document.getElementById(`managePlayer${key}ActionRemoveData`));
+                    document.getElementById(`managePlayer${key}Action${nameAsId}`)
+                        .setAttribute("cmd", server.actions.playerActions[name])
+                        .setAttribute("player", key)
+                        .addEventListener("click", function() {
+                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
+                        });
                     document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
                     openMenu = document.getElementById("menuActionsPlayer" + key).MDCMenu;
                 });
