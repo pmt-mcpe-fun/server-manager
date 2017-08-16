@@ -59,9 +59,9 @@ const jsyaml = require("js-yaml");
 
 const GITHUB_PLUGIN_TAGS_COLORS = {
     outdated: "red",
-    "10stars": "dark_blue", // > 10 Stars
+    "10stars": "cyan", // > 10 Stars
     "50stars": "blue", // > 50 Starts
-    "100stars": "light_blue", // > 100 Stars
+    "100stars": "lightblue", // > 100 Stars
     "3issues": "yellow", // > 3 Issues
     "10issues": "orange", // > 10 issues
     "20issues": "red", // > 20 issues
@@ -310,15 +310,19 @@ window.pluginProviders.Github = {
                             > 100 stars
                         </span>`;
                     } else {
-                        if (plugin.repo_data.open_issues_count > 50) {
+                        console.log("Not 100 stars");
+                        if (plugin.repo_data.stargazers_count > 50) {
                             document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
-                            > 50 stars
-                        </span>`;
+                                > 50 stars
+                            </span>`;
                         } else {
-                            if (plugin.repo_data.open_issues_count > 10) {
+                            console.log("Not 50 stars");
+                            if (plugin.repo_data.stargazers_count > 10) {
                                 document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
-                            > 10 stars
-                        </span>`;
+                                    > 10 stars
+                                </span>`;
+                            } else {
+                                console.log("Not 10 stars");
                             }
                         }
                     }
