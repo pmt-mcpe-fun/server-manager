@@ -35,7 +35,7 @@ function addTray(phpFromApp) {
             label: 'Show window',
             click: function() {
                 if (php.app.mainWindow === null) {
-                    createWindow();
+                    php.app.createWindow();
                 } else if (php.app.mainWindow !== null) {
                     if (php.app.mainWindow.isMinimized()) php.app.mainWindow.restore();
                     php.app.mainWindow.focus();
