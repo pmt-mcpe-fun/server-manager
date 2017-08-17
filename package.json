@@ -24,7 +24,8 @@
         "electron-require": "^0.3.0",
         "js-yaml": "^3.9.1",
         "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0"
+        "node-targz": "^0.2.0",
+        "node-notifier": "^5.1.2"
     },
     "dependencies": {},
     "electron-require": {

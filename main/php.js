@@ -200,7 +200,13 @@ var walk = function(dir) {
         } else {
             var contents = fs.readFileSync(file).toString();
             var newContents = contents.replace(/\/PocketMine/g, exports.app.phpFolder);
-            if (contents !== newContents && oldfile !== "php" /*Preventing bin to be overwritten so broken*/ ) fs.writeFileSync(file, newContents);
+            if (contents !== newContents &&
+                oldfile !== "php" &&
+                oldfile.split(".")[oldfile.split(".").length - 1] !== "exe" &&
+                oldfile.split(".")[oldfile.split(".").length - 1] !== "dll" &&
+                oldfile.split(".")[oldfile.split(".").length - 1] !== "so"
+                /*Preventing bin to be overwritten so broken*/
+            ) fs.writeFileSync(file, newContents);
         }
     })
 }

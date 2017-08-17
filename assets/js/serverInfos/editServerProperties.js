@@ -70,7 +70,7 @@ dialogES.listen('MDCDialog:accept', function() {
         var restart = false;
         if (serverMOTD !== window.server.settings.motd) {
             window.server.settings["motd"] = serverMOTD;
-            if (server.isStarted) window.server.commands.push("setmotd " + serverMOTD); // Use window.server->getNetwork->setName() & window.server->setConfigString("motd", motd)
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setmotd4psm " + serverMOTD); // Use window.server->getNetwork->setName() & window.server->setConfigString("motd", motd)
         }
         if (serverPort !== window.server.settings["server-port"]) {
             window.server.settings["server-port"] = serverPort;
@@ -86,19 +86,19 @@ dialogES.listen('MDCDialog:accept', function() {
         }
         if (viewDistance !== window.server.settings["view-distance"]) {
             window.server.settings["view-distance"] = viewDistance;
-            if (server.isStarted) window.server.commands.push("setviewdistance " + viewDistance); // Use window.server->setConfigInt("view-distance", viewdistance) & foreach players ->setViewDistance(viewdistance)
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setviewdistance4psm " + viewDistance); // Use window.server->setConfigInt("view-distance", viewdistance) & foreach players ->setViewDistance(viewdistance)
         }
         if (spawnProtection !== window.server.settings["spawn-protection"]) {
             window.server.settings["spawn-protection"] = spawnProtection;
-            if (server.isStarted) window.server.commands.push("setcfg spawn-protection " + spawnProtection);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm spawn-protection " + spawnProtection);
         }
         if (defaultGamemode !== window.server.settings["gamemode"]) {
             window.server.settings["gamemode"] = defaultGamemode;
-            if (server.isStarted) window.server.commands.push("setcfg gamemode " + defaultGamemode);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm gamemode " + defaultGamemode);
         }
         if (forceGamemode !== window.server.settings["force-gamemode"]) {
             window.server.settings["force-gamemode"] = forceGamemode ? "on" : "off";
-            if (server.isStarted) window.server.commands.push("setcfg force-gamemode " + window.server.settings["force-gamemode"]);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm force-gamemode " + window.server.settings["force-gamemode"]);
         }
         if (difficulty !== window.server.settings["difficulty"]) {
             window.server.settings["difficulty"] = difficulty;
@@ -106,19 +106,19 @@ dialogES.listen('MDCDialog:accept', function() {
         }
         if (pvp !== window.server.settings["pvp"]) {
             window.server.settings["pvp"] = pvp ? "on" : "off";
-            if (server.isStarted) window.server.commands.push("setcfg pvp " + window.server.settings["pvp"]);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm pvp " + window.server.settings["pvp"]);
         }
         if (hardcore !== window.server.settings["hardcore"]) {
             window.server.settings["hardcore"] = hardcore ? "on" : "off";
-            if (server.isStarted) window.server.commands.push("setcfg hardcore " + window.server.settings["hardcore"]);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm hardcore " + window.server.settings["hardcore"]);
         }
         if (animalsSpawning !== window.server.settings["spawn-animals"]) {
             window.server.settings["spawn-animals"] = animalsSpawning ? "on" : "off";
-            if (server.isStarted) window.server.commands.push("setcfg spawn-animals " + window.server.settings["spawn-animals"]);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm spawn-animals " + window.server.settings["spawn-animals"]);
         }
         if (montersSpawning !== window.server.settings["spawn-mobs"]) {
             window.server.settings["spawn-mobs"] = montersSpawning ? "on" : "off";
-            if (server.isStarted) window.server.commands.push("setcfg spawn-mobs " + window.server.settings["spawn-mobs"]);
+            if (server.isStarted) window.server.commands.push("psmcoreactplugin setcfg4psm spawn-mobs " + window.server.settings["spawn-mobs"]);
         }
         queuing = true;
         main.snackbar("Saving changes " + (restart ? "(restart required)" : "") + "...");

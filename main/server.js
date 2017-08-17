@@ -13,6 +13,7 @@ const { BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require("os");
+const notifier = require('node-notifier');
 const properties = require('./lib/properties');
 
 /**
@@ -79,6 +80,13 @@ exports.Server = function(name, php, app) {
                         this2.actions = data["psmActions"];
                         break;
                     case "psmnotification":
+                        data["psmnotification"].wait = true;
+                        data["psmnotification"].sound = true;
+                        notifier.notify(data["psmnotification"], function(err, response, metadata) {
+                            if (!err) {
+                                this.proc.stdin.write(data["psmnotification"].callback.replace(/\%b/gim, data.activationValue) + os.EOL);
+                            }
+                        });
                         break;
                     case "psmwindow":
                         var options = data["psmwindow"];
@@ -101,10 +109,6 @@ exports.Server = function(name, php, app) {
                 }
             });
         });
-
-        // this.proc.stderr.on('data', (data) => {
-        //     this.log += data;
-        // });
 
         this.proc.on('exit', (code) => {
             try {
@@ -156,10 +160,11 @@ exports.Server = function(name, php, app) {
     this.refresh = function() {
         try {
             if (this.isStarted) {
-                this.proc.stdin.write("getplayersforpsmsolongcommandthatimsurewontbefound\n"); // If they find this command without going into the code Idk how they did.
-                this.proc.stdin.write("getloadedlevelsforpsmthatsasuperlongcommandthatibetyoucannotenterwithoutcopypaste\n"); // Haha !
-                this.proc.stdin.write("getplugins4psmthatwillbejavascriptobjectencodedjsonbutnomanagement\n"); // Always JSON
-                this.proc.stdin.write("getactions4psmplzdontusethiscommandiknowitshardtoresistbutdontwhatdidijustsaidokwateveryoulostafewsecondsofyourlife\n"); // If they use this command, they're stupid !
+                this.proc.stdin.write("psmcoreactplugin getplayersforpsmsolongcommandthatimsurewontbefound" + os.EOL); // If they find this command without going into the code Idk how they did.
+                this.proc.stdin.write("psmcoreactplugin getloadedlevelsforpsmthatsasuperlongcommandthatibetyoucannotenterwithoutcopypaste" + os.EOL); // Haha !
+                this.proc.stdin.write("psmcoreactplugin getplugins4psmthatwillbejavascriptobjectencodedjsonbutnomanagement" + os.EOL); // Always JSON
+                this.proc.stdin.write("psmcoreactplugin getactions4psmplzdontusethiscommandiknowitshardtoresistbutdontwhatdidijustsaidokwateveryoulostafewsecondsofyourlife" + os.EOL); // If they use this command, they're stupid !
+                this.proc.stdin.write("psmcoreactplugin getlevelsgeneratorsfourpsmniceviewcheater" + os.EOL); // Nice job !
             }
         } catch (e) {
             // Socket closed.
