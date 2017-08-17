@@ -34,7 +34,7 @@ window.serverCallbacks.push(function(server) {
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsPlugin${key}">more_vert</i>
                     <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsPlugin${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" role="menuActionsPlugin${key}List" aria-hidden="true">
+                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPlugin${key}List" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
@@ -59,36 +59,34 @@ window.serverCallbacks.push(function(server) {
                          ${name}
                      </li>`;
                         new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}Action${nameAsId}`));
-                        document.getElementById(`managePlugin${key}Action${nameAsId}`)
-                            .setAttribute("cmd", server.actions.pluginActions[name])
-                            .setAttribute("plugin", key)
-                            .addEventListener("click", function() {
-                                window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.plugin]));
-                            });
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("cmd", server.actions.pluginActions[name])
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("plugin", key)
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).addEventListener("click", function() {
+                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.plugin]));
+                        });
                     });
                     document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlugin${key}ActionRemove">
                         Remove
                     </li>`;
                     new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}ActionRemove`));
-                    document.getElementById(`managePlugin${key}ActionRemove`)
-                        .addEventListener("click", function() {
-                            var alreadyRemoved = false;
-                            if (confirm("Are you sure that you want to delete plugin '" + key + "'?")) {
-                                if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"))) { // Removing phar
-                                    fs.unlink(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"), function(err) {
-                                        top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.")
-                                    });
-                                    alreadyRemoved = true;
-                                }
-                                if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key))) { // Removing data folder / DevTools plugins based folder
-                                    if (alreadyRemoved || confirm("Do you want to remove " + key + "'s configurations and data?")) { // Prompt to remove data if data.
-                                        require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, plugins, key + ".phar"));
-                                        if (!alreadyRemoved) top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.");
-                                    }
+                    document.getElementById(`managePlugin${key}ActionRemove`).addEventListener("click", function() {
+                        var alreadyRemoved = false;
+                        if (confirm("Are you sure that you want to delete plugin '" + key + "'?")) {
+                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"))) { // Removing phar
+                                fs.unlink(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"), function(err) {
+                                    top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.")
+                                });
+                                alreadyRemoved = true;
+                            }
+                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key))) { // Removing data folder / DevTools plugins based folder
+                                if (alreadyRemoved || confirm("Do you want to remove " + key + "'s configurations and data?")) { // Prompt to remove data if data.
+                                    require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"));
+                                    if (!alreadyRemoved) top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.");
                                 }
                             }
-                        });
+                        }
+                    });
                     document.getElementById("menuActionsPlugin" + key).MDCMenu.open = true;
                     openMenu = document.getElementById("menuActionsPlugin" + key).MDCMenu;
                 });

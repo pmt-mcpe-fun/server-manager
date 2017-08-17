@@ -33,7 +33,7 @@ window.serverCallbacks.push(function(server) {
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsPlayer${key}">more_vert</i>
                     <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsPlayer${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" role="menuActionsPlayer${key}List" aria-hidden="true">
+                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPlayer${key}List" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
@@ -58,23 +58,25 @@ window.serverCallbacks.push(function(server) {
                          ${name}
                      </li>`;
                         new mdc.ripple.MDCRipple(document.getElementById(`managePlayer${key}Action${nameAsId}`));
-                        document.getElementById(`managePlayer${key}Action${nameAsId}`)
-                            .setAttribute("cmd", server.actions.playerActions[name])
-                            .setAttribute("player", key)
-                            .addEventListener("click", function() {
-                                window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
-                            });
+                        document.getElementById(`managePlayer${key}Action${nameAsId}`).setAttribute("cmd", server.actions.playerActions[name])
+                        document.getElementById(`managePlayer${key}Action${nameAsId}`).setAttribute("player", key)
+                        document.getElementById(`managePlayer${key}Action${nameAsId}`).addEventListener("click", function() {
+                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
+                        });
                     });
                     document.getElementById("menuActionsPlayer" + key + "List").innerHTML += `
                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlayer${key}ActionRemoveData">
                         Remove Player data
                     </li>`;
                     new mdc.ripple.MDCRipple(document.getElementById(`managePlayer${key}ActionRemoveData`));
-                    document.getElementById(`managePlayer${key}Action${nameAsId}`)
-                        .setAttribute("cmd", server.actions.playerActions[name])
-                        .setAttribute("player", key)
+                    document.getElementById(`managePlayer${key}ActionRemoveData`)
                         .addEventListener("click", function() {
-                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.player), this.innerHTML, server.players[this.player]));
+                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "appFolder"), "servers", server.name, "players", key + ".dat"))) { // Removing data folder / DevTools plugins based folder
+                                if (confirm("Do you want to remove " + key + "'s data?")) { // Prompt to remove data if data.
+                                    require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "players", key + ".phar"));
+                                    top.main.snackbar("Successfully removed " + key + "'s data !\nRestart your server to apply changes.");
+                                }
+                            }
                         });
                     document.getElementById("menuActionsPlayer" + key).MDCMenu.open = true;
                     openMenu = document.getElementById("menuActionsPlayer" + key).MDCMenu;

@@ -32,7 +32,7 @@ window.serverCallbacks.push(function(server) {
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsLevel${key}">more_vert</i>
                     <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsLevel${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" role="menuActionsLevel${key}List" aria-hidden="true">
+                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsLevel${key}List" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
@@ -57,12 +57,11 @@ window.serverCallbacks.push(function(server) {
                          ${name}
                      </li>`;
                         new mdc.ripple.MDCRipple(document.getElementById(`manageLevel${key}Action${nameAsId}`));
-                        document.getElementById(`manageLevel${key}Action${nameAsId}`)
-                            .setAttribute("cmd", server.actions.levelActions[name])
-                            .setAttribute("level", key)
-                            .addEventListener("click", function() {
-                                window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.level), this.innerHTML, server.levels[this.level]));
-                            });
+                        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("cmd", server.actions.levelActions[name])
+                        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("level", key)
+                        document.getElementById(`manageLevel${key}Action${nameAsId}`).addEventListener("click", function() {
+                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.level), this.innerHTML, server.levels[this.level]));
+                        });
                     });
                     document.getElementById("menuActionsLevel" + key).MDCMenu.open = true;
                     openMenu = document.getElementById("menuActionsLevel" + key).MDCMenu;
