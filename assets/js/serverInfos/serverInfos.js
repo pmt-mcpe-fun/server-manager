@@ -91,7 +91,7 @@ document.getElementById("commandEnter").addEventListener("keypress", function(ev
     }
 });
 var editServerVersionDialog = new mdc.dialog.MDCDialog(document.getElementById("editServerVersionDialog"));
-var editServerVersionSelect;
+var editServerVersionSelect = new mdc.select.MDCSelect(document.getElementById("editServerVersionSelect"));
 setInterval(function() {
     if (queuing) {
         ipcRenderer.send("setServer", window.server);
@@ -111,15 +111,15 @@ setInterval(function() {
                     ${version}
                 </li>`;
         });
-        editServerVersionSelect = new mdc.select.MDCSelect(document.querySelector(".mdc-select"));
+        editServerVersionSelect = new mdc.select.MDCSelect(document.getElementById("editServerVersionSelect"));
     }
 }, 500);
 // Adding version changer
 document.getElementById("editServerVersionConfirm").addEventListener('click', function() {
-    if (editServerVersionSelect.value <= 0.1) {
+    if (parseFloat(editServerVersionSelect.value) <= 0.1) {
         top.main.snackbar("Please select a valid version");
     } else {
-        top.main.changePhar(editServerVersionSelect.value);
+        top.main.changePhar(parseFloat(editServerVersionSelect.value), window.server.name, false);
     }
 });
 // Adding nutton to show version changinb

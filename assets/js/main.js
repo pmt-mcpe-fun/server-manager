@@ -161,7 +161,7 @@ exports.createPMServer = function(name, port, version) {
                         fs_utils.rmdir(serverPath);
                         console.error(err);
                     } else {
-                        exports.changePhar(version);
+                        exports.changePhar(version, name);
                     }
                 });
             } catch (e) {
@@ -195,11 +195,15 @@ exports.removeServer = function(serverName) {
  * Adds/changes a phar between versions.
  * 
  * @param {Number} version
+ * @param {String} serverPath
+ * @param {Boolean} [serverCreation]
  */
-exports.changePhar = function(version) {
+exports.changePhar = function(version, name, serverCreation = true) {
+    var serverPath = path.join(ipcRenderer.sendSync("getVar", "appFolder"), "servers", name);
     if (!fs.existsSync(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"))) {
         var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
-        exports.download(data[version], // Getting the phar for our version
+        console.log(data.pharsVersion, version, data.pharsVersion[version]);
+        exports.download(data.pharsVersion[version], // Getting the phar for our version
             path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
             function(err) {
                 if (err) {
@@ -209,8 +213,15 @@ exports.changePhar = function(version) {
                 } else {
                     fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
                         if (!err) {
-                            snackbar("Sucessfully created server " + name + "!");
-                            fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
+                            fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"), function(err) {
+                                if (err) {
+                                    snackbar("An error occured while creating the server.");
+                                    console.error(err);
+                                } else {
+                                    snackbar(serverCreation ? "Sucessfully created server " + name + "!" : "Updated phar version to " + version + ".");
+                                    ipcRenderer.send("addServer", name);
+                                }
+                            });
                         } else {
                             snackbar("An error occured while creating the server.");
                             console.error(err);
@@ -221,9 +232,15 @@ exports.changePhar = function(version) {
     } else {
         fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
             if (!err) {
-                snackbar("Sucessfully created server " + name + "!");
-                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
-                ipcRenderer.send("addServer", name);
+                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"), function(err) {
+                    if (err) {
+                        snackbar("An error occured while creating the server.");
+                        console.error(err);
+                    } else {
+                        snackbar(serverCreation ? "Sucessfully created server " + name + "!" : "Updated phar version to " + version + ".");
+                        ipcRenderer.send("addServer", name);
+                    }
+                });
             } else {
                 snackbar("An error occured while creating the server.");
                 console.error(err);

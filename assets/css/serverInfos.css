@@ -144,7 +144,7 @@ section#editServerBody::-webkit-scrollbar-thumb {
     width: auto !important;
 }
 
-#editServerVersionSelect {
+#editServerVersionSelect div {
     top: 85px !important;
     left: 15px !important;
 }
