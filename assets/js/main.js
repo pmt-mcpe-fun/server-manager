@@ -161,39 +161,7 @@ exports.createPMServer = function(name, port, version) {
                         fs_utils.rmdir(serverPath);
                         console.error(err);
                     } else {
-                        if (!fs.existsSync(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"))) {
-                            var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
-                            exports.download(data[version], // Getting the phar for our version
-                                path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
-                                function(err) {
-                                    if (err) {
-                                        snackbar("Could not download latest Jenkins phar." + os.EOL + "Are you connected to the internet?");
-                                        fs_utils.rmdir(serverPath);
-                                        console.error(err);
-                                    } else {
-                                        fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
-                                            if (!err) {
-                                                snackbar("Sucessfully created server " + name + "!");
-                                                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
-                                            } else {
-                                                snackbar("An error occured while creating the server.");
-                                                console.error(err);
-                                            }
-                                        })
-                                    }
-                                });
-                        } else {
-                            fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
-                                if (!err) {
-                                    snackbar("Sucessfully created server " + name + "!");
-                                    fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
-                                    ipcRenderer.send("addServer", name);
-                                } else {
-                                    snackbar("An error occured while creating the server.");
-                                    console.error(err);
-                                }
-                            })
-                        }
+                        exports.changePhar(version);
                     }
                 });
             } catch (e) {
@@ -220,4 +188,46 @@ exports.removeServer = function(serverName) {
             fs_utils.rmdir(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), serverName))
         }
     })
+}
+
+
+/**
+ * Adds/changes a phar between versions.
+ * 
+ * @param {Number} version
+ */
+exports.changePhar = function(version) {
+    if (!fs.existsSync(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"))) {
+        var data = JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json")));
+        exports.download(data[version], // Getting the phar for our version
+            path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"),
+            function(err) {
+                if (err) {
+                    snackbar("Could not download latest Jenkins phar." + os.EOL + "Are you connected to the internet?");
+                    fs_utils.rmdir(serverPath);
+                    console.error(err);
+                } else {
+                    fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
+                        if (!err) {
+                            snackbar("Sucessfully created server " + name + "!");
+                            fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
+                        } else {
+                            snackbar("An error occured while creating the server.");
+                            console.error(err);
+                        }
+                    })
+                }
+            });
+    } else {
+        fs.readFile(path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar"), function(err, data) {
+            if (!err) {
+                snackbar("Sucessfully created server " + name + "!");
+                fs.writeFile(path.join(serverPath, "PocketMine-MP.phar"), data.toString("binary"));
+                ipcRenderer.send("addServer", name);
+            } else {
+                snackbar("An error occured while creating the server.");
+                console.error(err);
+            }
+        })
+    }
 }

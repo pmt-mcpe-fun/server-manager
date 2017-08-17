@@ -44,7 +44,7 @@
 
     <!-- Main contents -->
     <data-tab class="inline active" data-tab-id="main">
-        <div class="half">
+        <div class="half" style="display: inline;">
             <!-- Left Tab -->
             <div class="inline">
                 <h1 class="mdc-typography--display2" style="align-self: stretch;"><i id="started?" class="material-icons">play_arrow</i>&nbsp;&nbsp;&nbsp;<span id="serverName">ServerName</span></h1>
@@ -58,6 +58,9 @@
             <br>
             <button class="mdc-button mdc-button--raised inline" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">build</i>&nbsp;Edit server properties
+            </button>
+            <button class="mdc-button mdc-button--raised inline" id="EditServerVersionBtn" data-mdc-auto-init="MDCRipple">
+                <i class="material-icons">build</i>&nbsp;Edit server version
             </button>
             <br>
             <button class="mdc-button mdc-button--raised inline" id="openPocketMineYML" data-mdc-auto-init="MDCRipple">
@@ -258,10 +261,34 @@
                 </section>
                 <footer class="mdc-dialog__footer">
                     <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
-                    <butotn type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple">Save changes</button>
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple">Save changes</button>
                 </footer>
             </div>
             <div class="mdc-dialog__backdrop"></div>
+        </aside>
+        <!-- Server version changing dialog -->
+        <aside id="editServerVersionDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="editServerVersionTitle" aria-describedby="editServerVersionBody">
+            <div class="mdc-dialog__surface">
+                <header class="mdc-dialog__header">
+                    <h2 id="editServerVersionTitle" class="mdc-dialog__header__title">
+                        Edit Server Version
+                    </h2>
+                </header>
+                <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="editServerVersionBody">
+                    <!--Version-->
+                    <div class="mdc-select" role="listbox" tabindex="0">
+                        <span class="mdc-select__selected-text" id="editServerVersionDefaultText">Supported MCPE Version</span>
+                        <div class="mdc-simple-menu mdc-select__menu" id="editServerVersionSelect">
+                            <ul class="mdc-list mdc-simple-menu__items" id="editServerVersionList">
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <footer class="mdc-dialog__footer">
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple" id="editServerVersionConfirm">Save changes</button>
+                </footer>
+            </div>
         </aside>
         <!-- Left click element -->
         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">

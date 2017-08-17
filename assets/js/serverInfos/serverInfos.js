@@ -60,23 +60,28 @@ function define(serverR) {
         cb(serverR);
     }, this);
 }
+// Adding starting server button to start the server
 document.getElementById("startServer").addEventListener("click", function(event) {
     window.server.start();
     queuing = true;
     first = 3;
 });
+// Button to stop the server
 document.getElementById("stopServer").addEventListener("click", function(event) {
     window.server.stop();
     queuing = true;
     first = 3;
 });
+// Opens pocktemine.yml file in a new notepad/gedit/ default text editor
 document.getElementById("openPocketMineYML").addEventListener("click", function() {
     shell.openItem(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, 'pocketmine.yml'));
 });
+// Opens server's folder in explorer
 document.getElementById("openServerFolder").addEventListener("click", function() {
     shell.showItemInFolder(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, "PocketMine-MP.phar"));
     shell.beep();
 });
+// Checks when a command is enter with "Enter"
 document.getElementById("commandEnter").addEventListener("keypress", function(event) {
     if (event.keyCode == 13) {
         window.server.commands.push(this.value);
@@ -85,14 +90,42 @@ document.getElementById("commandEnter").addEventListener("keypress", function(ev
         first = 3; //Scroll to bottom when received text
     }
 });
+var editServerVersionDialog = new mdc.dialog.MDCDialog(document.getElementById("editServerVersionDialog"));
+var editServerVersionSelect;
 setInterval(function() {
     if (queuing) {
         ipcRenderer.send("setServer", window.server);
         queuing = false;
     }
     serverF.getServer(location.hash.substr(1), define);
+    // Server dialog versions changing
+    if (!editServerVersionDialog.open) {
+        document.getElementById("editServerVersionList").innerHTML = `<li class="mdc-list-item" role="option" id="supported" aria-disabled="true">
+                Supported MCPE Version
+            </li>`;
+        document.getElementById("editServerVersionDefaultText").innerHTML = "Supported MCPE version";
+        var versions = Object.keys(JSON.parse(fs.readFileSync(path.join(ipcRenderer.sendSync("getVar", "appFolder"), "versions.json"))).pharsVersion);
+        versions.forEach(function(version) {
+            document.getElementById("editServerVersionList").innerHTML += `
+                <li class="mdc-list-item" role="option" tabindex="0">
+                    ${version}
+                </li>`;
+        });
+        editServerVersionSelect = new mdc.select.MDCSelect(document.querySelector(".mdc-select"));
+    }
 }, 500);
-
+// Adding version changer
+document.getElementById("editServerVersionConfirm").addEventListener('click', function() {
+    if (editServerVersionSelect.value <= 0.1) {
+        top.main.snackbar("Please select a valid version");
+    } else {
+        top.main.changePhar(editServerVersionSelect.value);
+    }
+});
+// Adding nutton to show version changinb
+document.getElementById("EditServerVersionBtn").addEventListener("click", function() {
+    editServerVersionDialog.show();
+});
 // MDC Installation
 document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
     new mdc.textfield.MDCTextfield(elem);

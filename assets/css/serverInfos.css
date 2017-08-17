@@ -144,6 +144,11 @@ section#editServerBody::-webkit-scrollbar-thumb {
     width: auto !important;
 }
 
+#editServerVersionSelect {
+    top: 85px !important;
+    left: 15px !important;
+}
+
 @media screen and (max-device-width:406px) {
      :root,
     body {
