@@ -28,6 +28,7 @@ exports.Server = function(name, php, app) {
     this.name = name;
     this.folder = path.join(app.serverFolder, name);
     this.isStarted = false;
+    this.generators = {};
     this.players = {};
     this.log = "";
     this.php = php;
@@ -78,6 +79,9 @@ exports.Server = function(name, php, app) {
                         break;
                     case "psmActions":
                         this2.actions = data["psmActions"];
+                        break;
+                    case "psmgenerators":
+                        this2.generators = data["psmgenerators"];
                         break;
                     case "psmnotification":
                         data["psmnotification"].wait = true;
@@ -194,6 +198,7 @@ exports.ServerExportable = function() {
         this.plugins = Server.plugins;
         this.windows = Server.windows;
         this.actions = Server.actions;
+        this.generators = Server.generators;
         this.settings = Server.settings
     }
 }

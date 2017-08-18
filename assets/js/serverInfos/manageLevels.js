@@ -31,8 +31,8 @@ window.serverCallbacks.push(function(server) {
                 </span>
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsLevel${key}">more_vert</i>
-                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsLevel${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsLevel${key}List" aria-hidden="true">
+                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsLevel${key}" tabindex="-1">
+                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsLevel${key}List" role="menu" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
@@ -53,7 +53,7 @@ window.serverCallbacks.push(function(server) {
                         // Adding action
                         var nameAsId = name.replace(/ /g, "_");
                         document.getElementById("menuActionsLevel" + key + "List").innerHTML += `
-                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="manageLevel${key}Action${nameAsId}">
+                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="manageLevel${key}Action${nameAsId}">
                          ${name}
                      </li>`;
                         new mdc.ripple.MDCRipple(document.getElementById(`manageLevel${key}Action${nameAsId}`));

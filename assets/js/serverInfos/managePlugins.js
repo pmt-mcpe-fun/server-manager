@@ -33,8 +33,8 @@ window.serverCallbacks.push(function(server) {
                 </span>
                 <span class="mdc-list-item__end-detail">
                     <i class="material-icons" id="actionsPlugin${key}">more_vert</i>
-                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" id="menuActionsPlugin${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPlugin${key}List" aria-hidden="true">
+                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlugin${key}" tabindex="-1">
+                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPlugin${key}List" role="menu" aria-hidden="true">
                         </ul>
                     </div>
                 </span>
@@ -55,7 +55,7 @@ window.serverCallbacks.push(function(server) {
                         // Adding action
                         var nameAsId = name.replace(/ /g, "_");
                         document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
-                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlugin${key}Action${nameAsId}">
+                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}Action${nameAsId}">
                          ${name}
                      </li>`;
                         new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}Action${nameAsId}`));
@@ -66,22 +66,22 @@ window.serverCallbacks.push(function(server) {
                         });
                     });
                     document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
-                    <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" id="managePlugin${key}ActionRemove">
+                    <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}ActionRemove">
                         Remove
                     </li>`;
                     new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}ActionRemove`));
                     document.getElementById(`managePlugin${key}ActionRemove`).addEventListener("click", function() {
                         var alreadyRemoved = false;
                         if (confirm("Are you sure that you want to delete plugin '" + key + "'?")) {
-                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"))) { // Removing phar
-                                fs.unlink(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"), function(err) {
+                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "appFolder"), "servers", server.name, "plugins", key + ".phar"))) { // Removing phar
+                                fs.unlink(path.join(require("electron").ipcRenderer.sendSync("getVar", "appFolder"), "servers", server.name, "plugins", key + ".phar"), function(err) {
                                     top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.")
                                 });
                                 alreadyRemoved = true;
                             }
-                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key))) { // Removing data folder / DevTools plugins based folder
+                            if (fs.existsSync(path.join(require("electron").ipcRenderer.sendSync("getVar", "appFolder"), "servers", server.name, "plugins", key))) { // Removing data folder / DevTools plugins based folder
                                 if (alreadyRemoved || confirm("Do you want to remove " + key + "'s configurations and data?")) { // Prompt to remove data if data.
-                                    require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "serversFolder"), server.name, "plugins", key + ".phar"));
+                                    require("electron-require").lib("fs-utils.js").rmdir(path.join(require("electron").ipcRenderer.sendSync("getVar", "appFolder"), "servers", server.name, "plugins", key + ".phar"));
                                     if (!alreadyRemoved) top.main.snackbar("Successfully removed plugin " + key + " !\nRestart your server to apply changes.");
                                 }
                             }
@@ -91,8 +91,6 @@ window.serverCallbacks.push(function(server) {
                     openMenu = document.getElementById("menuActionsPlugin" + key).MDCMenu;
                 });
                 // Adding plugin's attribute
-                if (server.plugins[key].op) document.getElementById(`managePlugin${key}Props`).innerHTML += "<i class='material-icons'>build</i>";
-                if (server.plugins[key].whitelisted) document.getElementById(`managePlugin${key}Props`).innerHTML += "<i class='material-icons'>verified_user</i>";
             }
         });
     }

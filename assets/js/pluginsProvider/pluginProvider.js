@@ -57,7 +57,10 @@ document.getElementById("addPluginBtn").addEventListener("click", function(event
     document.getElementById("pluginAddDialog").MDCDialog.show();
     refresh();
 });
-
+document.getElementById("addPluginLC").addEventListener("click", function(event) {
+    document.getElementById("pluginAddDialog").MDCDialog.show();
+    refresh();
+});
 document.getElementById("pluginInfos").addEventListener("click", function() {
     event.stopImmediatePropagation();
     event.stopPropagation();

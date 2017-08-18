@@ -28,6 +28,7 @@ ipcRenderer.on("sendServer", function(event, server) {
     servers[server.name].windows = server.windows;
     servers[server.name].actions = server.actions;
     servers[server.name].levels = server.levels;
+    servers[server.name].generators = server.generators;
     servers[server.name].plugins = server.plugins;
     cbs[server.name](servers[server.name]);
 });
@@ -44,6 +45,7 @@ var Server = function(name) {
     this.players = {};
     this.levels = {};
     this.plugins = {};
+    this.generators = {};
 
     this.start = function() {
         this.isStarted = true;

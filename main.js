@@ -11,16 +11,22 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const termColors = require("./assets/js/lib/formatingCodes.js");
 
-// Outputing message of usage if no gui is specified
-if (process.argv.indexOf("--no-gui") !== -1) console.log(`You are running PocketMine Server Manager in "no gui mode".
-This means no window will be showed and everything will be done using commands.
-Launch a server: ${process.argv[0]} --start <server name>
-Stop a server: ${process.argv[0]} --stop <server name>
-Launch a GUI with server infos: ${process.argv[0]} --view <server name>
-Launch the GUI with server infos: ${process.argv[0]} --launch-gui`);
+// Outputing message of usage if no gui is specified. I know, it's a little hard to read...
+if (process.argv.indexOf("--no-gui") !== -1) {
+    console.log(`${termColors.COLOR_YELLOW}You are running PocketMine Server Manager in ${termColors.FORMAT_ITALIC}"no gui mode"${termColors.FORMAT_RESET}${termColors.COLOR_YELLOW}.
+This means ${termColors.FORMAT_ITALIC}no${termColors.FORMAT_RESET}${termColors.COLOR_YELLOW} window will be showed and everything will be done using commands.
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Launch a server:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --start <server name>
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Stop a server:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --stop <server name>
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Launch a GUI with server infos:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --view <server name>
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Launch the GUI:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --launch-gui
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Launch the GUI with os windows:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --launch-gui-os-win
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Quit the GUI:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --quit-gui
+${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Quit app:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --quit${termColors.FORMAT_RESET}`);
+}
 
-// require('daemon-plus')(); // creates new child process, exists the parent
+require('daemon-plus')(); // creates new child process, exists the parent
 
 if (process.env.XDG_CURRENT_DESKTOP == "Unity:Unity7") process.env.XDG_CURRENT_DESKTOP = "Unity"; // Fixing tray with Ubuntu 17.04
 
@@ -56,33 +62,39 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
             case "--view":
                 view = true;
                 break;
+            case "--quit":
+                app.quit();
+                break;
+            case "--launch-gui":
+                createWindow(true);
+                break;
+            case "--launch-gui-os-win":
+                createWindow(true);
+                break;
+            case "--quit-gui":
+                if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript("window.close();", true);
+                if (tray.tray) tray.tray.destroy();
+                break;
             default:
                 if (start) {
                     exports.servers[cmd].start();
-                    tray.removeStopServer(cmd);
+                    if (tray.tray) tray.removeStopServer(cmd);
                     start = false;
                 }
                 if (stop) {
                     exports.servers[cmd].stop();
-                    tray.removeStartServer(cmd);
+                    if (tray.tray) tray.removeStartServer(cmd);
                     stop = false;
                 }
                 if (view) {
                     if (exports.mainWindow === null) {
-                        createWindow(true);
+                        exports.createWindow(true);
                     }
                     viewPage = "serverInfos#" + cmd
                 }
                 break;
         }
     });
-    if (process.argv.length < 3) {
-        if (exports.mainWindow === null) {
-            createWindow(true);
-        }
-        if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-        exports.mainWindow.focus();
-    }
 });
 if (shouldQuit) {
     app.quit();
@@ -114,10 +126,10 @@ try {
 var this2 = this;
 
 // Creates the window
-function createWindow(forceLaunch = false) {
+function createWindow(forceLaunch = false, forceFrame = false) {
     if (process.argv.indexOf("--no-gui") == -1 || forceLaunch) {
         // Create the browser window.
-        var framed = process.argv.indexOf("--use-os-windows") !== -1;
+        var framed = process.argv.indexOf("--use-os-windows") !== -1 || forceFrame;
         exports.mainWindow = new BrowserWindow({ width: 800, height: 600, title: "PocketMine Server Manager", frame: framed, icon: path.join(__dirname, "assets", "icons", "icon.png") });
         exports.mainWindow.webContents.app = this2;
 
@@ -139,11 +151,13 @@ function createWindow(forceLaunch = false) {
         // When the app is launched, just download the app.
         exports.mainWindow.webContents.on("did-finish-load", define)
         require('./main/menus');
+        if (!tray.tray) tray.addTray(php);
     } else {
         delete process.argv[process.argv.indexOf("--no-gui")]; // Remove the arg, we don't need it anymore.
         setTimeout(function() { define() }, 1000); // Defining the rest of variables b4 calling this.
     }
 }
+exports.createWindow = createWindow;
 
 
 app.on('ready', function() { createWindow() });
@@ -312,7 +326,6 @@ function define() {
                 // Checking for servers;
                 php.snackbar("Looking for servers...");
                 var servers = fs.readdirSync(exports.serverFolder);
-                if (exports.mainWindow) tray.addTray(php);
                 servers.forEach(function(folder) {
                     exports.servers[folder] = new server.Server(folder, php, exports);
                     if (exports.mainWindow) {
