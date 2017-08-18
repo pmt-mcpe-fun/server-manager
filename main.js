@@ -63,13 +63,28 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
                 view = true;
                 break;
             case "--quit":
-                app.quit();
+                setTimeout(app.quit, 100); // Wait so no relaunch
+                break;
+            case "--relaunch":
+                app.quit(); // Relaunches the app.
                 break;
             case "--launch-gui":
-                createWindow(true);
+                if (exports.mainWindow) {
+                    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {
+                        createWindow(true);
+                    });
+                } else {
+                    createWindow(true);
+                }
                 break;
             case "--launch-gui-os-win":
-                createWindow(true);
+                if (exports.mainWindow) {
+                    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {
+                        createWindow(true, true);
+                    });
+                } else {
+                    createWindow(true, true);
+                }
                 break;
             case "--quit-gui":
                 if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript("window.close();", true);

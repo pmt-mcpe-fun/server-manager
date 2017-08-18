@@ -421,7 +421,7 @@ window.pluginProviders.Github = {
                 data += chunk.toString();
             });
             response.on('end', () => {
-                var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[2] + "." + pluginUrlPath.split("/")[3] + ".phar.zip");
+                var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[3] + "." + pluginUrlPath.split("/")[4] + ".phar.zip");
                 fs.writeFile(tmpfile, data, function(err) {
                     if (err) {
                         top.window.main.snackbar("Could not access Github: " + err.message + ".");
