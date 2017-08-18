@@ -8,6 +8,7 @@
  * @package PocketMine Server Manager
  */
 var openMenu = undefined;
+var levelAddGeneratorSelect;
 window.serverCallbacks.push(function(server) {
     var levelsList = document.getElementById("manageLevelsList").children;
     for (var i = 0; i < levelsList.length; i++) {
@@ -71,4 +72,57 @@ window.serverCallbacks.push(function(server) {
             }
         });
     }
+    if (!document.getElementById("levelAddDialog").MDCDialog.open) {
+        document.getElementById("levelAddGeneratorList").innerHTML = `<li class="mdc-list-item" role="option" aria-disabled="true">
+                Normal
+            </li>`;
+        document.getElementById("levelAddGeneratorDefaultText").innerHTML = "Normal";
+        Object.keys(server.generators).forEach(function(name) {
+            document.getElementById("levelAddGeneratorList").innerHTML += `
+                <li class="mdc-list-item" role="option" tabindex="0">
+                    ${name}
+                </li>`;
+        });
+        levelAddGeneratorSelect = new mdc.select.MDCSelect(document.getElementById("levelAddGeneratorSelect"));
+    }
 });
+
+
+
+
+document.getElementById("levelAddDialog").MDCDialog = new mdc.dialog.MDCDialog(document.getElementById("levelAddDialog"));
+
+document.getElementById("addLevelBtn").addEventListener("click", function(event) {
+    document.getElementById("levelAddName").value = "";
+    document.getElementById("levelAddName").parentElement.children[1].classList.remove("mdc-textfield__label--float-above");
+    document.getElementById("levelAddSeed").value = require("crypto").createHash("sha256").update(
+        Math.random() * 100000000 * require("electron").remote.process.pid +
+        require("electron").remote.process.getProcessMemoryInfo() - require("electron").remote.process.getCPUUsage() +
+        "").digest("hex");
+    levelAddGeneratorSelect.selectedIndex = 0;
+    document.getElementById("levelAddDialog").MDCDialog.show();
+});
+document.getElementById("addLevelLC").addEventListener("click", function(event) {
+    document.getElementById("levelAddName").value = "";
+    document.getElementById("levelAddName").parentElement.children[1].classList.remove("mdc-textfield__label--float-above");
+    document.getElementById("levelAddSeed").value = require("crypto").createHash("sha256").update(
+        Math.random() * 100000000 * require("electron").remote.process.pid +
+        require("electron").remote.process.getProcessMemoryInfo() - require("electron").remote.process.getCPUUsage()
+    ).digest("hex");
+    levelAddGeneratorSelect.selectedIndex = 0;
+    document.getElementById("levelAddDialog").MDCDialog.show();
+});
+// Adding level confirmation
+document.getElementById("levelAddConfirm").addEventListener("click", function() {
+    if (document.getElementById("levelAddName").value.length > 1) {
+        server.commands.push("psmcoreactplugin createlevel4psm " +
+            document.getElementById("levelAddName").value + " " +
+            levelAddGeneratorSelect.value.toLowerCase() + " " +
+            require("buffer").Buffer.from(
+                document.getElementById("levelAddSeed").value.toString(), "utf8"
+            ).toString("hex").replace(/[^0-9]/g, parseInt(Math.random() * 10)));
+        top.main.snackbar("Generating level " + document.getElementById("levelAddName").value + "...");
+    } else {
+        top.main.snackbar("Please enter a name for your new level.");
+    }
+})

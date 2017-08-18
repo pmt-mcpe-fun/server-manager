@@ -82,7 +82,9 @@ document.getElementById("addPlayerToWLBtn").addEventListener("click", function(e
       			remove_circle
     		</i>
             <span class="mdc-list-item__text">
-                <input id="addPlayerWLInput" class="mdc-textfield__input" type="text" pattern="^[a-zA-Z0-9_.-]+$" />
+                <div class="mdc-textfield">
+                    <input id="addPlayerWLInput" class="mdc-textfield__input" type="text" pattern="^[a-zA-Z0-9_.-]+$" />
+                </div>
             </span>
             <i class="material-icons mdc-list-item__end-detail" style="color: var(--mdc-theme-primary, green);" id="validAddPlayerWLInput">
       			done

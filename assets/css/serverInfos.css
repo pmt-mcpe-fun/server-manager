@@ -149,6 +149,11 @@ section#editServerBody::-webkit-scrollbar-thumb {
     left: 15px !important;
 }
 
+#levelAddGeneratorMenu {
+    top: 210px !important;
+    left: 20px !important;
+}
+
 @media screen and (max-device-width:406px) {
      :root,
     body {

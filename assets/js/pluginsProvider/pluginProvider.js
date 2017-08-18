@@ -33,11 +33,6 @@ function refresh() {
     		   ${pluginProvidersList[keyName].name}
             </span>
         </li>`;
-        document.getElementById(`pluginProvider${keyName}`).addEventListener("click", function(event) {
-            document.getElementById("pluginAddDialogTitle").innerHTML = "Add plugin - " + pluginProvidersList[this.getAttribute("data-keyname")].name;
-            var plugProvider = window.pluginProviders[pluginProvidersList[this.getAttribute("data-keyname")].name];
-            plugProvider.listPlugins();
-        });
     });
     new mdc.ripple.MDCRipple(document.getElementById(`pluginProviderpoggit`));
     document.getElementById(`pluginProviderpoggit`).addEventListener("click", function(event) {

@@ -359,7 +359,7 @@
         <!-- Left click element -->
         <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right leftClick" tabindex="-1" data-mdc-auto-init="MDCSimpleMenu">
             <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
-                <li class="mdc-list-item" role="menuitem" tabindex="0" id="editWhitelistLC">Add world</li>
+                <li class="mdc-list-item" role="menuitem" tabindex="0" id="addLevelLC">Add world</li>
                 <li class="mdc-list-item goToManage" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">build</i>Go to management tab</li>
                 <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
                 <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
@@ -367,9 +367,46 @@
             </ul>
         </div>
         <!-- Add button -->
-        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="footerEditWL" data-mdc-auto-init="MDCRipple">
+        <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="addLevelBtn" data-mdc-auto-init="MDCRipple">
         	<span class="mdc-fab__icon">add</span>
         </button>
+        <!-- Add level dialog -->
+        <aside id="levelAddDialog" class="mdc-dialog" data-mdc-auto-init="MDCDialog" role="alertdialog" aria-labelledby="levelAddDialogTitle" aria-describedby="levelAddDialogBody">
+            <div class="mdc-dialog__surface">
+                <header class="mdc-dialog__header">
+                    <h2 id="levelAddDialogTitle" class="mdc-dialog__header__title">
+                        Add world
+                    </h2>
+                </header>
+                <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="levelAddDialogBody">
+                    <!-- Name -->
+                    <div class="mdc-textfield mdc-textfield--upgraded">
+                        <input type="text" id="levelAddName" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                        <label class="mdc-textfield__label" for="levelAddName">Name</label>
+                    </div>
+                    <br>
+                    <!-- Seed -->
+                    <div class="mdc-textfield mdc-textfield--upgraded">
+                        <input type="text" id="levelAddSeed" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                        <label class="mdc-textfield__label mdc-textfield__label--float-above" for="levelAddSeed">Seed</label>
+                    </div>
+                    <br>
+                    <!--Level-->
+                    <div class="mdc-select" role="listbox" tabindex="0" id="levelAddGeneratorSelect">
+                        <span class="mdc-select__selected-text" id="levelAddGeneratorDefaultText">Normal</span>
+                        <div class="mdc-simple-menu mdc-select__menu" id="levelAddGeneratorMenu">
+                            <ul class="mdc-list mdc-simple-menu__items" id="levelAddGeneratorList">
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <footer class="mdc-dialog__footer">
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel" data-mdc-auto-init="MDCRipple">Close</button>
+                    <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept" data-mdc-auto-init="MDCRipple" id="levelAddConfirm">Add level</button>
+                </footer>
+            </div>
+            <div class="mdc-dialog__backdrop"></div>
+        </aside>
     </data-tab>
 
 
