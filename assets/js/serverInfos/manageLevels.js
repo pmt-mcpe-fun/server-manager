@@ -115,12 +115,14 @@ document.getElementById("addLevelLC").addEventListener("click", function(event) 
 // Adding level confirmation
 document.getElementById("levelAddConfirm").addEventListener("click", function() {
     if (document.getElementById("levelAddName").value.length > 1) {
-        server.commands.push("psmcoreactplugin createlevel4psm " +
+        var cmd = ("psmcoreactplugin createlevel4psm " +
             document.getElementById("levelAddName").value + " " +
             levelAddGeneratorSelect.value.toLowerCase() + " " +
             require("buffer").Buffer.from(
                 document.getElementById("levelAddSeed").value.toString(), "utf8"
-            ).toString("hex").replace(/[^0-9]/g, parseInt(Math.random() * 10)));
+            ).toString("hex").replace(/[^0-9]/g, parseInt(Math.random() * 10))).replace(/\r|\n/g, "");
+        server.commands.push(cmd);
+        ipcRenderer.send("setServer", window.server);
         top.main.snackbar("Generating level " + document.getElementById("levelAddName").value + "...");
     } else {
         top.main.snackbar("Please enter a name for your new level.");

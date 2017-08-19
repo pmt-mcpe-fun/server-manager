@@ -262,18 +262,15 @@ window.pluginProviders.Poggit = {
             if (error) {
                 document.getElementById("pluginAddDialogBody").innerHTML = "<p>" + error.message + ". Click outside this dialog to dismiss this dialog.</p>";
             }
-            response.on('data', function(chunk) {
-                data += chunk.toString("binary");
-            });
+            var plPath = require("path").join(
+                require("electron").ipcRenderer.sendSync("getVar", "serverFolder"),
+                window.server.name,
+                "plugins",
+                document.getElementById("pluginInfosName").innerHTML + ".phar"
+            );
+            response.pipe(plPath)
             response.on('end', () => {
                 try {
-                    var plPath = require("path").join(
-                        require("electron").ipcRenderer.sendSync("getVar", "serverFolder"),
-                        window.server.name,
-                        "plugins",
-                        document.getElementById("pluginInfosName").innerHTML + ".phar"
-                    );
-                    require("fs").writeFile(plPath, data, { encoding: "binary" });
                     top.window.main.snackbar("Successfully downloaded plugin " + document.getElementById("pluginInfosName").innerHTML + "!");
                 } catch (error) {
                     document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not download plugin: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";

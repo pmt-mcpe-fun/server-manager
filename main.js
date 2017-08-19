@@ -88,7 +88,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
                 break;
             case "--quit-gui":
                 if (exports.mainWindow) exports.mainWindow.webContents.executeJavaScript("window.close();", true);
-                if (tray.tray) tray.tray.destroy();
+                if (!tray.tray.isDestroyed()) tray.tray.destroy();
                 break;
             default:
                 if (start) {

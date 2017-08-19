@@ -158,7 +158,6 @@ window.pluginProviders.Github = {
                                 license: null
                             });
                             window.pluginProviders.Github.displayPlugins(pluginName);
-                            // console.log("Pushed plugins " + pluginRepo.full_name.split("/")[0]);
                         } else {}
                     });
                 }).on('error', function(error) {
@@ -269,7 +268,6 @@ window.pluginProviders.Github = {
                 }
                 window.pluginProviders.Github.plugins.forEach(function(plugin, key) {
                     if (document.getElementById("noPluginsFound")) document.getElementById("noPluginsFound").remove();
-                    console.log(plugin.repo_data.stargazers_count);
                     document.getElementById("githubPluginList").innerHTML += `
                     <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="githubPlugin${plugin.infos.name}" 
                     data-index="${key}"
@@ -294,7 +292,6 @@ window.pluginProviders.Github = {
                             <i class="material-icons">pageview</i>
                         </button>
                     </li>`;
-                    console.log(plugin.infos);
                     if (plugin.infos.api instanceof String) {
                         if (plugins.infos.api !== api) document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
                             Outdated
@@ -307,36 +304,32 @@ window.pluginProviders.Github = {
                     }
                     if (plugin.repo_data.stargazers_count > 100) {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}">
-                            > 100 stars
+                            ${plugin.repo_data.stargazers_count} stars
                         </span>`;
                     } else {
-                        console.log("Not 100 stars");
                         if (plugin.repo_data.stargazers_count > 50) {
                             document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
-                                > 50 stars
+                                ${plugin.repo_data.stargazers_count} stars
                             </span>`;
                         } else {
-                            console.log("Not 50 stars");
                             if (plugin.repo_data.stargazers_count > 10) {
                                 document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
-                                    > 10 stars
+                                    ${plugin.repo_data.stargazers_count} stars
                                 </span>`;
-                            } else {
-                                console.log("Not 10 stars");
                             }
                         }
                     }
                     if (plugin.repo_data.open_issues_count > 20) {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}">
-                            > 20 issues
+                            ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 10) {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10issues"]}">
-                            > 10 issues
+                            ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 3) {
                         document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["3issues"]}">
-                            > 3 issues
+                            ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     }
                 });
@@ -381,7 +374,7 @@ window.pluginProviders.Github = {
                 document.getElementById("pluginInfos").style.top = "calc(76px + 5%)";
             }
         });
-        document.getElementById("pluginInfosDownloadURL").value = "/repos/" + plugin.repo_author + "/" + plugin.repo_name + "/zipball/master"; // TODO: 1.5 Choose branch.
+        document.getElementById("pluginInfosDownloadURL").value = "https://api.github.com/repos/" + plugin.repo_author + "/" + plugin.repo_name + "/zipball/master"; // TODO: 1.5 Choose branch.
         document.getElementById("pluginInfos").classList.add("shown");
         document.getElementById("pluginInfos").classList.remove("hidden");
     },
@@ -393,62 +386,54 @@ window.pluginProviders.Github = {
             headers: {
                 "User-Agent": "PSM (Pocketmine Server Manager, https://psm.mcpe.fun) User Requester"
             },
-            hostname: "api.github.com",
-            path: pluginUrlPath
+            hostname: (new URL(pluginUrlPath)).hostname,
+            path: (new URL(pluginUrlPath)).pathname
         }
-        var data = "";
+        top.main.snackbar("Downloading plugin...");
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
-                return window.pluginProviders.Github.downloadPlugin(response.headers['location']);
-            }
-
-            var statusCode = response.statusCode;
-            var contentType = response.headers['content-type'];
-
-            var error;
-            if (statusCode !== 200) {
-                readmeLib.getRateLimitReset(function(data) {
-                    if (data.resources.search.remaining == 0) { // No more remaining tokens
-                        var date = Date.now() / 1000;
-                        var date2 = data.resources.core.reset;
-                        var minutesRemaining = (date2 - date) / 60
-                        minutesRemaining = Math.round(minutesRemaining)
-                        cb("You searched too much plugins on github and now you'll need to wait " + minutesRemaining + " minutes before researching some plugins again.");
-                    }
-                });
-            }
-            response.on('data', function(chunk) {
-                data += chunk.toString();
-            });
-            response.on('end', () => {
-                var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[3] + "." + pluginUrlPath.split("/")[4] + ".phar.zip");
-                fs.writeFile(tmpfile, data, function(err) {
-                    if (err) {
-                        top.window.main.snackbar("Could not access Github: " + err.message + ".");
-                        console.log(err);
-                    } else {
-                        try { // Windows
-                            fs.accessSync(path.join(os.homedir(), ".pocketmine", "php", "bin", "php")); // Windows
-                            phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php", "php.exe");
-                        } catch (e) { // Linux & MacOS
-                            phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php7", "bin", "php");
+                response.resume();
+                window.pluginProviders.Github.downloadPlugin(response.headers['location']);
+            } else if (response.statusCode == 404) {
+                top.main.snackbar("Plugin not found.");
+            } else {
+                var statusCode = response.statusCode;
+                var contentType = response.headers['content-type'];
+                if (statusCode !== 200) {
+                    readmeLib.getRateLimitReset(function(data) {
+                        if (data.resources.search.remaining == 0) { // No more remaining tokens
+                            var date = Date.now() / 1000;
+                            var date2 = data.resources.core.reset;
+                            var minutesRemaining = (date2 - date) / 60
+                            minutesRemaining = Math.round(minutesRemaining)
+                            cb("You searched too much plugins on github and now you'll need to wait " + minutesRemaining + " minutes before researching some plugins again.");
                         }
-                        require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 build.php --input-zip=" + tmpfile + " --ouput-phar=" +
-                            path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[3] + ".phar"),
-                            function(err, stdout, stderr) {
-                                if (err) {
-                                    console.log(err, stdout, stderr);
-                                    top.window.main.snackbar("Could not export plugin " + pluginUrlPath.split("/")[3] + ".");
-                                } else {
-                                    top.window.main.snackbar("Successfully downloaded " + pluginUrlPath.split("/")[2] + "!");
-                                }
-                            });
+                    });
+                }
+                var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[3] + "." + pluginUrlPath.split("/")[4] + ".phar.zip");
+                response.pipe(fs.createWriteStream(tmpfile)).on('close', () => {
+                    try { // Windows
+                        fs.accessSync(path.join(os.homedir(), ".pocketmine", "php", "bin", "php")); // Windows
+                        phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php", "php.exe");
+                    } catch (e) { // Linux & MacOS
+                        phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php7", "bin", "php");
                     }
+                    require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 " + path.join(path.dirname(location.pathname), "js", "pluginsProvider", "build.php") + " --input-zip=" + tmpfile + " --output-phar=" +
+                        path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[4] + ".phar"),
+                        function(err, stdout, stderr) {
+                            if (err) {
+                                console.log(err, stdout, stderr);
+                                top.window.main.snackbar("Could not export plugin " + pluginUrlPath.split("/")[4] + ".");
+                            } else {
+                                top.window.main.snackbar("Successfully downloaded " + pluginUrlPath.split("/")[4] + "!");
+                            }
+                        });
+                }).on('error', function(error) {
+                    response.resume();
+                    document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
+                    console.log(error);
                 });
-            }).on('error', function(error) {
-                document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
-                console.log(error);
-            });
+            }
         })
     }
 }

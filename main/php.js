@@ -162,6 +162,7 @@ exports.download = function(urlStr, dest, cb) {
         // check if response is success
         if (response.statusCode == 302) {
             exports.download(response.headers["location"], dest, cb);
+            response.resume();
             return;
         }
         var file = fs.createWriteStream(dest);
@@ -170,6 +171,7 @@ exports.download = function(urlStr, dest, cb) {
             file.close(cb); // close() is async, call cb after close completes.
         });
     }).on('error', function(err) { // Handle errors
+        response.resume();
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
         if (cb) cb(err.message);
     });

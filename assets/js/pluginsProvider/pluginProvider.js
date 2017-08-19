@@ -73,7 +73,6 @@ document.getElementById("pluginInfosClose").addEventListener("click", function()
     document.getElementById("pluginInfos").classList.add("hidden");
 });
 document.getElementById("pluginInfosDownload").addEventListener("click", function() {
-    console.log("Downloading plugin at " + document.getElementById("pluginInfosDownloadURL").value);
     document.getElementById("pluginInfos").style.top = "";
     document.getElementById("pluginInfos").classList.remove("shown");
     document.getElementById("pluginInfos").classList.add("hidden");

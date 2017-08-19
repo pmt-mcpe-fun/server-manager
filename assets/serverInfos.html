@@ -379,6 +379,15 @@
                     </h2>
                 </header>
                 <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="levelAddDialogBody">
+                    <!--Level-->
+                    <div class="mdc-select" role="listbox" tabindex="0" id="levelAddGeneratorSelect">
+                        <span class="mdc-select__selected-text" id="levelAddGeneratorDefaultText">Normal</span>
+                        <div class="mdc-simple-menu mdc-select__menu" id="levelAddGeneratorMenu">
+                            <ul class="mdc-list mdc-simple-menu__items" id="levelAddGeneratorList">
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
                     <!-- Name -->
                     <div class="mdc-textfield mdc-textfield--upgraded">
                         <input type="text" id="levelAddName" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
@@ -389,15 +398,6 @@
                     <div class="mdc-textfield mdc-textfield--upgraded">
                         <input type="text" id="levelAddSeed" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
                         <label class="mdc-textfield__label mdc-textfield__label--float-above" for="levelAddSeed">Seed</label>
-                    </div>
-                    <br>
-                    <!--Level-->
-                    <div class="mdc-select" role="listbox" tabindex="0" id="levelAddGeneratorSelect">
-                        <span class="mdc-select__selected-text" id="levelAddGeneratorDefaultText">Normal</span>
-                        <div class="mdc-simple-menu mdc-select__menu" id="levelAddGeneratorMenu">
-                            <ul class="mdc-list mdc-simple-menu__items" id="levelAddGeneratorList">
-                            </ul>
-                        </div>
                     </div>
                 </section>
                 <footer class="mdc-dialog__footer">
