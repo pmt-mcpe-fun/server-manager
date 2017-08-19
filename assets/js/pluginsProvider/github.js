@@ -418,7 +418,7 @@ window.pluginProviders.Github = {
                     } catch (e) { // Linux & MacOS
                         phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php7", "bin", "php");
                     }
-                    require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 " + path.join(path.dirname(location.pathname), "js", "pluginsProvider", "build.php") +
+                    require("child_process").exec(phpExecutable + " -dphar.readonly=Off " + path.join(path.dirname(location.pathname), "js", "pluginsProvider", "build.php") +
                         " --input-zip=" + tmpfile + " --tmpdir=" + os.tmpdir() + " --output-phar=" +
                         path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[4] + ".phar"),
                         function(err, stdout, stderr) {
