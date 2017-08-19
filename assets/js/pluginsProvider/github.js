@@ -269,14 +269,14 @@ window.pluginProviders.Github = {
                 window.pluginProviders.Github.plugins.forEach(function(plugin, key) {
                     if (document.getElementById("noPluginsFound")) document.getElementById("noPluginsFound").remove();
                     document.getElementById("githubPluginList").innerHTML += `
-                    <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="githubPlugin${plugin.infos.name}" 
+                    <li class="mdc-list-item mdc-list-item mdc-ripple-surface" id="githubPlugin${plugin.repo_data.id}" 
                     data-index="${key}"
                     data-name="${plugin.infos.name}"
                     data-version="${plugin.infos.version}"
                     data-tagline="${plugin.infos.description}">
                         <span class="mdc-list-item__text">
                             <span class="inline">
-                                <span id="githubPlugin${plugin.infos.name}Tags">
+                                <span id="githubPlugin${plugin.repo_data.id}Tags">
                                 </span>
                                 &nbsp;
                                 &nbsp;
@@ -286,49 +286,49 @@ window.pluginProviders.Github = {
                                 ${plugin.repo_data.description} - Author(s): ${plugin.infos.author} - Maintainer: ${plugin.repo_author}
                             </span>
                         </span>
-                        <button class="mdc-list-item__end-detail mdc-button mdc-button--raised inline githubView" id="githubPlugin${plugin.infos.name}ViewBtn" 
+                        <button class="mdc-list-item__end-detail mdc-button mdc-button--raised inline githubView" id="githubPlugin${plugin.repo_data.id}ViewBtn" 
                         onclick="window.pluginProviders.Github.displayPluginInfos('${key}');">
                             View&nbsp;
                             <i class="material-icons">pageview</i>
                         </button>
                     </li>`;
                     if (plugin.infos.api instanceof String) {
-                        if (plugins.infos.api !== api) document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
+                        if (plugins.infos.api !== api) document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
                             Outdated
                         </span>`;
                     }
                     if (plugin.infos.api instanceof Array) {
-                        if (plugins.infos.api.indexOf(api) == -1) document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
+                        if (plugins.infos.api.indexOf(api) == -1) document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
                             Outdated
                         </span>`;
                     }
                     if (plugin.repo_data.stargazers_count > 100) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}">
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}">
                             ${plugin.repo_data.stargazers_count} stars
                         </span>`;
                     } else {
                         if (plugin.repo_data.stargazers_count > 50) {
-                            document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
+                            document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
                                 ${plugin.repo_data.stargazers_count} stars
                             </span>`;
                         } else {
                             if (plugin.repo_data.stargazers_count > 10) {
-                                document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
+                                document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
                                     ${plugin.repo_data.stargazers_count} stars
                                 </span>`;
                             }
                         }
                     }
                     if (plugin.repo_data.open_issues_count > 20) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}">
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}">
                             ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 10) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10issues"]}">
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10issues"]}">
                             ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 3) {
-                        document.getElementById(`githubPlugin${plugin.infos.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["3issues"]}">
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["3issues"]}">
                             ${plugin.repo_data.open_issues_count} issues
                         </span>`;
                     }
@@ -418,7 +418,8 @@ window.pluginProviders.Github = {
                     } catch (e) { // Linux & MacOS
                         phpExecutable = path.join(os.homedir(), ".pocketmine", "php", "bin", "php7", "bin", "php");
                     }
-                    require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 " + path.join(path.dirname(location.pathname), "js", "pluginsProvider", "build.php") + " --input-zip=" + tmpfile + " --output-phar=" +
+                    require("child_process").exec(phpExecutable + " -dphar.readonly=Off -dopcache.enable=0 " + path.join(path.dirname(location.pathname), "js", "pluginsProvider", "build.php") +
+                        " --input-zip=" + tmpfile + " --tmpdir=" + os.tmpdir() + " --output-phar=" +
                         path.join(os.homedir(), ".pocketmine", "servers", window.server.name, "plugins", pluginUrlPath.split("/")[4] + ".phar"),
                         function(err, stdout, stderr) {
                             if (err) {

@@ -9,21 +9,26 @@
  * @package PocketMine Server Manager
  */
 
-$opts = getopt("", ["input-zip::", "output-phar::"]);
-var_dump($opts);
+$opts = getopt("", ["input-zip::", "output-phar::", "tmpdir::"]);
 $zipArch = new ZipArchive();
 $zipArch->open($opts["input-zip"]);
-var_dump($zipArch);
-$pluginYml = $zipArch->getFromName("plugin.yml");
+$zipArch->extractTo($opts["tmpdir"] . "/tmppl");
 $zipArch->close();
 
-echo "Got plugin.yml : $pluginYml\n";
+$pluginYml = file_get_contents($opts["tmpdir"] . "/tmppl/" . scandir($opts["tmpdir"] . "/tmppl/")[2] . "/plugin.yml");
 
-$zipphar = new PharData($opts["input-zip"]);
-$phar = $zipphar->convertToExecutable(Phar::PHAR);
+echo "Current path: " . $opts["tmpdir"] . "/tmppl/" . scandir($opts["tmpdir"] . "/tmppl/")[2] + "\n";
+
+$phar = new Phar($opts["output-phar"]);
+$phar->buildFromDirectory($opts["tmpdir"] . "/tmppl/" . scandir($opts["tmpdir"] . "/tmppl/")[2]); // Builds from the directory under the zip is.
 echo "Converted ZIP, now getting into setting metadata and stub...\n";
 $phar->setStub("<?php echo 'Phar built from PSM, PocketMine Server Manager (https://psm.mcpe.fun)'; __HALT_COMPILER();");
 $phar->setMetadata(yaml_parse($pluginYml));
-echo "Success ! Now copying file...\n";
-copy($phar->getFileInfo()->getPathname(), $opts["output-phar"]);
+echo "Success ! Now removing temp directory...\n";
+if(strpos(PHP_OS, "win") && PHP_OS !== "darwin") {
+    exec("rmdir " . $opts["tmpdir"] . "/tmppl/" . " /s /q"); // Windows based OSes
+} else {
+    exec("rm -rf " . $opts["tmpdir"] . "/tmppl/"); // Unix based OSes
+}
+unlink($opts["input-zip"]);
 echo "Done!\n";
