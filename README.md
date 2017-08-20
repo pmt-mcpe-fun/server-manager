@@ -1,1 +1,1 @@
-# ServerManager
+# PSM - PocketMine Server Manager
