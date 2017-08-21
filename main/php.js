@@ -176,6 +176,7 @@ exports.download = function(urlStr, dest, cb) {
         if (res) res.resume();
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
         if (cb) cb(err.message);
+        console.log(err);
     });
 };
 
