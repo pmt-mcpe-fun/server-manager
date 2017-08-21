@@ -288,7 +288,7 @@ ipcMain.on("close", function(event) {
  * @return {Boolean}
  */
 ipcMain.on("addServer", function(event, name) {
-    if (exports.mainWindow) {
+    if (tray.trayMenu) {
         tray.trayMenu.items[2].submenu.append(new MenuItem({
             label: name,
             type: "normal",
@@ -311,7 +311,7 @@ ipcMain.on("addServer", function(event, name) {
             }
         }));
     }
-    if (exports.mainWindow) tray.tray.setContextMenu(tray.trayMenu);
+    if (tray.tray) tray.tray.setContextMenu(tray.trayMenu);
 });
 
 // Defines everything when window loads
@@ -343,7 +343,7 @@ function define() {
                 var servers = fs.readdirSync(exports.serverFolder);
                 servers.forEach(function(folder) {
                     exports.servers[folder] = new server.Server(folder, php, exports);
-                    if (exports.mainWindow) {
+                    if (tray.trayMenu) {
                         tray.trayMenu.items[0].submenu.append(new MenuItem({
                             label: folder,
                             type: "normal",
@@ -367,7 +367,7 @@ function define() {
                         }));
                     }
                 }, this);
-                if (exports.mainWindow) tray.tray.setContextMenu(tray.trayMenu);
+                if (tray.tray) tray.tray.setContextMenu(tray.trayMenu);
                 // Setting app clock (1 second based)
                 setInterval(function() {
                     // IPC Refreshing

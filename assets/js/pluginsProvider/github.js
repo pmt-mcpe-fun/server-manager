@@ -116,6 +116,7 @@ window.pluginProviders.Github = {
                     path: "/" + pluginRepo.full_name + "/" + pluginRepo.default_branch + "/plugin.yml"
                 }
                 var resData = "";
+                var res;
                 http.get(options, function(response) {
                     if (response.statusCode == 302 || response.statusCode == 301) {
                         return get(response.headers['location'], dest, cb);
@@ -139,7 +140,7 @@ window.pluginProviders.Github = {
                         delete data.items[index];
                         window.pluginProviders.Github.displayPlugins(pluginName); // Still displaying so if no result found, tell them.
                     }
-
+                    res = response;
                     response.on('data', function(chunk) {
                         resData += chunk.toString();
                     });
@@ -161,6 +162,7 @@ window.pluginProviders.Github = {
                         } else {}
                     });
                 }).on('error', function(error) {
+                    if (res) res.resume();
                     document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
                     console.log(error);
                 });
@@ -200,6 +202,7 @@ window.pluginProviders.Github = {
             hostname: "api.github.com",
             path: "/search/repositories?q=" + qstring
         }
+        var res;
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
                 return get(response.headers['location'], dest, cb);
@@ -220,6 +223,7 @@ window.pluginProviders.Github = {
                     }
                 });
             }
+            res = response;
             response.on('data', function(chunk) {
                 JSONData += chunk.toString();
             });
@@ -233,6 +237,7 @@ window.pluginProviders.Github = {
                 }
             });
         }).on('error', function(error) {
+            if (res) res.resume();
             document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
             console.log(error);
         });
@@ -390,6 +395,7 @@ window.pluginProviders.Github = {
             path: (new URL(pluginUrlPath)).pathname
         }
         top.main.snackbar("Downloading plugin...");
+        var res;
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
                 response.resume();
@@ -410,6 +416,7 @@ window.pluginProviders.Github = {
                         }
                     });
                 }
+                res = response;
                 var tmpfile = path.join(os.tmpdir(), pluginUrlPath.split("/")[3] + "." + pluginUrlPath.split("/")[4] + ".phar.zip");
                 response.pipe(fs.createWriteStream(tmpfile)).on('close', () => {
                     try { // Windows
@@ -430,7 +437,7 @@ window.pluginProviders.Github = {
                             }
                         });
                 }).on('error', function(error) {
-                    response.resume();
+                    if (res) res.resume();
                     document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Github: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
                     console.log(error);
                 });

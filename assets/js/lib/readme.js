@@ -52,6 +52,7 @@ const fs = require("fs");
  */
 exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on github and we know it's url
     var data = "";
+    var res;
     var req = http.get({
         hostname: "api.github.com",
         path: `/repos/${user}/${repo}/readme`,
@@ -74,6 +75,7 @@ exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on githu
                     }
                 });
             }
+            res = response;
 
             response.on('data', function(chunk) {
                 data += chunk.toString();
@@ -97,6 +99,7 @@ exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on githu
         }
     });
     req.on("error", function(err) {
+        if (res) res.resume();
         getRateLimitReset(function(data) {
             if (data.resources.core.remaining == 0) { // No more remaining tokens
                 var date = Date.now() / 1000;
@@ -117,6 +120,7 @@ exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on githu
  */
 function getRateLimitReset(cb) {
     var data = "";
+    var res;
     var req = http.get({
         hostname: "api.github.com",
         path: `/rate_limit`,
@@ -127,7 +131,7 @@ function getRateLimitReset(cb) {
     }, function(response) {
         if (response.statusCode == 404) {} else {
             if (response.statusCode !== 200) {}
-
+            res = response;
             response.on('data', function(chunk) {
                 data += chunk.toString();
             });
@@ -135,6 +139,9 @@ function getRateLimitReset(cb) {
                 cb(JSON.parse(data));
             });
         }
+    }).on("error", function(err) {
+        if (res) res.resume();
+        console.error(err);
     });
 }
 exports.getRateLimitReset = getRateLimitReset;

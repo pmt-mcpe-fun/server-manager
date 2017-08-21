@@ -122,6 +122,7 @@ Object.keys(exports.LicenseList).forEach(function(licenseId) {
  */
 exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on github and we know it's url
     var JSONData = "";
+    var res;
     var req = http.get({
         hostname: "api.github.com",
         path: `/repos/${user}/${repo}/license`,
@@ -130,14 +131,17 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
         }
     }, function(response) {
         if (response.statusCode == 404) {
+            response.resume();
             cb(exports.LicenseList.none);
         } else {
             var contentType = response.headers['content-type'];
 
             var error;
             if (response.statusCode !== 200) {
+                response.resume();
                 cb(exports.LicenseList.none);
             }
+            res = response;
 
             response.on('data', function(chunk) {
                 JSONData += chunk.toString();
@@ -160,6 +164,7 @@ exports.getLicenseFromGH = function(user, repo, cb) { // Poggit is based on gith
         }
     });
     req.on("error", function(err) {
+        res.resume();
         cb({ error: err });
     });
 }

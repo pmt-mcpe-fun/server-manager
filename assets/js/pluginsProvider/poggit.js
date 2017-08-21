@@ -107,6 +107,7 @@ window.pluginProviders.Poggit = {
         var url = new URL(urlStr);
         options.hostname = url.hostname;
         options.path = url.pathname;
+        var res;
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
                 return get(response.headers['location'], dest, cb);
@@ -124,6 +125,7 @@ window.pluginProviders.Poggit = {
             if (error) {
                 document.getElementById("pluginAddDialogBody").innerHTML = "<p>" + error.message + ". Click outside this dialog to dismiss this dialog.</p>";
             }
+            res = response;
             response.on('data', function(chunk) {
                 JSONData += chunk.toString();
             });
@@ -137,6 +139,7 @@ window.pluginProviders.Poggit = {
                 }
             });
         }).on('error', function(error) {
+            if (res) res.resume();
             document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Poggit: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
             console.log(error);
         });
@@ -247,6 +250,7 @@ window.pluginProviders.Poggit = {
         var url = new URL(pluginUrl);
         options.hostname = url.hostname;
         options.path = url.pathname;
+        var res;
         http.get(options, function(response) {
             if (response.statusCode == 302 || response.statusCode == 301) {
                 return downloadPlugin(response.headers['location'], dest, cb);
@@ -262,6 +266,7 @@ window.pluginProviders.Poggit = {
             if (error) {
                 document.getElementById("pluginAddDialogBody").innerHTML = "<p>" + error.message + ". Click outside this dialog to dismiss this dialog.</p>";
             }
+            res = response;
             var plPath = require("path").join(
                 require("electron").ipcRenderer.sendSync("getVar", "serverFolder"),
                 window.server.name,
@@ -278,6 +283,7 @@ window.pluginProviders.Poggit = {
                 }
             });
         }).on('error', function(error) {
+            if (res) res.resume();
             document.getElementById("pluginAddDialogBody").innerHTML = "<p>Could not access Poggit: " + error.message + ". Click outside this dialog to dismiss dialog.</p>";
             console.log(error);
         });

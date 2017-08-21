@@ -38,9 +38,11 @@ var phpLib = undefined;
 function checkForUpdates(php, cb) {
     phpLib = php;
     php.snackbar("Looking for updates...");
+    var res;
     http.get("http://psm.mcpe.fun/versions.json",
         function(response) {
             var completeResponse = '';
+            res = response;
             response.on('data', function(chunk) {
                 completeResponse += chunk;
             });
@@ -67,6 +69,7 @@ function checkForUpdates(php, cb) {
             });
         }
     ).on('error', function(e) { // An error occured. Do nothing exepct cb
+        if (res) res.resume();
         console.log(`Got error: ${e.message}`);
         cb.apply(php.app);
     });
