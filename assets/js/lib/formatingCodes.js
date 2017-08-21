@@ -141,7 +141,7 @@ function getUnixEscapeCodes() {
 
 function getWinEscapeCodes() {
     exports.FORMAT_BOLD = "\x1b[1m";
-    exports.FORMAT_OBFUSCATED = "";
+    exports.FORMAT_OBFUSCATED = "\x1b[18m"; // Not existing but don't care. Just to fix a bug
     exports.FORMAT_ITALIC = "\x1b[3m";
     exports.FORMAT_UNDERLINE = "\x1b[4m";
     exports.FORMAT_STRIKETHROUGH = "\x1b[9m";
