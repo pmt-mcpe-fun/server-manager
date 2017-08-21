@@ -265,7 +265,7 @@ exports.changePhar = function(version, name, serverCreation = true) {
                 }
             });
     } else {
-        require("child_process").exec(os.platform() == "win32" ? "copy /y " : "cp " +
+        require("child_process").exec((os.platform() == "win32" ? "copy /y " : "cp ") +
             path.join(ipcRenderer.sendSync("getVar", "pharsFolder"), version + ".phar") + " " +
             path.join(serverPath, "PocketMine-MP.phar"),
             function(err, stdout, stderr) {
