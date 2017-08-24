@@ -93,7 +93,7 @@ exports.getReadmeFromGH = function(user, repo, cb) { // Poggit is based on githu
                         }
                     })
                 } catch (e) {
-                    cb(data);
+                    cb(data.replace(/<(script)/gim, "&lt;$1"));
                 }
             });
         }

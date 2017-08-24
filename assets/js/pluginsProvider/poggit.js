@@ -273,7 +273,7 @@ window.pluginProviders.Poggit = {
                 "plugins",
                 document.getElementById("pluginInfosName").innerHTML + ".phar"
             );
-            response.pipe(plPath)
+            response.pipe(fs.createWriteStream(plPath));
             response.on('end', () => {
                 try {
                     top.window.main.snackbar("Successfully downloaded plugin " + document.getElementById("pluginInfosName").innerHTML + "!");
@@ -397,7 +397,7 @@ window.pluginProviders.Poggit = {
      */
     searchPlugin: function(searchString) {
         var searchedPlugins = [];
-        Object.keys(plugins).forEach(function(key) {
+        Object.keys(this.plugins).forEach(function(key) {
             if (key.includes(searchString)) searchedPlugins.push(plugin);
         });
         this.displayPlugins(searchedPlugins);

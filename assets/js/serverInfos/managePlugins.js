@@ -7,9 +7,9 @@
  * @copyright (C) Ad5001 2017
  * @package PocketMine Server Manager
  */
-var openMenu = undefined;
 
 
+var MDCMenu = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsPlugin`)); // Defining real menu;
 window.serverCallbacks.push(function(server) {
     var pluginsList = document.getElementById("managePluginsList").children;
     for (var i = 0; i < pluginsList.length; i++) {
@@ -24,52 +24,54 @@ window.serverCallbacks.push(function(server) {
         Object.keys(server.plugins).forEach(function(key) {
             if (!document.getElementById(`managePlugin${key}`)) {
                 document.getElementById("managePluginsList").innerHTML += `
-            <li class="mdc-list-item" id="managePlugin${key}">
+                <li class="mdc-list-item" id="managePlugin${key}">
                 <span id="managePlugin${key}Props" class=" mdc-list-item__start-detail">
-                    <i class='material-icons'>settings</i>
-    		    </span>
-                <span class="mdc-list-item__text">
-    		        ${key}
-                </span>
-                <span class="mdc-list-item__end-detail">
-                    <i class="material-icons" id="actionsPlugin${key}">more_vert</i>
-                    <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlugin${key}" tabindex="-1">
-                        <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPlugin${key}List" role="menu" aria-hidden="true">
-                        </ul>
-                    </div>
-                </span>
-            </li>`;
-                new mdc.ripple.MDCRipple(document.getElementById("managePlugin" + key));
-                document.getElementById(`menuActionsPlugin${key}`).MDCMenu = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsPlugin${key}`)); // Defining real menu;
+                        <i class='material-icons'>settings</i>
+    		        </span>
+                    <span class="mdc-list-item__text">
+    		            ${key}
+                    </span>
+                    <span class="mdc-list-item__end-detail">
+                        <i class="material-icons" id="actionsPlugin${key}">more_vert</i>
+                    </span>
+                </li>`;
+                mdc.ripple.MDCRipple.attachTo(document.getElementById("managePlugin" + key));
                 // Adding actions of plugin
-                document.getElementById("actionsPlugin" + key).addEventListener("click", function() {
-                    if (openMenu) {
-                        openMenu.open = false;
-                    }
-                    Object.keys(server.actions.pluginActions).forEach(function(name) {
-                        // Actions to remove
-                        if (name == "Add to whitelist" && window.server.plugins[key].whitelisted) return;
-                        if (name == "Remove from whitelist" && !window.server.plugins[key].whitelisted) return;
-                        if (name == "OP" && window.server.plugins[key].op) return;
-                        if (name == "DeOP" && !window.server.plugins[key].op) return;
+                document.getElementById("actionsPlugin" + key).addEventListener("click", function(ev) {
+                    document.getElementById(`menuActionsPluginList`).innerHTML = "";
+                    Object.keys(server.actions.pluginsActions).forEach(function(name) {
                         // Adding action
                         var nameAsId = name.replace(/ /g, "_");
-                        document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
-                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}Action${nameAsId}">
-                         ${name}
-                     </li>`;
-                        new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}Action${nameAsId}`));
+                        document.getElementById(`menuActionsPluginList`).innerHTML += `
+                        <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}Action${nameAsId}">
+                            ${name}
+                        </li>`;
+                        mdc.ripple.MDCRipple.attachTo(document.getElementById(`managePlugin${key}Action${nameAsId}`));
                         document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("cmd", server.actions.pluginActions[name])
                         document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("plugin", key)
                         document.getElementById(`managePlugin${key}Action${nameAsId}`).addEventListener("click", function() {
                             window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.plugin]));
                         });
                     });
-                    document.getElementById("menuActionsPlugin" + key + "List").innerHTML += `
+                    if (server.actions.pluginsSpecificActions[key]) Object.keys(server.actions.pluginsSpecificActions[key]).forEach(function(name) {
+                        // Adding action
+                        var nameAsId = name.replace(/ /g, "_");
+                        document.getElementById(`menuActionsPluginList`).innerHTML += `
+                        <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}Action${nameAsId}">
+                            ${name}
+                        </li>`;
+                        mdc.ripple.MDCRipple.attachTo(document.getElementById(`managePlugin${key}Action${nameAsId}`));
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("cmd", server.actions.pluginActions[name])
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).setAttribute("plugin", key)
+                        document.getElementById(`managePlugin${key}Action${nameAsId}`).addEventListener("click", function() {
+                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.plugin]));
+                        });
+                    });
+                    document.getElementById(`menuActionsPluginList`).innerHTML += `
                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="managePlugin${key}ActionRemove">
                         Remove
                     </li>`;
-                    new mdc.ripple.MDCRipple(document.getElementById(`managePlugin${key}ActionRemove`));
+                    mdc.ripple.MDCRipple.attachTo(document.getElementById(`managePlugin${key}ActionRemove`));
                     document.getElementById(`managePlugin${key}ActionRemove`).addEventListener("click", function() {
                         var alreadyRemoved = false;
                         if (confirm("Are you sure that you want to delete plugin '" + key + "'?")) {
@@ -87,10 +89,11 @@ window.serverCallbacks.push(function(server) {
                             }
                         }
                     });
-                    document.getElementById("menuActionsPlugin" + key).MDCMenu.open = true;
-                    openMenu = document.getElementById("menuActionsPlugin" + key).MDCMenu;
+                    MDCMenu = mdc.menu.MDCSimpleMenu.attachTo(document.getElementById(`menuActionsPlugin`));
+                    document.getElementById("menuActionsPlugin").style.left = event.clientX + 'px';
+                    document.getElementById("menuActionsPlugin").style.top = event.clientY + 'px';
+                    MDCMenu.open = true;
                 });
-                // Adding plugin's attribute
             }
         });
     }

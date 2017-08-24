@@ -26,7 +26,7 @@ ${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Quit the GUI:${termColors.FORM
 ${termColors.COLOR_GREEN}${termColors.FORMAT_BOLD}Quit app:${termColors.FORMAT_RESET}${termColors.COLOR_ORANGE} ${process.argv[0]} --quit${termColors.FORMAT_RESET}`);
 }
 
-if (process.argv.indexOf("--debug") !== -1) require('daemon-plus')(); // creates new child process, exists the parent
+if (process.argv.indexOf("--debug") == -1) require('daemon-plus')(); // creates new child process, exists the parent
 
 if (process.env.XDG_CURRENT_DESKTOP == "Unity:Unity7") process.env.XDG_CURRENT_DESKTOP = "Unity"; // Fixing tray with Ubuntu 17.04
 

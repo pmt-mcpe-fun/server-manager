@@ -95,7 +95,7 @@
                     <form id="editServerForm">
                         <!-- MOTD -->
                         <div class="mdc-textfield mdc-textfield--upgraded">
-                            <input type="text" id="serverMOTD" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                            <input type="text" id="serverMOTD" class="mdc-textfield__input" />
                             <label class="mdc-textfield__label mdc-textfield__label--float-above" for="serverMOTD">MOTD</label>
                         </div>
                         <br>
@@ -340,6 +340,10 @@
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
             </ul>
         </div>
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlayer" tabindex="-1">
+            <ul class="mdc-simple-menu__items mdc-list" role="menu" id="menuActionsPlayerList" role="menu" aria-hidden="true">
+            </ul>
+        </div>
         <!-- Add button -->
         <button class="mdc-fab mdc-ripple-upgraded material-icons mdc-toolbar__icon mdc-theme--accent-bg mdc-ripple-surface mdc-elevation--z2 footerFab" id="EditWhitelistBtn" data-mdc-auto-init="MDCRipple">
         	<span class="mdc-fab__icon">people_outline</span>
@@ -364,6 +368,11 @@
                 <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
                 <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">settings</i>Go to plugins tab</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
+        <!-- menu actions -->
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsLevel" tabindex="-1">
+            <ul class="mdc-simple-menu__items mdc-list" id="menuActionsLevelList" role="menu" aria-hidden="true">
             </ul>
         </div>
         <!-- Add button -->
@@ -424,6 +433,10 @@
                 <li class="mdc-list-item goToPlayers" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">people</i>Go to players tab</li>
                 <li class="mdc-list-item goToWorlds" role="menuitem" tabindex="0"><i class="material-icons" aria-hidden="true">public</i>Go to worlds tab</li>
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
+            </ul>
+        </div>
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlugin" tabindex="-1">
+            <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPluginList" role="menu" aria-hidden="true">
             </ul>
         </div>
         <!-- Add button -->

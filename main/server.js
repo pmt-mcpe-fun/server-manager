@@ -35,14 +35,7 @@ exports.Server = function(name, php, app) {
     this.changed = false;
     this.settings = properties.parseProperties(fs.readFileSync(path.join(this.folder, "server.properties")).toString());
     this.windows = [];
-    this.players = {
-        "test": {
-            "name": "test",
-            "op": false,
-            "whitelisted": true,
-            "gamemode": 1
-        }
-    };
+    this.players = {};
     this.levels = {};
     this.plugins = {};
     this.actions = {
@@ -76,6 +69,7 @@ exports.Server = function(name, php, app) {
                         break;
                     case "psmplugins":
                         this2.plugins = data["psmplugins"];
+                        console.log(data);
                         break;
                     case "psmActions":
                         this2.actions = data["psmActions"];
@@ -88,7 +82,7 @@ exports.Server = function(name, php, app) {
                         data["psmnotification"].sound = true;
                         notifier.notify(data["psmnotification"], function(err, response, metadata) {
                             if (!err) {
-                                this.proc.stdin.write(data["psmnotification"].callback.replace(/\%b/gim, data.activationValue) + os.EOL);
+                                this2.proc.stdin.write(data["psmnotification"].callback.replace(/\%b/gim, data.activationValue) + os.EOL);
                             }
                         });
                         break;
@@ -99,12 +93,12 @@ exports.Server = function(name, php, app) {
                         winOptions.height = options.height ? options.height : 600;
                         winOptions.title = options.title ? options.title : "PocketMine Server Manager";
                         if (app && app.mainWindow) winOptions.parent = app.mainWindow;
-                        this.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
-                        var winId = this.windows.length - 1;
-                        this.windows[winId].id = winId;
-                        this.windows[winId].server = this;
-                        this.windows[winId].on('closed', function() {
-                            delete this.server.windows[this.windId];
+                        this2.windows.push(new BrowserWindow(winOptions)); // Keep reference to the window.
+                        var winId = this2.windows.length - 1;
+                        this2.windows[winId].id = winId;
+                        this2.windows[winId].server = this2;
+                        this2.windows[winId].on('closed', function() {
+                            delete this2.windows[this2.windId];
                         });
                         break;
                     default:
