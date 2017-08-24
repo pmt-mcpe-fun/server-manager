@@ -340,7 +340,7 @@
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
             </ul>
         </div>
-        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlayer" tabindex="-1">
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" style="position: absolute" id="menuActionsPlayer" tabindex="-1">
             <ul class="mdc-simple-menu__items mdc-list" role="menu" id="menuActionsPlayerList" role="menu" aria-hidden="true">
             </ul>
         </div>
@@ -371,7 +371,7 @@
             </ul>
         </div>
         <!-- menu actions -->
-        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsLevel" tabindex="-1">
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" style="position: absolute" id="menuActionsLevel" tabindex="-1">
             <ul class="mdc-simple-menu__items mdc-list" id="menuActionsLevelList" role="menu" aria-hidden="true">
             </ul>
         </div>
@@ -435,7 +435,7 @@
                 <li class="mdc-list-item" role="menuitem" tabindex="0" onclick="require('./js/main.js').exit();">Exit PocketMine Server Manager</li>
             </ul>
         </div>
-        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-right" style="position: absolute" id="menuActionsPlugin" tabindex="-1">
+        <div class="mdc-simple-menu mdc-simple-menu--open-from-top-left" style="position: absolute" id="menuActionsPlugin" tabindex="-1">
             <ul class="mdc-simple-menu__items mdc-list" id="menuActionsPluginList" role="menu" aria-hidden="true">
             </ul>
         </div>
@@ -488,8 +488,8 @@
 
 
 </body>
+<script src="../node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>
-    var mdc = top.require("material-components-web/dist/material-components-web");
     mdc.autoInit();
     window.pluginProviders = {};
 </script>

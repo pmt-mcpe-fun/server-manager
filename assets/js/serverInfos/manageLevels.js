@@ -7,7 +7,7 @@
  * @copyright (C) Ad5001 2017
  * @package PocketMine Server Manager
  */
-var MDCMenu = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsLevel`)); // Defining real menu;
+var MDCMenuLvl = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsLevel`)); // Defining real menu;
 var levelAddGeneratorSelect;
 window.serverCallbacks.push(function(server) {
     var levelsList = document.getElementById("manageLevelsList").children;
@@ -31,33 +31,11 @@ window.serverCallbacks.push(function(server) {
     		            ${key}
                     </span>
                     <span class="mdc-list-item__end-detail">
-                        <i class="material-icons" id="actionsLevel${key}">more_vert</i>
+                        <i class="material-icons" id="actionsLevel${key}"
+                        onclick="window.displayLevelMenu(event, '${key}')">more_vert</i>
                     </span>
                 </li>`;
                 mdc.ripple.MDCRipple.attachTo(document.getElementById("manageLevel" + key));
-                // Adding actions of level
-                document.getElementById("actionsLevel" + key).addEventListener("click", function() {
-                    console.log("Calling ", MDCMenu, window.server.actions.levelActions, MDCMenu.open);
-                    document.getElementById("menuActionsLevelList").innerHTML = "";
-                    Object.keys(window.server.actions.levelActions).forEach(function(name) {
-                        // Adding action
-                        var nameAsId = name.replace(/ /g, "_");
-                        document.getElementById("menuActionsLevelList").innerHTML += `
-                     <li onclass="mdc-list-item" data-mdc-auto-init="MDCRipple" role="menuitem" tabindex="0" id="manageLevelAction${nameAsId}">
-                         ${name}
-                     </li>`;
-                        mdc.ripple.MDCRipple.attachTo(document.getElementById(`manageLevel${key}Action${nameAsId}`));
-                        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("cmd", server.actions.levelActions[name])
-                        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("level", key)
-                        document.getElementById(`manageLevel${key}Action${nameAsId}`).addEventListener("click", function() {
-                            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.level), this.innerHTML, server.levels[this.level]));
-                        });
-                    });
-                    MDCMenu = new mdc.menu.MDCSimpleMenu(document.getElementById(`menuActionsLevel`));
-                    document.getElementById("menuActionsLevel").style.left = event.clientX + 'px';
-                    document.getElementById("menuActionsLevel").style.top = event.clientY + 'px';
-                    MDCMenu.open = true;
-                });
                 // Adding level's attribute
                 if (server.levels[key].loaded) document.getElementById(`manageLevel${key}Props`).innerHTML += "<i class='material-icons'>done</i>";
             }
@@ -119,3 +97,43 @@ document.getElementById("levelAddConfirm").addEventListener("click", function() 
         top.main.snackbar("Please enter a name for your new level.");
     }
 })
+
+
+
+document.body.addEventListener("click", function() {
+    if (MDCMenuLvl.open) MDCMenuLvl.open = false;
+});
+
+
+
+/**
+ * Displays menu with informations for level
+ */
+window.displayLevelMenu = function(event, key) {
+    console.log("Calling ", MDCMenuLvl, window.server.actions.levelActions, MDCMenuLvl.open);
+    document.getElementById("menuActionsLevelList").innerHTML = "";
+    Object.keys(window.server.actions.levelActions).forEach(function(name) {
+        // Adding action
+        var nameAsId = name.replace(/ /g, "_");
+        document.getElementById("menuActionsLevelList").innerHTML += `
+         <li class="mdc-list-item" 
+         role="menuitem" tabindex="0"
+         cmd="${server.actions.levelActions[name]}"
+         level="${key}"
+         onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.level), this.innerHTML, server.levels[this.level]));"
+         id="manageLevelAction${nameAsId}">
+             ${name}
+         </li>`;
+        mdc.ripple.MDCRipple.attachTo(document.getElementById(`manageLevel${key}Action${nameAsId}`));
+        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("cmd", server.actions.levelActions[name])
+        document.getElementById(`manageLevel${key}Action${nameAsId}`).setAttribute("level", key)
+        document.getElementById(`manageLevel${key}Action${nameAsId}`).addEventListener("click", function() {
+            window.server.commands.push(parseAsk(this.getAttribute("cmd").replace(/\%p/g, this.level), this.innerHTML, server.levels[this.level]));
+        });
+    });
+    document.getElementById("menuActionsLevel").style.left = (event.clientX - 170 /**Width**/ ).toString() + 'px';
+    document.getElementById("menuActionsLevel").style.top = event.clientY + 'px';
+    MDCMenuLvl.open = true;
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+}
