@@ -51,6 +51,7 @@ window.addEventListener("load", function() {
         remote.getCurrentWindow().minimize();
     });
     document.getElementById("closeBtn").addEventListener("click", function() {
+        alert(`Closing the window will not stop your servers, letting them run in the background with the app.\r\n\r\nIf you want to close the app when all your servers are stopped, relaunch the window (relaunching the app), right click and click 'Exit Pocketmine Server Manager'.`);
         remote.getCurrentWindow().close();
     });
 

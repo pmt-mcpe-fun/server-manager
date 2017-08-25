@@ -146,6 +146,11 @@ button.footerFab {
     color: #B0FF59;
 }
 
+#open_menu {
+    background-color: #52B9DB;
+    color: #52B9DB;
+}
+
 #minimizeBtn {
     background-color: yellow;
     color: yellow;
