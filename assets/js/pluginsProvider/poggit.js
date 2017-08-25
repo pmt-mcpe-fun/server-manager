@@ -71,10 +71,10 @@ const PLUGIN_STATE_NAMES = [
     "",
     "",
     "", // First 3 arent used.
-    "Checked",
-    "Voted",
-    "Approved",
-    "Featured"
+    "<i class='material-icons'>check</i>&nbsp;Checked",
+    "<i class='material-icons'>favorite_border</i>&nbsp;Voted",
+    "<i class='material-icons'>verified_user</i>&nbsp;Approved",
+    "<i class='material-icons'>stars</i>&nbsp;Featured"
 ];
 
 var http = require("https");
@@ -312,14 +312,22 @@ window.pluginProviders.Poggit = {
                 <div class="inline"><p>Plugin list:</p>
                 <span class="search inline"><i class="material-icons">search</i>
                     <div class="mdc-textfield" id="poggitSearchTF">
-                        <input type="text" id="poggitPluginSearch" class="mdc-textfield__input" pattern="^[\w\-\._]+$" />
+                        <input type="text" id="poggitPluginSearch" class="mdc-textfield__input" />
                     </div>
                 </span>
                 </div>
                 <ul id="poggitPluginList" class="mdc-list mdc-list--two-line"></ul>`;
             this.displayPlugins(data);
-            document.getElementById("poggitPluginSearch").addEventListener("keypress", function(ev) {
-                window.pluginProviders.Poggit.searchPlugin(this.value + ev.char);
+            document.getElementById("poggitPluginSearch").addEventListener("keydown", function(ev) {
+                switch (ev.which || ev.keyCode) {
+                    case 8:
+                    case 46:
+                        window.pluginProviders.Poggit.searchPlugin(this.value.substr(0, this.value.length - 2));
+                        break;
+                    default:
+                        window.pluginProviders.Poggit.searchPlugin(this.value + String.fromCharCode(ev.which || ev.keyCode));
+                        break;
+                }
             })
         });
     },
@@ -331,6 +339,7 @@ window.pluginProviders.Poggit = {
      * @param {Plugin[]} data
      */
     displayPlugins: function(data) {
+        document.getElementById("poggitPluginList").innerHTML = "";
         if (data.length > 0) {
             this.orderPluginsByState(data).forEach(function(plugin, index) {
                 if (plugin) {
@@ -372,14 +381,14 @@ window.pluginProviders.Poggit = {
                                 </button>
                             </li>`;
                         if (plugin.is_official) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.official}">
-                                Pre-release
-                                </span>`;
+                                <i class="material-icons">verified_user</i>&nbsp;Official
+                            </span>`;
                         if (plugin.is_outdated) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.outdated}">
-                                Pre-release
-                                </span>`;
+                                <i class="material-icons">warning</i>&nbsp;Outdated
+                            </span>`;
                         if (plugin.is_pre_release) document.getElementById(`poggitPlugin${plugin.name}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${POGGIT_PLUGIN_TAGS_COLORS.pre_release}">
-                                Pre-release
-                                </span>`;
+                                <i class="material-icons">auto_renew</i>&nbsp;Pre-release
+                            </span>`;
                         window.pluginProviders.Poggit.plugins[plugin.name] = plugin;
                     }
                 }
@@ -396,9 +405,14 @@ window.pluginProviders.Poggit = {
      * @param {String} searchString
      */
     searchPlugin: function(searchString) {
+        console.log(searchString);
         var searchedPlugins = [];
         Object.keys(this.plugins).forEach(function(key) {
-            if (key.includes(searchString)) searchedPlugins.push(plugin);
+            if (key.toLocaleLowerCase().includes(searchString.toLocaleLowerCase()) ||
+                searchedPlugins == "" ||
+                window.pluginProviders.Poggit.plugins[key].tagline.toLocaleLowerCase().includes(searchString.toLocaleLowerCase())) {
+                searchedPlugins.push(window.pluginProviders.Poggit.plugins[key]);
+            }
         });
         this.displayPlugins(searchedPlugins);
     }

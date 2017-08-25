@@ -59,8 +59,10 @@ const jsyaml = require("js-yaml");
 
 const GITHUB_PLUGIN_TAGS_COLORS = {
     outdated: "red",
+    "psmimplements": "lime",
+    "psmincompatible": "red",
     "10stars": "cyan", // > 10 Stars
-    "50stars": "blue", // > 50 Starts
+    "50stars": "blue", // > 50 Stars
     "100stars": "lightblue", // > 100 Stars
     "3issues": "yellow", // > 3 Issues
     "10issues": "orange", // > 10 issues
@@ -299,42 +301,54 @@ window.pluginProviders.Github = {
                     </li>`;
                     if (plugin.infos.api instanceof String) {
                         if (plugins.infos.api !== api) document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
-                            Outdated
+                            <i class="material-icons">warning</i>&nbsp;Outdated
                         </span>`;
                     }
                     if (plugin.infos.api instanceof Array) {
                         if (plugins.infos.api.indexOf(api) == -1) document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS.outdated}">
-                            Outdated
+                            <i class="material-icons">warning</i>&nbsp;Outdated                        
+                        </span>`;
+                    }
+                    if (plugin.infos.psmimplements) {
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["psmimplements"]}">
+                            <i class="material-icons">visibility</i>&nbsp;With GUI
+                        </span>`;
+                    }
+                    if (plugin.infos.psmimplements) {
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["psmincompatible"]}">
+                            <i class="material-icons">visibility_off</i>&nbsp;No GUI
                         </span>`;
                     }
                     if (plugin.repo_data.stargazers_count > 100) {
-                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}">
-                            ${plugin.repo_data.stargazers_count} stars
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["100stars"]}" 
+                        title="${plugin.repo_data.stargazers_count} stars on github">
+                            <i class="material-icons">star</i>&nbsp;${plugin.repo_data.stargazers_count} 
                         </span>`;
-                    } else {
-                        if (plugin.repo_data.stargazers_count > 50) {
-                            document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}">
-                                ${plugin.repo_data.stargazers_count} stars
-                            </span>`;
-                        } else {
-                            if (plugin.repo_data.stargazers_count > 10) {
-                                document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}">
-                                    ${plugin.repo_data.stargazers_count} stars
-                                </span>`;
-                            }
-                        }
+                    } else if (plugin.repo_data.stargazers_count > 50) {
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["50stars"]}"
+                        title="${plugin.repo_data.stargazers_count} stars on github">
+                            <i class="material-icons">star</i>&nbsp;${plugin.repo_data.stargazers_count} 
+                        </span>`;
+                    } else if (plugin.repo_data.stargazers_count > 10) {
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10stars"]}"
+                        title="${plugin.repo_data.stargazers_count} stars on github">
+                            <i class="material-icons">star</i>&nbsp;${plugin.repo_data.stargazers_count} 
+                        </span>`;
                     }
                     if (plugin.repo_data.open_issues_count > 20) {
-                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}">
-                            ${plugin.repo_data.open_issues_count} issues
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["20issues"]}"
+                        title="${plugin.repo_data.open_issues_count} opened issues on github">
+                            <i class="material-icons">error_outline</i>&nbsp;${plugin.repo_data.open_issues_count}
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 10) {
-                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10issues"]}">
-                            ${plugin.repo_data.open_issues_count} issues
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["10issues"]}"
+                        title="${plugin.repo_data.open_issues_count} opened issues on github">
+                            <i class="material-icons">error_outline</i>&nbsp;${plugin.repo_data.open_issues_count}
                         </span>`;
                     } else if (plugin.repo_data.open_issues_count > 3) {
-                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["3issues"]}">
-                            ${plugin.repo_data.open_issues_count} issues
+                        document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["3issues"]}"
+                        title="${plugin.repo_data.open_issues_count} opened issues on github">
+                            <i class="material-icons">error_outline</i>&nbsp;${plugin.repo_data.open_issues_count}
                         </span>`;
                     }
                 });

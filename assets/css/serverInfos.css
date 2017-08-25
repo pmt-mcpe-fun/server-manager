@@ -60,6 +60,7 @@ div.console::selection {
 
 p#consoleContent::-webkit-scrollbar {
     display: block;
+    width: 10px;
 }
 
 p#consoleContent::-webkit-scrollbar-thumb {
@@ -71,6 +72,7 @@ p#consoleContent::-webkit-scrollbar-thumb {
 
 section#editServerBody::-webkit-scrollbar {
     display: block;
+    width: 10px;
 }
 
 section#editServerBody::-webkit-scrollbar-thumb {

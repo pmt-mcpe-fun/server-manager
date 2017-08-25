@@ -10,10 +10,16 @@
  *
  */
 
+
+/**
+  * Poggit tags related
+  */
+
 .poggitPluginTag {
     border-radius: 2.5px;
     padding: 4px;
     margin-left: 5px;
+    display: inline-flex;
 }
 
 button.inline {
@@ -24,6 +30,11 @@ button.inline {
 button .material-icons {
     line-height: unset !important;
 }
+
+
+/**
+ * Plugin car infos related
+ */
 
 #pluginInfos {
     z-index: 2000;
@@ -132,4 +143,21 @@ article {
 
 .search .material-icons {
     vertical-align: middle;
+}
+
+
+/**
+ * Add plugin dialog related
+ */
+
+#pluginAddDialogBody1::-webkit-scrollbar {
+    display: block;
+    width: 15px;
+}
+
+#pluginAddDialogBody1::-webkit-scrollbar-thumb {
+    display: block;
+    background-color: black;
+    border: solid 1px black;
+    border-radius: 5px;
 }
