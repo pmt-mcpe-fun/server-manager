@@ -25,7 +25,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("manageLevelsList").innerHTML += `
                 <li class="mdc-list-item" id="manageLevel${key}">
                     <span id="manageLevel${key}Props" class=" mdc-list-item__start-detail">
-                        <i class="material-icons title="World">public</i>
+                        <i class="material-icons" title="World">public</i>
     		        </span>
                     <span class="mdc-list-item__text">
     		            ${key}
