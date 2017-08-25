@@ -106,13 +106,16 @@ function downloadPHP(cb) {
                         exports.phpIni = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php.ini");
                         exports.phpPath = path.join(exports.app.phpFolder, "bin", "php7");
                     }
+                    /**
+                     * PHP.ini replacements, due to extensions locations... WHY???
+                     */
                     fs.readFile(exports.phpIni, function(err, data) {
                         if (err) {
                             console.log(err);
                             snackbar("Could not read php.ini. Are youu sure that you can read files in your home directory?");
                         } else {
                             var properties = data.toString().split(os.EOL);
-                            properties.push("extension_dir=" + path.join(exports.phpPath, "lib"));
+                            if (os.platform() !== "win32") properties.push("extension_dir=" + path.join(exports.phpPath, "lib"));
                             properties.forEach(function(line, index) {
                                 var lineData = line.split("=");
                                 if (lineData[0] == "zend_extension") {
@@ -122,10 +125,11 @@ function downloadPHP(cb) {
                                                     fs.readdirSync(path.join(exports.phpPath, "lib", "php", "extensions"))[0], "opcache.so"),
                                                 path.join(exports.phpPath, "lib", "opcache.so"));
                                             break;
-                                        case "opcache.dll":
-                                            properties[index] = "zend_extension=" +
-                                                path.join(exports.phpPath, "lib", "php", "extensions",
-                                                    fs.readdirSync(path.join(exports.phpPath, "lib", "php", "extensions"))[0], "opcache.dll");
+                                    }
+                                } else if (lineData[0] == "extension") {
+                                    switch (lineData[1]) {
+                                        case "php_pthreads.dll":
+                                            properties[index] = "extension=php_pthreadsVC2.dll";
                                             break;
                                     }
                                 }

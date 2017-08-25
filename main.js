@@ -50,6 +50,7 @@ exports.servers = {};
 var viewPage;
 // Single instance, Windows Jump list & command line relaunching.
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+    var used = false;
     var start = false;
     var stop = false;
     var view = false;
@@ -72,9 +73,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
                 break;
             case "--launch-gui":
                 if (exports.mainWindow) {
-                    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {
-                        createWindow(true);
-                    });
+                    exports.mainWindow.focus();
                 } else {
                     createWindow(true);
                 }
@@ -97,21 +96,31 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
                     exports.servers[cmd].start();
                     if (tray.tray) tray.removeStopServer(cmd);
                     start = false;
-                }
-                if (stop) {
+                    used = true;
+                } else if (stop) {
                     exports.servers[cmd].stop();
                     if (tray.tray) tray.removeStartServer(cmd);
                     stop = false;
-                }
-                if (view) {
+                    used = true;
+                } else if (view) {
                     if (exports.mainWindow === null) {
                         exports.createWindow(true);
+                        viewPage = "serverInfos#" + cmd;
+                    } else if (defined) {
+                        exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${cmd}'`);
+                        exports.mainWindow.focus();
+                    } else {
+                        viewPage = "serverInfos#" + cmd;
                     }
-                    viewPage = "serverInfos#" + cmd
+                    used = true;
                 }
                 break;
         }
     });
+    if (!used) {
+        if (exports.mainWindow === null) exports.createWindow(true);
+        exports.mainWindow.focus();
+    }
 });
 if (shouldQuit) {
     app.quit();

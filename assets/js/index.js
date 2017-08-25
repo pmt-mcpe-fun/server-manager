@@ -51,8 +51,20 @@ window.addEventListener("load", function() {
         remote.getCurrentWindow().minimize();
     });
     document.getElementById("closeBtn").addEventListener("click", function() {
-        alert(`Closing the window will not stop your servers, letting them run in the background with the app.\r\n\r\nIf you want to close the app when all your servers are stopped, relaunch the window (relaunching the app), right click and click 'Exit Pocketmine Server Manager'.`);
-        remote.getCurrentWindow().close();
+        if (!localStorage.getItem("alreadyWarned")) {
+            remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+                type: "info",
+                buttons: ["OK"],
+                title: "Background running",
+                message: `Closing the window will not stop your servers, letting them run in the background with the app.\r\n\r\nIf you want to close the app when all your servers are stopped, relaunch the window (relaunching the app), right click and click 'Exit Pocketmine Server Manager'.`,
+                checkboxLabel: "Do not show again"
+            }, function(response, checked) {
+                if (checked) localStorage.setItem("alreadyWarned", true);
+                remote.getCurrentWindow().close();
+            })
+        } else {
+            remote.getCurrentWindow().close();
+        }
     });
 
 
