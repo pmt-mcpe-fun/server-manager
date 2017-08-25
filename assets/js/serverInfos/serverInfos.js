@@ -49,12 +49,9 @@ function define(serverR) {
             newLine.innerHTML = formatingCodes.terminal2HTML(logsNew[i]);
             newLine.id = "console" + i;
             logsHTML.appendChild(newLine);
+            document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
+            document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
         }
-    }
-    if (first > 0) {
-        document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
-        document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
-        first--;
     }
     window.serverCallbacks.forEach(function(cb, index) {
         cb(serverR);
