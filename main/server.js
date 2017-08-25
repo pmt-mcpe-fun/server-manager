@@ -58,7 +58,10 @@ exports.Server = function(name, php, app) {
         this.proc.stdout.on('data', (dataFull) => {
             var dataM = findJSON(dataFull.toString());
             var JSONs = dataM[1];
-            if (dataM[0].length > 0) this2.log += dataM[0] + os.EOL;
+            if (dataM[0].length > 0 && dataM[0].indexOf("\u001b]0;") == -1) {
+                console.log(JSON.stringify(dataM[0]));
+                this2.log += dataM[0] + os.EOL;
+            }
             JSONs.forEach(function(data) {
                 switch (Object.keys(data)[0]) { // API
                     case "psmplayers":
@@ -69,7 +72,6 @@ exports.Server = function(name, php, app) {
                         break;
                     case "psmplugins":
                         this2.plugins = data["psmplugins"];
-                        console.log(data);
                         break;
                     case "psmActions":
                         this2.actions = data["psmActions"];

@@ -115,5 +115,4 @@ window.displayPluginData = function(event, key) {
     MDCMenuPlgs.open = true;
     event.stopImmediatePropagation();
     event.stopPropagation();
-    mdc.autoInit();
 }

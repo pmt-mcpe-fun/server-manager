@@ -41,7 +41,9 @@ const MenuItem = electron.MenuItem;
 const php = require("./main/php");
 const server = require("./main/server");
 const tray = require("./main/tray");
+require("./main/ipc")(this);
 exports.tray = tray;
+exports.server = server;
 exports.php = php;
 exports.servers = {};
 
@@ -189,129 +191,6 @@ app.on('activate', function() {
     }
     if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
     exports.mainWindow.focus();
-});
-
-// Listeners for app
-/**
- * Gets an app variable (sync)
- * 
- * @param {*} event
- * @param {String} varN
- */
-ipcMain.on('getVar', function(event, varN) {
-    if (exports[varN]) {
-        event.returnValue = exports[varN];
-    } else if (this2[varN]) {
-        event.returnValue = this2[varN];
-    } else {
-        event.returnValue = null;
-    }
-});
-/**
- * Sends a server by it's name (async)
- * 
- * @param {*} event
- * @param {String} serverName
- */
-ipcMain.on('getServer', function(event, serverName) {
-    if (!exports.servers[serverName]) {
-        if (fs.existsSync(path.join(exports.serverFolder, serverName))) {
-            exports.servers[serverName] = new server.Server(serverName, php, this2);
-        }
-    } else {
-        if (!fs.existsSync(path.join(exports.serverFolder, serverName))) { // Server has been deleted
-            exports.servers[serverName].settings = {};
-            delete exports.servers[serverName];
-        }
-    }
-    if (exports.servers[serverName]) {
-        var serv = new server.ServerExportable();
-        serv.import(exports.servers[serverName]);
-        event.sender.send("sendServer", serv);
-    }
-});
-/**
- * Sets back the server (async)
- * 
- * @param {*} event
- * @param {{}} serverR
- */
-ipcMain.on("setServer", function(event, serverR) {
-    var export2 = function(obj, Server) {
-        if (obj.isStarted &&
-            !Server.isStarted) {
-            Server.start();
-            tray.removeStopServer(Server.name);
-        }
-        if (Server.settings !== obj.settings) {
-            Server.settings = obj.settings;
-            Server.save();
-        }
-        obj.commands.forEach(function(cmd) {
-            Server.inputCommand(cmd);
-        }, obj);
-    }
-    export2(serverR, exports.servers[serverR.name]);
-});
-/**
- * Saves server (sync)
- * 
- * @param {*} event
- * @return {Boolean}
- */
-ipcMain.on("save", function(event) {
-    event.returnValue = true;
-    Object.keys(exports.servers).forEach(function(name) {
-        var serv = exports.servers[name];
-        if (!serv.save()) event.returnValue = false;
-    })
-});
-
-/**
- * Closes the app (sync)
- * 
- * @param {*} event
- * @return {Boolean}
- */
-ipcMain.on("close", function(event) {
-    exports.mainWindow.webContents.executeJavaScript("window.close();", true, function() {});
-    tray.tray.destroy();
-    app.exit();
-    process.exit();
-    event.returnValue = "";
-});
-
-/**
- * Adds a server
- * 
- * @param {*} event
- * @return {Boolean}
- */
-ipcMain.on("addServer", function(event, name) {
-    if (tray.trayMenu) {
-        tray.trayMenu.items[2].submenu.append(new MenuItem({
-            label: name,
-            type: "normal",
-            id: `view${name}`,
-            click: function() {
-                if (!exports.mainWindow) createWindow();
-                exports.mainWindow.webContents.executeJavaScript(`document.getElementById('frame').contentWindow.location = 'serverInfos.html#${name}'`, function() {
-                    if (exports.mainWindow.isMinimized()) exports.mainWindow.restore();
-                    exports.mainWindow.focus();
-                });
-            }
-        }));
-        tray.trayMenu.items[0].submenu.append(new MenuItem({
-            label: name,
-            type: "normal",
-            id: `stopped${name}`,
-            click: function() {
-                php.app.servers[name].start();
-                tray.removeStopServer(name);
-            }
-        }));
-    }
-    if (tray.tray) tray.tray.setContextMenu(tray.trayMenu);
 });
 
 // Defines everything when window loads

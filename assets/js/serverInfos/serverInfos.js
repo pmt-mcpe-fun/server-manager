@@ -61,13 +61,20 @@ function define(serverR) {
 document.getElementById("startServer").addEventListener("click", function(event) {
     window.server.start();
     queuing = true;
-    first = 3;
 });
 // Button to stop the server
 document.getElementById("stopServer").addEventListener("click", function(event) {
     window.server.stop();
     queuing = true;
-    first = 3;
+});
+// Button to clear the log
+document.getElementById("clearLog").addEventListener("click", function(event) {
+    server.log = "";
+    ipcRenderer.send("clearLog", server.name);
+    ipcRenderer.once("clearLogSucess", function() {
+        document.getElementById("consoleContent").innerHTML = "";
+    });
+    top.main.snackbar("Clearing log...");
 });
 // Opens pocktemine.yml file in a new notepad/gedit/ default text editor
 document.getElementById("openPocketMineYML").addEventListener("click", function() {
@@ -76,7 +83,6 @@ document.getElementById("openPocketMineYML").addEventListener("click", function(
 // Opens server's folder in explorer
 document.getElementById("openServerFolder").addEventListener("click", function() {
     shell.showItemInFolder(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, "PocketMine-MP.phar"));
-    shell.beep();
 });
 // Checks when a command is enter with "Enter"
 document.getElementById("commandEnter").addEventListener("keypress", function(event) {

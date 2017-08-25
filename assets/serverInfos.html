@@ -49,12 +49,18 @@
             <div class="inline">
                 <h1 class="mdc-typography--display2" style="align-self: stretch;"><i id="started?" class="material-icons">play_arrow</i>&nbsp;&nbsp;&nbsp;<span id="serverName">ServerName</span></h1>
             </div>
-            <button class="mdc-button mdc-button--raised inline" id="startServer" data-mdc-auto-init="MDCRipple">
-                <i class="material-icons">play_arrow</i>&nbsp;Start
-            </button>
-            <button class="mdc-button mdc-button--raised inline" id="stopServer" data-mdc-auto-init="MDCRipple">
-                <i class="material-icons">stop</i>&nbsp;Stop
-            </button>
+            <div style="display: inline-flex">
+                <button class="mdc-button mdc-button--raised inline" id="startServer" data-mdc-auto-init="MDCRipple">
+                    <i class="material-icons">play_arrow</i>&nbsp;Start
+                </button>
+                <button class="mdc-button mdc-button--raised inline" id="stopServer" data-mdc-auto-init="MDCRipple">
+                    <i class="material-icons">stop</i>&nbsp;Stop
+                </button>
+                <button class="mdc-button mdc-button--raised inline" id="clearLog" data-mdc-auto-init="MDCRipple">
+                    <i class="material-icons">error_outline</i>&nbsp;Clear log
+                </button>
+            </div>
+            <br>
             <br>
             <button class="mdc-button mdc-button--raised inline" id="EditServerPropertiesBtn" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">build</i>&nbsp;Edit server properties
@@ -66,7 +72,6 @@
             <button class="mdc-button mdc-button--raised inline" id="openPocketMineYML" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">build</i>&nbsp;Edit pocketmine.yml
             </button>
-            <br>
             <button class="mdc-button mdc-button--raised inline" id="openServerFolder" data-mdc-auto-init="MDCRipple">
                 <i class="material-icons">folder</i>&nbsp;Open server folder.
             </button>
