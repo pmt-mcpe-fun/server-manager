@@ -314,7 +314,7 @@ window.pluginProviders.Github = {
                             <i class="material-icons">visibility</i>&nbsp;With GUI
                         </span>`;
                     }
-                    if (plugin.infos.psmimplements) {
+                    if (!plugin.infos.psmimplements) {
                         document.getElementById(`githubPlugin${plugin.repo_data.id}Tags`).innerHTML += `<span class="poggitPluginTag", style="background-color: ${GITHUB_PLUGIN_TAGS_COLORS["psmincompatible"]}">
                             <i class="material-icons">visibility_off</i>&nbsp;No GUI
                         </span>`;
