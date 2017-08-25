@@ -4,6 +4,7 @@
 module.exports = function(app) {
 
     const ipcMain = require("electron").ipcMain;
+    const MenuItem = require("electron").MenuItem;
     const fs = require('fs');
     const path = require('path');
 
@@ -17,8 +18,6 @@ module.exports = function(app) {
     ipcMain.on('getVar', function(event, varN) {
         if (app[varN]) {
             event.returnValue = app[varN];
-        } else if (this2[varN]) {
-            event.returnValue = this2[varN];
         } else {
             event.returnValue = null;
         }
@@ -33,7 +32,7 @@ module.exports = function(app) {
     ipcMain.on('getServer', function(event, serverName) {
         if (!app.servers[serverName]) {
             if (fs.existsSync(path.join(app.serverFolder, serverName))) {
-                app.servers[serverName] = new app.server.Server(serverName, php, this2);
+                app.servers[serverName] = new app.server.Server(serverName, app.php, app);
             }
         } else {
             if (!fs.existsSync(path.join(app.serverFolder, serverName))) { // Server has been deleted
@@ -138,7 +137,7 @@ module.exports = function(app) {
                 type: "normal",
                 id: `stopped${name}`,
                 click: function() {
-                    php.app.servers[name].start();
+                    app.servers[name].start();
                     app.tray.removeStopServer(name);
                 }
             }));
