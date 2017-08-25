@@ -26,7 +26,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("managePluginsList").innerHTML += `
                 <li class="mdc-list-item" id="managePlugin${key}">
                 <span id="managePlugin${key}Props" class=" mdc-list-item__start-detail">
-                        <i class='material-icons'>settings</i>
+                        <i class='material-icons' title='Plugin'>extension</i>
     		        </span>
                     <span class="mdc-list-item__text">
     		            ${key}

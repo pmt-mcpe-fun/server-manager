@@ -25,7 +25,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("manageLevelsList").innerHTML += `
                 <li class="mdc-list-item" id="manageLevel${key}">
                     <span id="manageLevel${key}Props" class=" mdc-list-item__start-detail">
-                        <i class='material-icons'>public</i>
+                        <i class="material-icons title="World">public</i>
     		        </span>
                     <span class="mdc-list-item__text">
     		            ${key}
@@ -49,7 +49,7 @@ window.serverCallbacks.push(function(server) {
         Object.keys(server.generators).forEach(function(name) {
             document.getElementById("levelAddGeneratorList").innerHTML += `
                 <li class="mdc-list-item" role="option" tabindex="0">
-                    ${name}
+                    <i class="material-icons">terrain</i>&nbsp;&nbsp;${name}
                 </li>`;
         });
         levelAddGeneratorSelect = new mdc.select.MDCSelect(document.getElementById("levelAddGeneratorSelect"));
@@ -86,7 +86,7 @@ document.getElementById("levelAddConfirm").addEventListener("click", function() 
     if (document.getElementById("levelAddName").value.length > 1) {
         var cmd = ("psmcoreactplugin createlevel4psm " +
             document.getElementById("levelAddName").value + " " +
-            levelAddGeneratorSelect.value.toLowerCase() + " " +
+            levelAddGeneratorSelect.value.replace('terrain&nbsp;&nbsp;', '').toLowerCase() + " " +
             require("buffer").Buffer.from(
                 document.getElementById("levelAddSeed").value.toString(), "utf8"
             ).toString("hex").replace(/[^0-9]/g, parseInt(Math.random() * 10))).replace(/\r|\n/g, "");

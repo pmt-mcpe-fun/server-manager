@@ -25,7 +25,7 @@ window.serverCallbacks.push(function(server) {
                 document.getElementById("managePlayersList").innerHTML += `
                 <li class="mdc-list-item" id="managePlayer${key}">
                     <span id="managePlayer${key}Props" class=" mdc-list-item__start-detail">
-                        <i class='material-icons'>person</i>
+                        <i class="material-icons" title="Player">person</i>
     		        </span>
                     <span class="mdc-list-item__text">
     		            ${key}
@@ -42,8 +42,22 @@ window.serverCallbacks.push(function(server) {
 
                 });
                 // Adding player's attribute
-                if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons'>build</i>";
-                if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons'>verified_user</i>";
+                if (server.players[key].op) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='Administrator (OP)'>build</i>";
+                // if (server.players[key].whitelisted) document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='In whitelist'>verified_user</i>"; // Broken for the moment
+                switch (server.players[key].gamemode) {
+                    case 0: // Survival
+                        document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='Survival mode'>directions_walk</i>";
+                        break;
+                    case 1: // Creative
+                        document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='Creative mode'>create</i>";
+                        break;
+                    case 2: // Adventure
+                        document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='Adventure mode'>rowing</i>"; // Adventure mode
+                        break;
+                    case 3: // Spectator
+                        document.getElementById(`managePlayer${key}Props`).innerHTML += "<i class='material-icons' title='Spectator mode'>wb_cloudy</i>";
+                        break;
+                }
             }
         });
     }
