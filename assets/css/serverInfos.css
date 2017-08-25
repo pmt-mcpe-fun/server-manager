@@ -48,12 +48,14 @@ div.console::selection {
 #consoleContent {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 100%;
+    height: calc(100% - 20px);
 }
 
 #consoleContent p {
     -webkit-margin-before: 3px;
     -webkit-margin-after: 3px;
+    word-wrap: break-word;
+    width: 100%;
 }
 
 p#consoleContent::-webkit-scrollbar {
