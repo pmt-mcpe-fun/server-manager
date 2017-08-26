@@ -32,6 +32,12 @@ window.addEventListener("load", function() {
             document.getElementById("main-logo").setAttribute("href", "serverPicker.html");
             document.getElementById("main-logo").classList.remove("unclickable");
         }
+        document.getElementById("frame").contentWindow.addEventListener("focus", function(event) {
+            menu.open = false;
+        })
+        document.getElementById("frame").contentWindow.addEventListener("click", function(event) {
+            menu.open = false;
+        })
     });
 
 
@@ -77,6 +83,12 @@ window.addEventListener("load", function() {
     document.querySelector('#open_menu').addEventListener('click', function() {
         menu.open = !menu.open
     });
+    document.getElementById("frame").contentWindow.addEventListener("focus", function(event) {
+        menu.open = false;
+    })
+    document.getElementById("frame").contentWindow.addEventListener("click", function(event) {
+        menu.open = false;
+    })
 
 
     // Exiting
