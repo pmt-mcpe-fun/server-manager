@@ -28,6 +28,7 @@ const version = rq.lib('version.js')
 
 var updateAvailable;
 var newData;
+var oldDataString;
 var phpLib = undefined;
 /**
  * Checks for updates
@@ -49,7 +50,8 @@ function checkForUpdates(php, cb) {
             response.on('end', function() { // Here we have the final result
                 var data;
                 try {
-                    data = JSON.parse(fs.readFileSync(path.join(php.app.appFolder, "versions.json")));
+                    oldDataString = fs.readFileSync(path.join(php.app.appFolder, "versions.json"));
+                    data = JSON.parse(oldDataString);
                 } catch (e) {
                     data = {};
                 }
@@ -106,17 +108,23 @@ function applyUpdates(oldData, newData) {
                     "View changelog",
                     "Cancel"
                 ],
-                icon: path.join(__dirname, "assets", "icons", "icon.png")
+                icon: path.join(__dirname, "..", "assets", "icons", "icon.png")
             });
             switch (buttonClicked) {
                 case 0:
                     shell.openExternal("https://psm.mcpe.fun/download");
+                    app.exit();
                     break;
                 case 1:
                     shell.openExternal("https://psm.mcpe.fun/changelog");
+                    break;
+                case 2:
+                    fs.writeFileSync(path.join(php.app.appFolder, "versions.json"), oldDataString);
+                    break;
             }
         }
     } catch (e) {
         // Version file is invalid. Do not trigger error and let the file be replaced.
+        console.log(e);
     }
 }
