@@ -2,9 +2,7 @@
         <h1>PSM</h1>
         <p class="light">PocketMine Server Manager<br>Manage MCPE servers like you never did before.</p>
         <a href="https://psm.mcpe.fun/download/">Download</a>
-    </header>
-
-    <main style="background-color: white; padding: 2em; margin:2em; border-radius: 10px;width: calc(100% - 8em);">
+</header>
         <center>
             <h2 class="light">What is PSM?</h2>
         </center>
@@ -68,4 +66,3 @@
         </div>
         <br>
         <br><br>
-    </main>
