@@ -40,10 +40,15 @@
         "nsis": {
             "allowToChangeInstallationDirectory": true,
             "guid": "fun.mcpe.psm.servermanager",
-            "deleteAppDataOnUninstall": true
+            "deleteAppDataOnUninstall": true,
+            "installerLanguages": ["en_US"],
+            "oneClick": false,
+            "perMachine": true,
+            "license": "LICENSE.md"
         },
         "mac": {
-            "category": "your.app.category.type"
+            "category": "public.app-category.utilities",
+            "target": "dmg"
         },
         "linux": {
             "category": "Development;Utility",
