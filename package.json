@@ -24,10 +24,15 @@
         "electron-require": "^0.3.0",
         "js-yaml": "^3.9.1",
         "material-components-web": "^0.14.0",
-        "node-targz": "^0.2.0",
         "node-notifier": "^5.1.2"
     },
-    "dependencies": {},
+    "dependencies": {
+        "daemon-plus": "^1.1.1",
+        "electron-require": "^0.3.0",
+        "js-yaml": "^3.9.1",
+        "material-components-web": "^0.14.0",
+        "node-notifier": "^5.1.2"
+    },
     "electron-require": {
         "lib": "%{app}/assets/js/lib",
         "pluginReceiver": "%{app}/assets/js/pluginsProvider"
@@ -41,7 +46,6 @@
             "allowToChangeInstallationDirectory": true,
             "guid": "fun.mcpe.psm.servermanager",
             "deleteAppDataOnUninstall": true,
-            "installerLanguages": ["en_US"],
             "oneClick": false,
             "perMachine": true,
             "license": "LICENSE.md"
@@ -71,11 +75,90 @@
             }
         },
         "snap": {
-            "confinement": "classic",
+            "stagePackages": [
+                "libnotify4",
+                "libappindicator1",
+                "libxtst6",
+                "libnss3",
+                "libxss1",
+                "fontconfig-config",
+                "gconf2",
+                "libasound2",
+                "pulseaudio",
+                "libcanberra-gtk-module",
+                "overlay-scrollbar",
+                "libatk-bridge2.0-0",
+                "libgail-3-0",
+                "make",
+                "g++",
+                "autoconf",
+                "automake",
+                "wget",
+                "m4",
+                "gzip",
+                "bzip2",
+                "bison",
+                "libtool",
+                "libtool-bin"
+            ],
             "summary": "Manage your servers with ease !"
         },
         "deb": {
-            "priority": "optional"
+            "priority": "optional",
+            "depends": [
+                "libnotify4",
+                "libappindicator1",
+                "libxtst6",
+                "libnss3",
+                "libxss1",
+                "fontconfig-config",
+                "gconf2",
+                "libasound2",
+                "pulseaudio",
+                "libcanberra-gtk-module",
+                "overlay-scrollbar",
+                "libatk-bridge2.0-0",
+                "libgail-3-0",
+                "make",
+                "g++",
+                "autoconf",
+                "automake",
+                "wget",
+                "m4",
+                "gzip",
+                "bzip2",
+                "bison",
+                "libtool",
+                "libtool-bin"
+            ]
+        },
+        "rpm": {
+            "depends": [
+                "libnotify4",
+                "libappindicator1",
+                "libxtst6",
+                "libnss3",
+                "libxss1",
+                "fontconfig-config",
+                "gconf2",
+                "libasound2",
+                "pulseaudio",
+                "libcanberra-gtk-module",
+                "overlay-scrollbar",
+                "libatk-bridge2.0-0",
+                "libgail-3-0",
+                "make",
+                "g++",
+                "autoconf",
+                "automake",
+                "wget",
+                "m4",
+                "gzip",
+                "bzip2",
+                "bison",
+                "libtool",
+                "libtool-bin"
+            ]
         }
     }
 }
