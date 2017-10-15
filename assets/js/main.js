@@ -13,7 +13,6 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const http = require('https');
-const tarGz = require('node-targz');
 const mdc = require("material-components-web/dist/material-components-web");
 const rq = require('electron-require');
 const { URL } = require('url');

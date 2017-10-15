@@ -1,6 +1,6 @@
 /**
  * updater.js - Auto updater for the app.
- * 
+ *
  * @author Ad5001
  * @version 1.0.0
  * @license NTOSL (Custom) - View LICENSE.md in the root of the project
@@ -32,7 +32,7 @@ var oldDataString;
 var phpLib = undefined;
 /**
  * Checks for updates
- * 
+ *
  * @param {php.js}
  * @param {Function} cb
  */
@@ -80,14 +80,14 @@ exports.checkForUpdates = checkForUpdates;
 
 /**
  * Applies new version update
- * 
- * @param {VersionData} oldData 
- * @param {VersionData} newData 
+ *
+ * @param {VersionData} oldData
+ * @param {VersionData} newData
  */
 function applyUpdates(oldData, newData) {
     try {
         var php = phpLib
-        if (newData.pharsVersion !== oldData.pharsVersion) {
+        if (oldData.pharsVersion && newData.pharsVersion !== oldData.pharsVersion) {
             Object.keys(oldData.pharsVersion).forEach(function(key) {
                 if (
                     (fs.existsSync(path.join(php.app.pharsFolder, key + ".phar")) &&

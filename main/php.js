@@ -60,7 +60,7 @@ function downloadPHP(cb) {
         switch (os.platform()) {
             // Windows binaries
             case "win32":
-                exports.download("https://psm.mcpe.fun/download/PHP/windows-binaries.ps1",
+                exports.download("https://psm.mcpe.fun/download/PHP/getbinary.ps1",
                     path.join(exports.app.phpFolder, "compile.ps1"), () => {
                         snackbar("Compiling PHP...");
                         var comp = exec("PowerShell.exe",
