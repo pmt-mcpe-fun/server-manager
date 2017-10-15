@@ -1,6 +1,6 @@
 {
     "name": "pocketmine-server-manager",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A PocketMine Server manager",
     "main": "main.js",
     "scripts": {
