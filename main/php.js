@@ -12,9 +12,10 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const http = require("https");
-const exec = require('child_process').spawn;
+const {execSync, spawn} = require('child_process');
 const { URL } = require("url");
 const properties = require("./lib/properties.js");
+const CHECK_PHP = "7.2";
 /**
  * Sets main.js app exports
  *
@@ -36,13 +37,21 @@ function define(cb) {
         try { // Windows
             fs.accessSync(path.join(exports.app.phpFolder, "bin", "php")); // Windows
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php", "php.exe");
-            cb.apply(exports.app);
         } catch (e) { // Linux & MacOS
             exports.phpExecutable = path.join(exports.app.phpFolder, "bin", "php7", "bin", "php");
-            cb.apply(exports.app);
         }
         snackbar("Found php at " + exports.phpExecutable + "...");
+        // Updating php if needed?
+        var ver = /^PHP (\d\.\d)/.exec(execSync(exports.phpExecutable + " -v"))[1];
+        if(ver !== CHECK_PHP){
+            snackbar("Updating PHP to "+ CHECK_PHP + "...");
+            downloadPHP(cb);
+        } else {
+            cb.apply(exports.app);
+        }
+
     } else { // No PHP
+        snackbar("Downloading PHP " + CHECK_PHP + "...");
         downloadPHP(cb);
     }
 }
@@ -54,7 +63,6 @@ exports.define = define;
  * @param {Function} cb
  */
 function downloadPHP(cb) {
-    snackbar("Downloading PHP...");
     fs.mkdir(exports.app.phpFolder, function(){
         var osName;
         switch (os.platform()) {
@@ -63,7 +71,7 @@ function downloadPHP(cb) {
                 exports.download("https://psm.mcpe.fun/download/PHP/getbinary.ps1",
                     path.join(exports.app.phpFolder, "compile.ps1"), () => {
                         snackbar("Compiling PHP...");
-                        var comp = exec("PowerShell.exe",
+                        var comp = spawn("PowerShell.exe",
                             ["-File", path.join(exports.app.phpFolder, "compile.ps1")],
                             {cwd:exports.app.phpFolder}
                         );
@@ -85,7 +93,7 @@ function downloadPHP(cb) {
                 exports.download("https://psm.mcpe.fun/download/PHP/compile.sh",
                     path.join(exports.app.phpFolder, "compile.sh"), () => {
                         snackbar("Compiling PHP...");
-                        var comp = exec("bash",
+                        var comp = spawn("bash",
                             [path.join(exports.app.phpFolder, "compile.sh")],
                             {cwd:exports.app.phpFolder}
                         );
