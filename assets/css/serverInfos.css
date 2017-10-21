@@ -27,7 +27,7 @@ body {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    height: 260px;
+    height: calc(80% - 56px);
     overflow-y: scroll;
     width: 100%;
     user-select: text;
