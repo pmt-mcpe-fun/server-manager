@@ -77,6 +77,7 @@ function parseAsk(command, name, player) {
         command = command.replace("%a",
             customPrompt("Action '" + name + "' on player asks you for mutiple values in command<br>\n" + command.replace("%a", "<b>(?)</b>").replace(/\%a/, "(?)")));
     }
+    return command;
 }
 /**
  * Prompts the user
