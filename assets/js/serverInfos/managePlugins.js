@@ -80,7 +80,7 @@ window.displayPluginData = function(event, key) {
         var nameAsId = name.replace(/ /g, "_");
         document.getElementById(`menuActionsPluginList`).innerHTML += `
         <li class="mdc-list-item"
-        cmd=${server.actions.pluginActions[name]}
+        cmd="${server.actions.pluginsActions[name]}"
         plugin="${key}"
         role="menuitem" tabindex="0" 
         onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
@@ -93,7 +93,7 @@ window.displayPluginData = function(event, key) {
         var nameAsId = name.replace(/ /g, "_");
         document.getElementById(`menuActionsPluginList`).innerHTML += `
         <li class="mdc-list-item"
-        cmd=${server.actions.pluginsSpecificActions[key][name]}
+        cmd="${server.actions.pluginsSpecificActions[key][name]}"
         plugin="${key}"
         role="menuitem" tabindex="0" 
         onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
