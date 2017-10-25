@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/tabs.css">
     <link rel="stylesheet" href="css/plugins.css">
     <link rel="stylesheet" href="css/formatingConsole.css">
+    <style id="customStyle"></style>
     <!-- Material Design -->
     <link rel="stylesheet" href="../node_modules/material-components-web/dist/material-components-web.css">
 </head>
@@ -24,6 +25,10 @@
         <a class="mdc-tab mdc-tab--with-icon-and-text mdc-tab--active" data-go-tab="main">
             <i class="material-icons mdc-tab__icon" aria-hidden="true">build</i>
             <span class="mdc-tab__icon-text">Manage</span>
+        </a>
+        <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="console" id="data-tab-console">
+            <i class="material-icons mdc-tab__icon" aria-hidden="true">last_page</i>
+            <span class="mdc-tab__icon-text">Console</span>
         </a>
         <a class="mdc-tab mdc-tab--with-icon-and-text" data-go-tab="players">
             <i class="material-icons mdc-tab__icon" aria-hidden="true">people</i>
@@ -76,7 +81,7 @@
                 <i class="material-icons">folder</i>&nbsp;Open server folder.
             </button>
         </div>
-        <div class="half">
+        <div class="half" id="dataConsoleHalf">
             <!-- Right tab -->
             <h1 class="mdc-typography--display1">Console</h1>
             <div class="console">
@@ -310,6 +315,21 @@
     </data-tab>
 
 
+    <!-- Console tab (hidden if there are enought width & height). -->
+    <data-tab data-tab-id="console">
+        <div class="displayMarg">
+            <h1 class="mdc-typography--display1">Console</h1>
+            <div class="console">
+                <p id="consoleContent" class="mdc-typography--body1"></p>
+            </div>
+            <div class="inline" id="commandHolder2">
+                <span class="material-icons">navigate_next</span>
+                <input type="text" id="commandEnter2" class="mdc-textfield__input inner" placeholder="Type a command...">
+            </div>
+        </div>
+    </data-tab>
+
+
 
 
     <!-- Online players (get data) -->
@@ -508,5 +528,6 @@
 <script src="js/pluginsProvider/poggit.js"></script>
 <script src="js/pluginsProvider/github.js"></script>
 <script src="js/serverInfos/tabs.js"></script>
+<script src="js/serverInfos/ui.js"></script>
 
 </html>

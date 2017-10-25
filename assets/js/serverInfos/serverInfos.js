@@ -42,15 +42,17 @@ function define(serverR) {
     document.getElementById("started?").innerHTML = window.server.isStarted ? "play_arrow" : "stop";
     document.getElementById("started?").style.color = window.server.isStarted ? "var(--mdc-theme-primary, green)" : "red";
     var logsNew = window.server.log.replace(/&/gim, "&amp;").replace(/</gim, "&lt;").replace(/>/gim, "&gt;").replace(/\r|\n/g, "<br>").replace(/(<br>)+/g, "<br>").split("<br>");
-    var logsHTML = document.getElementById("consoleContent");
-    for (var i = logsHTML.children.length - 1; i < logsNew.length - 1; i++) {
-        if (i !== -1 && !document.getElementById("console" + i) && logsNew[i].indexOf("\u001b]0;") == -1) {
-            var newLine = document.createElement("p");
-            newLine.innerHTML = formatingCodes.terminal2HTML(logsNew[i]);
-            newLine.id = "console" + i;
-            logsHTML.appendChild(newLine);
-            document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
-            document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
+    var logsHTML = document.getElementById("consoleContent") || document.getElementById("consoleContent2");
+    if (logsHTML) {
+        for (var i = logsHTML.children.length - 1; i < logsNew.length - 1; i++) {
+            if (i !== -1 && !logsHTML.querySelector(`p[data-id="console${i}"]`) && logsNew[i].indexOf("\u001b]0;") == -1) {
+                var newLine = document.createElement("p");
+                newLine.innerHTML = formatingCodes.terminal2HTML(logsNew[i]);
+                newLine.setAttribute("data-id", "console" + i);
+                logsHTML.appendChild(newLine);
+                document.querySelector(".console").scrollTop = 10000000; // Should not have a that long console pixels.
+                document.getElementById("consoleContent").scrollTop = 10000000; // Should not have a that long console pixels.
+            }
         }
     }
     window.serverCallbacks.forEach(function(cb, index) {
@@ -85,14 +87,16 @@ document.getElementById("openServerFolder").addEventListener("click", function()
     shell.showItemInFolder(path.join(ipcRenderer.sendSync("getVar", "serverFolder"), window.server.name, "PocketMine-MP.phar"));
 });
 // Checks when a command is enter with "Enter"
-document.getElementById("commandEnter").addEventListener("keypress", function(event) {
+window.enterCommand = function(event) {
     if (event.keyCode == 13) {
         window.server.commands.push(this.value);
         this.value = "";
         queuing = true;
         first = 3; //Scroll to bottom when received text
     }
-});
+};
+document.getElementById("commandEnter").addEventListener("keypress", window.enterCommand);
+document.getElementById("commandEnter2").addEventListener("keypress", window.enterCommand);
 var editServerVersionDialog = new mdc.dialog.MDCDialog(document.getElementById("editServerVersionDialog"));
 var editServerVersionSelect = new mdc.select.MDCSelect(document.getElementById("editServerVersionSelect"));
 setInterval(function() {
@@ -129,8 +133,3 @@ document.getElementById("editServerVersionConfirm").addEventListener('click', fu
 document.getElementById("EditServerVersionBtn").addEventListener("click", function() {
     editServerVersionDialog.show();
 });
-// MDC Installation
-document.querySelectorAll(".mdc-textfield").forEach(function(elem) {
-    new mdc.textfield.MDCTextfield(elem);
-});
-window.tabBar = new mdc.tabs.MDCTabBar(document.querySelector('.mdc-tab-bar'));

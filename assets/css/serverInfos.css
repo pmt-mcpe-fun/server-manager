@@ -82,7 +82,8 @@ section#editServerBody::-webkit-scrollbar-thumb {
     border-radius: 5px;
 }
 
-#commandHolder {
+#commandHolder,
+#commandHolder2 {
     padding-top: 6px;
     height: 30px;
     margin-top: -1px;

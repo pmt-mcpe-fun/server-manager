@@ -8,12 +8,14 @@
  * @package PocketMine Server Manager
  */
 
-document.querySelectorAll(".mdc-tab").forEach(function(elem) {
-    elem.addEventListener("click", function() {
-
-        switchTab(this.getAttribute("data-go-tab"));
+function reloadTabs() {
+    document.querySelectorAll(".mdc-tab").forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            switchTab(this.getAttribute("data-go-tab"));
+        });
     });
-});
+}
+reloadTabs();
 // Buttons in menu
 document.querySelectorAll(".goToPlayers").forEach(function(elem) {
     elem.addEventListener("click", function() {

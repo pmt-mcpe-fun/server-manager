@@ -39,3 +39,8 @@ data-tab {
     top: 0px;
     position: absolute;
 }
+
+.displayMarg {
+    margin: 2.5%;
+    height: inherit !important;
+}
