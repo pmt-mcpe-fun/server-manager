@@ -55,7 +55,7 @@ module.exports = function(app) {
      */
     ipcMain.on("setServer", function(event, serverR) {
         var export2 = function(obj, Server) {
-            if (obj.isStarted &&
+            if (obj.start &&
                 !Server.isStarted) {
                 Server.start();
                 app.tray.removeStopServer(Server.name);

@@ -13,7 +13,10 @@ const { BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require("os");
-const notifier = require('node-notifier');
+var notifier = new require('node-notifier').NotificationCenter({
+    withFallback: false, // Use Growl Fallback if <= 10.8 
+    customPath: void 0 // Relative/Absolute path to binary if you want to use your own fork of terminal-notifier 
+});
 const properties = require('./lib/properties');
 
 /**
@@ -81,8 +84,10 @@ exports.Server = function(name, php, app) {
                     case "psmnotification":
                         data["psmnotification"].wait = true;
                         data["psmnotification"].sound = true;
+                        var actions = data["psmnotification"].actions || [];
+                        console.log(data, actions);
                         notifier.notify(data["psmnotification"], function(err, response, metadata) {
-                            if (!err) {
+                            if (!err && metadata && actions.indexOf(metadata.activationValue) !== -1) {
                                 this2.proc.stdin.write(data["psmnotification"].callback.replace(/\%b/gim, data.activationValue) + os.EOL);
                             }
                         });
@@ -229,20 +234,15 @@ function findJSON(text) {
                 startedJSON = false;
                 texts.forEach(function(t) {
                     if (t == "{") {
-                        console.log("Starting JSON...");
                         startedJSON = true;
                         maybeJSON += "{";
                     } else if (startedJSON) {
-                        console.log(t);
                         maybeJSON += t;
                     } else if (t == "}") {
                         try {
                             JSONs.push(JSON.parse(text.replace(/\r|\n/, "")));
                             startedJSON = false;
-                            console.log("Ending JSON.");
-                        } catch (e) {
-                            console.log("Wasn't JSON...");
-                        } // Silently fails and continu parsing. It may have been just a part of the closed ones.
+                        } catch (e) {} // Silently fails and continu parsing. It may have been just a part of the closed ones.
                     } else {
                         noJSON += t + os.EOL;
                     }

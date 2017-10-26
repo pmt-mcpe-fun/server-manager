@@ -48,7 +48,7 @@ var Server = function(name) {
     this.generators = {};
 
     this.start = function() {
-        this.isStarted = true;
+        this.start = true;
     };
     this.stop = function() {
         this.commands.push("stop");

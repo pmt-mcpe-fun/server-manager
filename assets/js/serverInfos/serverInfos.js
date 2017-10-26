@@ -23,7 +23,6 @@ const formatingCodes = rq.lib('formatingCodes.js');
 
 
 var scroll = 1;
-var stopping = false;
 window.serverCallbacks = [];
 
 // Defining custom left click element
@@ -62,12 +61,10 @@ function define(serverR) {
 // Adding starting server button to start the server
 document.getElementById("startServer").addEventListener("click", function(event) {
     window.server.start();
-    stopping = false;
 });
 // Button to stop the server
 document.getElementById("stopServer").addEventListener("click", function(event) {
     window.server.stop();
-    stopping = true;
 });
 // Button to clear the log
 document.getElementById("clearLog").addEventListener("click", function(event) {
@@ -102,7 +99,7 @@ var editServerVersionSelect = new mdc.select.MDCSelect(document.getElementById("
 
 // Send server interval
 setInterval(function() {
-    if (window.server && !stopping) ipcRenderer.send("setServer", window.server);
+    if (window.server) ipcRenderer.send("setServer", window.server);
     serverF.getServer(location.hash.substr(1), define);
     // Server dialog versions changing
     if (!editServerVersionDialog.open) {
