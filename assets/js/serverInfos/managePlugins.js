@@ -83,7 +83,7 @@ window.displayPluginData = function(event, key) {
         cmd="${server.actions.pluginsActions[name]}"
         plugin="${key}"
         role="menuitem" tabindex="0" 
-        onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
+        onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.getAttribute('plugin')), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
         id="managePlugin${key}Action${nameAsId}">
             ${name}
         </li>`;
@@ -96,7 +96,7 @@ window.displayPluginData = function(event, key) {
         cmd="${server.actions.pluginsSpecificActions[key][name]}"
         plugin="${key}"
         role="menuitem" tabindex="0" 
-        onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.plugin), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
+        onclick="window.server.commands.push(parseAsk(this.getAttribute('cmd').replace(/\%p/g, this.getAttribute('plugin')), this.innerHTML, server.plugins[this.getAttribute('plugin')]));"
         id="managePlugin${key}Action${nameAsId}">
             ${name}
         </li>`;

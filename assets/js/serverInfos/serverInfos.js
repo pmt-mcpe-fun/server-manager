@@ -22,8 +22,8 @@ const serverF = rq.lib('server.js');
 const formatingCodes = rq.lib('formatingCodes.js');
 
 
-var queuing = false; // TODO: Find a better var name.
-var first = 1;
+var scroll = 1;
+var stopping = false;
 window.serverCallbacks = [];
 
 // Defining custom left click element
@@ -62,12 +62,12 @@ function define(serverR) {
 // Adding starting server button to start the server
 document.getElementById("startServer").addEventListener("click", function(event) {
     window.server.start();
-    queuing = true;
+    stopping = false;
 });
 // Button to stop the server
 document.getElementById("stopServer").addEventListener("click", function(event) {
     window.server.stop();
-    queuing = true;
+    stopping = true;
 });
 // Button to clear the log
 document.getElementById("clearLog").addEventListener("click", function(event) {
@@ -92,18 +92,17 @@ window.enterCommand = function(event) {
         window.server.commands.push(this.value);
         this.value = "";
         queuing = true;
-        first = 3; //Scroll to bottom when received text
+        scroll = 3; //Scroll to bottom when received text
     }
 };
 document.getElementById("commandEnter").addEventListener("keypress", window.enterCommand);
 document.getElementById("commandEnter2").addEventListener("keypress", window.enterCommand);
 var editServerVersionDialog = new mdc.dialog.MDCDialog(document.getElementById("editServerVersionDialog"));
 var editServerVersionSelect = new mdc.select.MDCSelect(document.getElementById("editServerVersionSelect"));
+
+// Send server interval
 setInterval(function() {
-    if (queuing) {
-        ipcRenderer.send("setServer", window.server);
-        queuing = false;
-    }
+    if (window.server && !stopping) ipcRenderer.send("setServer", window.server);
     serverF.getServer(location.hash.substr(1), define);
     // Server dialog versions changing
     if (!editServerVersionDialog.open) {

@@ -59,7 +59,6 @@ exports.Server = function(name, php, app) {
             var dataM = findJSON(dataFull.toString());
             var JSONs = dataM[1];
             if (dataM[0].length > 0 && dataM[0].indexOf("\u001b]0;") == -1) {
-                console.log(JSON.stringify(dataM[0]));
                 this2.log += dataM[0] + os.EOL;
             }
             JSONs.forEach(function(data) {
@@ -208,60 +207,6 @@ exports.ServerExportable = function() {
 function findJSON(text) {
     var JSONs = [];
     var noJSON = "";
-    /*text.split(os.EOL).forEach(function(line) {
-        if (!parsingJSON) {
-            if (line.substr(line.length - 1, 1) == "{") { // Starting JSON Object
-                openedCurles += 1;
-                parsingJSON = true;
-                currentJSON += "{";
-                startedBy = "{";
-            } else if (line.substr(line.length - 1, 1) == "[") { // Starting JSON Array
-                openedBrackets += 1;
-                parsingJSON = true;
-                currentJSON += "[";
-                startedBy = "[";
-            } else {
-                noJSON += line + os.EOL;
-            }
-        }
-        if (parsingJSON) {
-            line.split().forEach(function(char) {
-                switch (char) {
-                    case "{":
-                        openedCurles++;
-                        if (!parsingJSON) {
-                            openedCurles += 1;
-                            parsingJSON = true;
-                            currentJSON += "{";
-                            startedBy = "{";
-                        }
-                        break;
-                    case "}":
-                        if (parsingJSON) openedCurles--;
-                        break;
-                    case "[":
-                        openedBrackets++;
-                        if (!parsingJSON) {
-                            openedBrackets += 1;
-                            parsingJSON = true;
-                            currentJSON += "[";
-                            startedBy = "[";
-                        }
-                        break;
-                    case "]":
-                        if (parsingJSON) openedBrackets--;
-                        break;
-                }
-                currentJSON += char;
-                if (openedCurles == 0 && openedBrackets == 0) {
-                    if (parsingJSON) {
-                        parsingJSON = false;
-                        JSONs.push(JSON.parse(currentJSON));
-                    }
-                }
-            })
-        }
-    })*/
     try {
         var texts = text.split("}{");
         if (texts.length > 1) { // Multiple JSONs
@@ -277,7 +222,36 @@ function findJSON(text) {
                 }
             });
         } else {
-            JSONs.push(JSON.parse(text.replace(/\r|\n/, "")));
+            var texts = text.split(os.EOL);
+            var startedJSON = true;
+            var maybeJSON = "";
+            if (texts.indexOf("{") !== -1) {
+                startedJSON = false;
+                texts.forEach(function(t) {
+                    if (t == "{") {
+                        console.log("Starting JSON...");
+                        startedJSON = true;
+                        maybeJSON += "{";
+                    } else if (startedJSON) {
+                        console.log(t);
+                        maybeJSON += t;
+                    } else if (t == "}") {
+                        try {
+                            JSONs.push(JSON.parse(text.replace(/\r|\n/, "")));
+                            startedJSON = false;
+                            console.log("Ending JSON.");
+                        } catch (e) {
+                            console.log("Wasn't JSON...");
+                        } // Silently fails and continu parsing. It may have been just a part of the closed ones.
+                    } else {
+                        noJSON += t + os.EOL;
+                    }
+                })
+            }
+            if (startedJSON) {
+                JSONs.push(JSON.parse(text.replace(/\r|\n/, ""))); // If it fails, just default to notext.
+            }
+            // JSONs.push(JSON.parse(text.replace(/\r|\n/, "")));
         }
     } catch (e) {
         noJSON = text.replace(/(\r|\n)+/gm, "$1");
