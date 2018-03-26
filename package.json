@@ -15,12 +15,12 @@
     ],
     "author": "Ad5001 <mail@ad5001.eu>",
     "contributors": [
-        "Nathaniel F. <hello@nfgamermc.com> (https://nfgamermc.com)"
+        "Nathaniel F. <hello@nfgamermc.com> (https://nathfreder.website)"
     ],
     "license": "NTOSL (Custom) - View LICENSE.md in the root of the project",
     "devDependencies": {
         "daemon-plus": "^1.1.1",
-        "electron": "1.6.16",
+        "electron": "1.8.2-beta5",
         "electron-require": "^0.3.0",
         "js-yaml": "^3.9.1",
         "material-components-web": "^0.14.0",
